@@ -1,0 +1,25 @@
+<div (click)="doMove()"
+     class="container"
+     [class.destroy]="isDestroy && (lightOff$ | async) === true"
+     [class.history-from]="isHistoryFrom && (lightOff$ | async) === true"
+     [class.history-to]="isHistoryTo && (lightOff$ | async) === true"
+     [class.possible]="isPossible && (lightOff$ | async) === true"
+     [class.clicked]="isClicked && (lightOff$ | async) === true">
+  <div *ngIf="displayCellIDs$ | async">{{coordinateX}},{{coordinateY}} ({{cellID}})</div>
+  <div *ngIf="isSafeZoneP1" class="safe-zone-p1">
+    <img src="assets/game/field/{{colorMapping.p1.godType}}_SafeZone.png"
+         [alt]="'safe-zone-' + colorMapping.p1.godType">
+  </div>
+  <div *ngIf="isSafeZoneP2" class="safe-zone-p2">
+    <img src="assets/game/field/{{colorMapping.p2.godType}}_SafeZone.png"
+         [alt]="'safe-zone-' + colorMapping.p2.godType">
+  </div>
+  <app-light [coordinateX]="coordinateX" [coordinateY]="coordinateY"></app-light>
+
+  <div class="coordinates">
+    <div *ngIf="coordinateY === maxCoordinateY" class="x-axis">{{getXAxisValue()}}</div>
+    <div *ngIf="coordinateX === 0" class="y-axis">{{getYAxisValue()}}</div>
+  </div>
+
+</div>
+

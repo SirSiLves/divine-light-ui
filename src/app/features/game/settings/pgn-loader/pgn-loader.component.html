@@ -1,0 +1,30 @@
+<form [formGroup]="formGroup">
+  <div class="grid">
+    <div class="col-12 pb-0 title">
+      Portable Game Notation (PGN)
+      <div class="ml-2">
+        <button pButton pRipple
+                (click)="enableEdit()"
+                type="button"
+                [disabled]="edit"
+                [pTooltip]="'core.settings.edit' | translate"
+                [icon]="'pi pi-pencil'"
+                class="p-button-rounded p-button-text"></button>
+      </div>
+
+    </div>
+    <div class="col-12">
+      <div class="copy">
+        <input type="text" pInputText [formControl]="pgn">
+        <button pButton pRipple
+                (click)="copyPGN()"
+                [cdkCopyToClipboard]="pgn.value"
+                [pTooltip]="'core.settings.copy' | translate"
+                type="button"
+                [icon]="copy ? 'pi pi-check' : 'pi pi-copy'"
+                class="ml-1 p-button-rounded p-button-text"></button>
+      </div>
+      <div class="mt-1 error" *ngIf="pgn.invalid">{{'core.error.pgn' | translate}}</div>
+    </div>
+  </div>
+</form>

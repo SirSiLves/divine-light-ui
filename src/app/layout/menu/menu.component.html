@@ -1,0 +1,41 @@
+<div class="container">
+  <div>
+    <button (click)="setOpen()"
+            pButton pRipple
+            type="button"
+            [icon]="open ? 'pi pi-times' : 'pi pi-align-justify'"
+            class="p-button-rounded p-button-text"></button>
+  </div>
+
+  <div>
+    <div *ngIf="open" class="menu-list"
+         [@slide]="MENU_LIST.length"
+         (@slide.start)="onAnimationEvent(true)"
+         (@slide.done)="onAnimationEvent(false)">
+      <div class="menu sun">
+        <img src="./assets/game/Sun.png" alt="Sun-Logo" style="width:40px;height:40px;"
+             (click)="openPage(MENU.HOME)">
+      </div>
+
+      <div *ngFor="let menu of MENU_LIST" class="menu-list-item">
+        <div class="hr">
+          <hr>
+        </div>
+
+        <button pButton type="button" [label]="'core.menu.' + menu.label | translate"
+                [ngClass]="isLastVisited(menu.url) ? 'p-button-raised visited menu' : 'p-button-text p-button-raised menu'"
+                (click)="openPage(menu.url)"></button>
+      </div>
+
+    </div>
+
+    <div *ngIf="!open && !isAnimating && showScoreBoard" class="result">
+      <app-result></app-result>
+    </div>
+  </div>
+
+  <div class="settings" *ngIf="lastVisited.includes(MENU.GAME)">
+    <app-settings></app-settings>
+  </div>
+</div>
+

@@ -1,0 +1,30 @@
+<div *ngIf="piece"
+     [pDraggable]="'not-defined'"
+     [pDraggableDisabled]="true"
+     class="container"
+     (click)="doOrPrepareMove()" [@fade]="animateMove">
+  <div class="rotate-menu">
+    <div class="save" *ngIf="showSave">
+      <button pButton pRipple type="button" icon="pi pi-check" class="p-button-rounded p-button-primary"
+              (click)="save()"></button>
+    </div>
+    <div class="rotate ml-1 mr-1" *ngIf="showRotate">
+      <button pButton pRipple type="button" icon="pi pi pi-refresh" class="p-button-rounded p-button-warning"
+              (click)="rotatePiece()"></button>
+    </div>
+    <div class="cancel" *ngIf="showCancel">
+      <button pButton pRipple type="button" icon="pi pi-times" class="p-button-rounded p-button-danger"
+              (click)="reset()"></button>
+    </div>
+  </div>
+
+  <div [class]="'piece ' + rotation + ' ' + animateRotate">
+    <img src="assets/game/pieces/{{getPieceImageName()}}"
+         [alt]="this.piece.type.toString()">
+  </div>
+</div>
+
+
+
+
+

@@ -1,0 +1,167 @@
+.dead {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform-style: preserve-3d;
+  z-index: 1000;
+  height: 100%;
+  width: 100%;
+  bottom: 3%;
+  right: 2%;
+}
+
+@keyframes move {
+  0% {
+    transform: translate3d(0, 0, 1000px);
+  }
+}
+
+@-moz-keyframes move {
+  0% {
+    transform: translate3d(0, 0, 1000px);
+  }
+}
+
+@-webkit-keyframes move {
+  0% {
+    transform: translate3d(0, 0, 1000px);
+  }
+}
+
+
+.bubble-wrap {
+  position: absolute;
+  transform-style: preserve-3d;
+  transform-origin: center center;
+}
+
+.bubble {
+  position: absolute;
+  border-radius: 20%;
+  animation: move 2s ease-in-out infinite;
+}
+
+@for $j from 20 through 100 {
+  .bubble:nth-child(#{$j}) {
+    $size: (calc(random(5)/10) * 1vw);
+    height: $size;
+    width: $size;
+    animation-delay: -$j * .2s;
+    transform: translate3d((calc(random($j) / 5 * -0.5vw)), (calc(random($j) / 5 * 0.5vw)), (calc(random(1000) * 1px)));
+    background: var(--particles);
+  }
+}
+
+@for $j from 35 through 100 {
+  .bubble:nth-child(#{$j}) {
+    $size: (calc(random(5)/9) * 1vw);
+    height: $size;
+    width: $size;
+    animation-delay: -$j * .2s;
+    transform: translate3d((calc(random($j) / 7 * 0.5vw)), (calc(random($j) / 7 * 0.5vw)), (calc(random(1000) * 1px)));
+    background: var(--particles);
+  }
+}
+
+@for $j from 50 through 100 {
+  .bubble:nth-child(#{$j}) {
+    $size: (calc(random(5)/10) * 1vw);
+    height: $size;
+    width: $size;
+    animation-delay: -$j * .2s;
+    transform: translate3d((calc(random($j) / 10 * 0.5vw)), (calc(random($j) / 10 * -0.5vw)), (calc(random(1000) * 1px)));
+    background: var(--particles);
+  }
+}
+
+@for $j from 80 through 100 {
+  .bubble:nth-child(#{$j}) {
+    $size: (calc(random(5)/10) * 1vw);
+    height: $size;
+    width: $size;
+    animation-delay: -$j * .2s;
+    transform: translate3d((calc(random($j) / 13 * -0.5vw)), (calc(random($j) / 13 * -0.5vw)), (calc(random(1000) * 1px)));
+    background: var(--particles);
+  }
+}
+
+.light {
+  display: flex;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+
+  &.up {
+    border-left: var(--light);
+    top: -0.2rem;
+    bottom: 50%;
+    left: 48%;
+    justify-items: center;
+  }
+
+  &.right {
+    border-top: var(--light);
+    top: 49%;
+    right: -0.2rem;
+    left: 49%;
+  }
+
+  &.down {
+    border-left: var(--light);
+    top: 50%;
+    bottom: -0.2rem;
+    left: 48%;
+  }
+
+  &.left {
+    border-top: var(--light);
+    top: 49%;
+    right: 49%;
+    left: -0.2rem;
+  }
+}
+
+
+@media only screen and (min-width: 1080px) {
+
+  @for $j from 20 through 100 {
+    .bubble:nth-child(#{$j}) {
+      $size: (random(7) * 1px);
+      height: $size;
+      width: $size;
+      animation-delay: -$j * .2s;
+      transform: translate3d((calc(random($j) / 5 * -5px)), (calc(random($j) / 5 * 5px)), (calc(random(1000) * 1px)));
+    }
+  }
+
+  @for $j from 35 through 100 {
+    .bubble:nth-child(#{$j}) {
+      $size: (random(7) * 1px);
+      height: $size;
+      width: $size;
+      animation-delay: -$j * .2s;
+      transform: translate3d((calc(random($j) / 7 * 5px)), (calc(random($j) / 7 * 5px)), (calc(random(1000) * 1px)));
+    }
+  }
+
+  @for $j from 50 through 100 {
+    .bubble:nth-child(#{$j}) {
+      $size: (random(7) * 1px);
+      height: $size;
+      width: $size;
+      animation-delay: -$j * .2s;
+      transform: translate3d((calc(random($j) / 10 * 5px)), (calc(random($j) / 10 * -5px)), (calc(random(1000) * 1px)));
+    }
+  }
+
+  @for $j from 80 through 100 {
+    .bubble:nth-child(#{$j}) {
+      $size: (random(7) * 1px);
+      height: $size;
+      width: $size;
+      animation-delay: -$j * .2s;
+      transform: translate3d((calc(random($j) / 13 * -5px)), (calc(random($j) / 13 * -5px)), (calc(random(1000) * 1px)));
+    }
+  }
+}

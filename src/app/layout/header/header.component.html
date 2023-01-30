@@ -1,0 +1,23 @@
+<div class="box">
+  <div class="king">
+    <span [routerLink]="'/news'"><h2>Divine-Light</h2></span>
+    <img [routerLink]="'/news'" src="./assets/game/King.png" alt="King-Logo" style="width:40px;height:40px;">
+  </div>
+
+  <div class="toggle">
+    <button pButton pRipple
+            type="button"
+            [icon]="checked ? 'pi pi-moon' : 'pi pi-sun'"
+            class="p-button-rounded p-button-text"
+            (click)="switchTheme()"></button>
+  </div>
+</div>
+
+<ng-container *ngIf="isLoading$ | async; else emptySpace">
+  <p-progressBar mode="indeterminate" [style]="{'height': '3px'}"></p-progressBar>
+</ng-container>
+<ng-template #emptySpace>
+  <div [style]="{'height': '3px'}"></div>
+</ng-template>
+
+<app-menu></app-menu>

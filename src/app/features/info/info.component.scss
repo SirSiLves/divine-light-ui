@@ -1,0 +1,36 @@
+.container {
+  display: grid;
+  grid-template-columns: 1fr 10fr 1fr;
+  margin-top: 2rem;
+  margin-bottom: 6rem;
+}
+
+.text-area {
+  display: flex;
+  flex-direction: column;
+  padding-top: 1rem;
+  margin-bottom: 3rem;
+
+  .autor {
+    margin-bottom: 1rem;
+    border-bottom: solid 0.25rem;
+  }
+
+  img {
+    margin-right: 1rem;
+    border: solid;
+    border-radius: 0.25rem;
+    box-shadow:
+      0 1px 5px -1px rgba(0, 0, 0, 0.5),
+      0 1px 5px 1px rgba(0, 0, 0, 0.5),
+      0 1px 5px 0 rgba(0, 0, 0, 0.5);
+  }
+
+  .text {
+    i {
+      cursor: pointer;
+    }
+
+  }
+
+}

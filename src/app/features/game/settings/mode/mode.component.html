@@ -1,0 +1,13 @@
+<form *ngIf="formGroup" [formGroup]="formGroup">
+  <div class="mode">
+    <p-dropdown [options]="modes"
+                [formControl]="mode"
+                [optionLabel]="'label'"
+                [style]="{'width':'100%'}"
+                [appendTo]="'body'"
+    ></p-dropdown>
+  </div>
+</form>
+
+
+

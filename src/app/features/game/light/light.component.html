@@ -1,0 +1,16 @@
+<ng-container *ngIf="(history$ | async) === false">
+  <div *ngIf="deadEffectTest || showDeadEffect && (showUPLight || showRIGHTLight || showDOWNLight || showLEFTLight)">
+    <div class="dead">
+      <div class="bubble-wrap">
+        <div class="bubble" *ngFor="let _ of particles;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="light up" *ngIf="showUPLight"></div>
+  <div class="light right" *ngIf="showRIGHTLight"></div>
+  <div class="light down" *ngIf="showDOWNLight"></div>
+  <div class="light left" *ngIf="showLEFTLight"></div>
+
+</ng-container>
+

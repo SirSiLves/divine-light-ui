@@ -1,0 +1,18 @@
+<div class="board">
+  <div class="frame"
+       [ngStyle]="isAnimating === true ? {} : (isHistory$ | async) ?
+       {'box-shadow': 'var(--color4) 0 0 10px'} : (playing$ | async) === PlayerType.CAMAXTLI ?
+       {'box-shadow': ''+  colorMapping.p1.color +' 0 0 10px'} :
+       {'box-shadow': ''+  colorMapping.p2.color +' 0 0 10px'}">
+    <div *ngFor="let y of matrixSkeleton; index as yI" class="y"
+         [@slide]="matrixSkeleton.length"
+         (@slide.start)="onAnimationEvent(true)"
+         (@slide.done)="onAnimationEvent(false)">
+      <div *ngFor="let _ of y; index as xI" class="x">
+        <app-cell [coordinateX]="xI" [coordinateY]="yI" [cellID]="getCellID(xI, yI)"></app-cell>
+
+        <app-piece [x]="xI" [y]="yI"></app-piece>
+      </div>
+    </div>
+  </div>
+</div>

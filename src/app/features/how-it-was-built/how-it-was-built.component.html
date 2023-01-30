@@ -1,0 +1,719 @@
+<div class="container">
+  <p-card>
+    <h2>Game</h2>
+    <p>
+      This section will explain more about how it was developed. Unfortunately this section is in german.
+      If i find some time, will translate it.
+    </p>
+
+    <p-accordion [multiple]="true">
+      <p-accordionTab header="Allgemein" [selected]="true">
+        <div class="text-area">
+          <div class="text">
+            Das Spiel wurde im Rahmen einer Semesterarbeit an der FFHS im "CAS Advanced Game Development" entwickelt.
+            Als Game Engine habe ich Unity verwendet. Die Grafiken sind selbst gezeichnet. Die nachfolgenden Rubriken
+            zeigen wichtige Design Entscheidungen auf.
+            <br><br>
+            <div class="image">
+              <img src="./assets/game/built/unity.png" alt="unity" style="max-width: 100%; max-height: 100%;">
+            </div>
+          </div>
+        </div>
+      </p-accordionTab>
+
+      <p-accordionTab header="Matrix">
+
+        <div class="text-area">
+          <div class="text">
+            <p>
+              Fürs Halten der Spielstände und auch laden der Anzeige dient ein Jagged Array als Matrix.
+              Darin werden die Zahlen (int‘s) zwischen 0 & 999 gespeichert.
+              Damit eine Einheit eindeutig definiert ist, dient fo
+            </p>
+
+            <h5>Figuren</h5>
+            <p>
+              Die Figuren Typen haben die Einer zur Verfügung:
+            </p>
+            <ul>
+              <li>1: Sun</li>
+              <li>2: King</li>
+              <li>3: Wall</li>
+              <li>4: Refletor</li>
+              <li>5: Angler</li>
+            </ul>
+
+            <h5>Rotation</h5>
+            <p>
+              Um die Rotation der Figur darstellen zu können, stehen die Zehner zur Verfügung:
+            </p>
+            <ul>
+              <li>0: 0° / 360°</li>
+              <li>10: 90°</li>
+              <li>20: 180°</li>
+              <li>30: 270°</li>
+            </ul>
+
+            <h5>Spieler</h5>
+            <p>
+              Für die Spieler bzw. deren Figuren Farben stehen die Hunderter zur Verfügung:
+            </p>
+            <ul>
+              <li>0: Gold</li>
+              <li>100: Silber</li>
+            </ul>
+
+            <h4>Positionsbeispiel</h4>
+            <p>
+              Daraus ergibt sich für die Figuren des Spielers Gold folgende mögliche Zustände.
+            </p>
+            <ul>
+              Sun
+              <li>001 -> 0°</li>
+              <li>011 -> 90°</li>
+              <li>021 -> 180°</li>
+              <li>031 -> 270°</li>
+            </ul>
+            <ul>
+              King
+              <li>002 -> 0°</li>
+              <li>012 -> 90°</li>
+              <li>022 -> 180°</li>
+              <li>032 -> 270°</li>
+            </ul>
+            <ul>
+              Wall
+              <li>003-> 0°</li>
+              <li>013 -> 90°</li>
+              <li>023 -> 180°</li>
+              <li>033 -> 270°</li>
+            </ul>
+            ...
+            <ul>
+              Angler
+              <li>005 -> 0°</li>
+              <li>015 -> 90°</li>
+              <li>025 -> 180°</li>
+              <li>035 -> 270°</li>
+            </ul>
+            Und für den Gegenspieler in Silber
+            <ul>
+              Sun
+              <li>101 -> 0°</li>
+              <li>111 -> 90°</li>
+              <li>121 -> 180°</li>
+              <li>131 -> 270°</li>
+            </ul>
+            ...
+          </div>
+
+          <h4>Feld</h4>
+          <p>
+            Die eindeutige ID des Feldes kann auf 2 Arten bestimmt werden. Einerseits mit den Koordinaten oder der
+            Nummerierung an welcher Stelle im Array sich das Feld befindet. Dadurch hat das 1 Feld die ID
+            (X: 0/Y: 0) oder 0 und das letzte (X: 9/Y: 7) oder 79.
+          </p>
+          <div class="image">
+            <img src="./assets/game/built/field.png" alt="field" style="max-width: 70%; max-height: 70%;">
+          </div>
+
+          <h4>Startposition</h4>
+          <p>
+            Um die Startposition zu definieren bzw. laden zu können, habe ich ein Dictionary
+            hinterlegt. Als Key gilt jeweils die Feld ID und als Value die Figuren Position. Dadurch kann
+            man mehrere Startaufstellungen hinterlegen und diese bei Bedarf laden.
+          </p>
+          <div class="image">
+            <img src="./assets/game/built/startposition.png" alt="startposition"
+                 style="max-width: 70%; max-height: 70%;">
+          </div>
+
+          <p>
+            Würde man dann die Startposition aller Figuren auf die Console ausgeben, sieht das dann
+            so aus:
+          </p>
+          <div class="image">
+            <img src="./assets/game/built/matrix_console.png" alt="matrix-console"
+                 style="max-width: 70%; max-height: 70%;">
+          </div>
+
+          <p>
+            Und zu guter letzte wie es dann mit den Figuren darauf aussieht und der hinterlegten
+            Startposition
+          </p>
+          <div class="image">
+            <img src="./assets/game/built/start.png" alt="start" style="max-width: 70%; max-height: 70%;">
+          </div>
+
+        </div>
+      </p-accordionTab>
+
+      <p-accordionTab header="Göttliches Licht">
+        <div class="text-area">
+          <div class="text">
+            <h4>Visuelles Licht</h4>
+            <div class="image">
+              <img src="./assets/game/built/licht.png" alt="licht" style="max-width: 40%; max-height: 40%;">
+            </div>
+            <p>
+              Um das Licht zwischen den Figuren weiterleiten zu können, habe ich von Unity die Komponente „2D Box
+              Collider“
+              verwendet und als Licht einen „Line Renderer“. Mit dem Script musste ich dann erkennen lassen, ob die
+              Figur das Licht
+              weiterleiten kann, oder ob sie zerstört werden muss. Dafür gibt es pro Figur mehrere Child-„Game Objects“.
+            </p>
+            <div class="image">
+              <img src="./assets/game/built/goettliches-licht-gameobjs.png" alt="licht-obj"
+                   style="max-width: 70%; max-height: 70%;">
+            </div>
+
+            <p>
+              Fürs weiterleiten des Lichts gibt es das Game Object „Mirror“. Wird dieser Collider erkannt, schaut sich
+              das Script die aktuelle
+              Rotation der Figur an. Anhand dieser wird dann der „Line Renderer“ weitergeleitet.
+            </p>
+            <div class="image">
+              <img src="./assets/game/built/line-renderer.png" alt="line-render"
+                   style="max-width: 70%; max-height: 70%;">
+            </div>
+            <br>
+
+
+            <h4>Matrix Licht</h4>
+            <p>
+              Die AI hat die grafische Licht Ausführung nicht zur Verfügung. Deswegen brauchte es eine
+              Implementierung, um das Licht nur auf der Matrix ausführen lassen zu können.<br>
+              <br>
+              Die wichtigsten Schritte sind: <br>
+              1. Ermittle Start Position <br>
+              2. Ermittle Richtung <br>
+              3. Ist auf dem Feld etwas anders wie 000, ermittle Figur <br>
+              4. Darf das Licht aufgrund der Figur weitergeleitet werden, übergebe neue Richtung,
+              ansonsten returniere Wert (zerstören der Figur gibt mehr Punkte als das
+              blockieren). <br>
+              5. Weiter wieder mit Punkt 3, ausser das Licht verlässt das Spielbrett, dann returniere
+              0. <br>
+            </p>
+
+            <p><strong>Beispiel anhand der Matrix</strong></p>
+            <p>
+              1. Spieler Silber ist am Zug<br>
+              2. Start Position oben Links 121<br>
+              3. Richtung aus 121 ergibt 180° nach unten.<br>
+              4. Figur 105 ist ein Winkler. Aufgrund des Wert 105 zeigt die Spielfläche des Winkler nach rechts. Neue
+              Richtung ist daher 270°.
+              Die 270° sind vielleicht etwas verwirrend. Das ist aber so, da es sich bei Unity um ein „Left-handed
+              coordinate system“ handelt.<br>
+              5. Nächste Figur ist die 025. Wieder ein Winkler deren Spiegelfläche aber nach unten zeigt, also die neue
+              Richtung lautet 180°.<br>
+              6. 015 ist wieder ein Winkler, deren Fläche aber nach Links und somit die neue Richtung 90° ist.<br>
+              7. 135 erneut ein Winkler mit der Spiegelfläche nach 180°.<br>
+              8. Und zum Ende die 002 , wobei es sich um den König handelt. Spieler Silber hat gewonnen.<br>
+            </p>
+            <div class="image">
+              <img src="./assets/game/built/light-matrix.png" alt="light-matrix"
+                   style="max-width: 70%; max-height: 70%;">
+            </div>
+
+
+          </div>
+        </div>
+      </p-accordionTab>
+
+      <p-accordionTab header="2D Aufbau">
+        <div class="text-area">
+          <div class="text">
+            <p>
+              Das Spiel wurde im 2D Look erstellt. Damit aber der Line Renderer (Licht Gottes) und die Box Colliders
+              der Figuren gleichzeitig funktionieren, musste mit der Z-Achse gearbeitet werden. Ansonsten kollidierte
+              der
+              Line Renderer mit dem Box Collider fürs anklicken der Figur, was nicht sein sollte. Normalerweise kann man
+              die Prioritäten der Layer über die Einstellung „Order in Layer“ setzen. Für diesen Fall mit dem Line
+              Renderer funktioniert es aber nicht. Ein guter Nebeneffekt hatte es auch die Z-Achse miteinzubeziehen,
+              so konnte man sich die Layers besser vorstellen.
+            </p>
+            <div class="image">
+              <img src="./assets/game/built/2d-look.png" alt="2dlook" style="max-width: 70%; max-height: 70%;">
+            </div>
+          </div>
+        </div>
+      </p-accordionTab>
+
+      <p-accordionTab header="Core Loop">
+        <div class="text-area">
+          <div class="text">
+            <p>
+              Der Core Loop beschreibt, welche Schritte in einer Durchgangs-Schleife (Loop) ausgeführt
+              werden.
+            </p>
+            <div class="image">
+              <img src="./assets/game/built/coreloop.png" alt="coreloop" style="max-width: 40%; max-height: 40%;">
+            </div>
+
+            <ol>
+              <li>
+                <strong>User Input</strong>
+                <ul>
+                  <li>User bewegt Figur</li>
+                </ul>
+              </li>
+              <li>
+                <strong>Validate</strong>
+                <ul>
+                  <li>Gültigkeitsprüfung des Zugs</li>
+                  <li>Weitere Inputs blockieren</li>
+                </ul>
+              </li>
+              <li>
+                <strong>Update Matirx</strong>
+                <ul>
+                  <li>Neue Position wird in die Matrix geschrieben</li>
+                </ul>
+              </li>
+              <li>
+                <strong>Update Board</strong>
+                <ul>
+                  <li>Zug wird visualisiert anhand der neuen Matrix</li>
+                </ul>
+              </li>
+              <li>
+                <strong>Light Up</strong>
+                <ul>
+                  <li>Licht wird ausgeführt</li>
+                </ul>
+              </li>
+              <li>
+                <strong>Update Board</strong>
+                <ul>
+                  <li>Hat das Licht eine Figur getroffen, wird Zerstören visualisiert</li>
+                  <li>Gibt es ein Sieger, wird dieser angezeigt ansonsten Spielerwechsel</li>
+                  <li>Input Freigabe</li>
+                </ul>
+              </li>
+            </ol>
+
+          </div>
+        </div>
+      </p-accordionTab>
+
+      <p-accordionTab header="Klassenentwurf">
+        <div class="text-area">
+          <div class="text">
+            <p>
+              Der Klassenentwurf zeigt die verwendeten Methoden und Parametern, sowie Beziehungen zwischen den
+              wichtigsten Klassen auf. Es wurde absichtlich auf einige Klassen, Methoden und Parametern verzichtet,
+              damit die Komplexität nicht unnötig ansteigt um den Spielzusammenhalt zu verstehen.
+            </p>
+
+            <div class="image">
+              <img src="./assets/game/built/Klassendiagramm.png" alt="klassendiagramm"
+                   style="max-width: 70%; max-height: 70%;">
+            </div>
+
+            <h4>Klassenbeschreibung</h4>
+
+            <p-table [value]="klassendiagramm">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>Klassenname</th>
+                  <th>Beschreibung</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-diagramm>
+                <tr>
+                  <td>{{diagramm.name}}</td>
+                  <td>{{diagramm.beschreibung}}</td>
+                </tr>
+              </ng-template>
+            </p-table>
+
+
+          </div>
+        </div>
+      </p-accordionTab>
+
+      <p-accordionTab header="Checkpoints">
+        <div class="text-area">
+          <div class="text">
+            <p>
+              Im Spiel ist eine Rewind-Funktion implementiert. Damit kann irgendein Spielstand, der in der Vergangenheit
+              liegt, angezeigt werden. Jeder Zug wird als «COMMAND» ausgeführt und automatisch in die History
+              aufgenommen. Genauer gesagt wird zuerst der «COMMAND» wie INITIALIZE, MOVE, SWAP, ROTATE, oder DESTROY
+              auf der Matrix ausgeführt und anschliessend wird der letzte «COMMAND» aus der History auf dem Board
+              visualisiert.
+            </p>
+
+            <div class="image">
+              <img src="./assets/game/built/icommand.png" alt="icommand" style="max-width: 40%; max-height: 40%;">
+            </div>
+
+            <p>
+              Wird nun aus der History Liste ein COMMAND angeklickt, wird die darin gespeicherte Matrix
+              geladen und der Zug visualisiert. Somit hat der Spieler die Möglichkeit, den Hergang der
+              aktuellen Spielposition, erneut anzeigen zu lassen.
+            </p>
+
+            <div class="image">
+              <img src="./assets/game/built/history.png" alt="history" style="max-width: 70%; max-height: 70%;">
+            </div>
+
+            <h4>Legende</h4>
+            <div class="image">
+              <img src="./assets/game/built/history-legende.png" alt="history-legende"
+                   style="max-width: 70%; max-height: 70%;">
+            </div>
+            <p>
+              Die erste Zahl beschreibt die Anzahl ausgeführten Züge. <br><br>
+              Der erste Buchstabe die Art des Zuges. s gibt I – Initialisiere, M – Move, S – Swap, R – Rotate, D –
+              Destroy.<br><br>
+              Das C steht für Cell und sagt aus, wo wurde der Zug ausgeführt. <br><br>
+              Das P steht für Piece und beschreibt, welche Figur bewegt oder zerstört wurde. <br><br>
+              Beispiel für Zug Nummer 2: Der Angler wurde vom Feld J4 nach J3 beweget. <br><br>
+            </p>
+
+
+          </div>
+        </div>
+      </p-accordionTab>
+
+      <p-accordionTab header="AI Komponente">
+        <div class="text-area">
+          <div class="text">
+            <h4>Monte Carlo Tree Search (MCTS)</h4>
+            <p>
+              Der Monte Carlo Tree Search (MCTS) ist ein Algorithmus, der aus zufälligen Spiel
+              Simulationen versucht den optimalsten Spielzug zu finden. Der grosse Vorteil von MCTS ist,
+              dass er nicht alle möglichen Spielzüge kennen muss, er wählt zufällig einfach einen aus.
+              Die Einschränkung jedoch ist, dass die Leistungsfähigkeit der AI von der Betriebsplattform
+              des Spiels abhängig ist. Das heisst je schneller ein PC / Server ist, desto mehr SpielSimulationen können
+              ausgeführt werden in einer vorgegebenen Wartezeit.
+              Möchte man jedoch die AI Stärke gleich hochhalten, egal ob eine schnellere Hardware zur
+              Verfügung steht oder nicht, verlängert sich einfach die Wartezeit von der AI, bis sie einen
+              gleichwertigen Spielzug berechnet hat.
+            </p>
+
+            <h5>Tree Search</h5>
+            <p>
+              Wie funktioniert nun der MCTS Algorithmus? Der Algorithmus baut einen Such-Baum auf,
+              welcher die berechneten Wahrscheinlichkeiten aufzeigt. Der Zug mit der höchsten
+              Wahrscheinlichkeit, ist danach der optimalste Zug. Bei jeder Iteration werden 4 Aktionen
+              nacheinander ausgeführt. Die Aktionen heissen:
+            </p>
+
+            <ol>
+              <li>
+                <strong>Selection</strong>
+                <p>
+                  Die Selektion ist rekursiv und wird solange ausgeführt, bis das Ende erreicht
+                  ist im Baum.
+                </p>
+              </li>
+              <li>
+                <strong>Expansion</strong>
+                <p>
+                  Ein weiterer Node wird erstellt.
+                </p>
+              </li>
+              <li>
+                <strong>Simulation</strong>
+                <p>
+                  Spiel Simulation wird ausgeführt. Das heisst ein Spiel wird mit Zufallszügen
+                  bis zum Ende gespielt. Wichtig dabei ist aber, dass man ein Limit setzt. Gibt
+                  es nach 100 Zügen kein Gewinner oder Unentschieden muss ebenfalls die
+                  Simulation abgebrochen werden können.
+                </p>
+              </li>
+              <li>
+                <strong>Backpropagation</strong>
+                <p>
+                  Die Resultate der Simulationen werden in die Nodes geschrieben.
+                </p>
+              </li>
+            </ol>
+            <br>
+
+            <p>
+              In Bezug auf das Spiel Divine Light heisst das folgendes:
+            </p>
+            <ol>
+              <li>
+                Spieler Gold ist am Zug. Es wird eine Figur ausgewählt, die die aktuell höchste
+                Bewertung hat (Selection).
+              </li>
+              <li>
+                Für die gewählte Figur wird geschaut, wurden alle möglichen Züge ausgeführt und
+                bewertet, falls ja, prüfe gibt es weitere Zugsmöglichkeiten, falls ja, erstelle einen
+                neuen Zug (Child-Node). Fall nein, wird die Simulation auf diesem gewählten Node
+                erneut ausgeführt.
+              </li>
+              <li>
+                Jetzt wird das Spiel Simuliert bis zum Ende oder Abbruch bei zu vielen Spielzüge
+                (Simulation).
+              </li>
+              <li>
+                Das Resultat der Simulation wird in den Baum geschrieben (Backpropagation).
+                Dadurch werden die Nodes im Tree erneut bewertet. Danach sieht man im
+                Verhältnis, wie gut dieser Zug wirklich ist.
+              </li>
+              <li>
+                Prüfe ob noch weitergesucht werden soll (Tiefenlimit erreicht), falls ja beginne
+                wieder von Punkt 1.
+              </li>
+            </ol>
+
+            <h5>UCB1 (Upper Confidence Bound 1)</h5>
+            <p>
+              Um die Wahrscheinlichkeit berechnen zu können wird die sogenannte „Upper Confidence
+              Bound 1“ kurz UCB1 Formel verwendet.
+            </p>
+            <ul>
+              <li>
+                wi ist die Anzahl Siege
+              </li>
+              <li>
+                si ist die Anzahl ausgeführten
+                Simulationen
+              </li>
+              <li>
+                sp ist die Anzahl ausgeführten
+                Simulationen vom Parent
+              </li>
+              <li>
+                c ist der Value fürs Verhältnis
+                zwischen Explotation und
+                Exploration
+              </li>
+            </ul>
+            <div class="image">
+              <img src="./assets/game/built/ucb-formel.png" alt="ucb-formel" style="max-width: 40%; max-height: 40%;">
+            </div>
+
+            <h5>Beispiel mit UCB</h5>
+            <p>
+              Ein Beispiel wie ein MCTS Baum aufgebaut wird:
+            </p>
+            <ol>
+              <li>
+                Vom Parent Node 1. Ebene wird gestartet.
+                (Selection)
+              </li>
+              <li>
+                Es werden ein Child Node erstellt 2. Ebene
+                (Expandation).
+              </li>
+              <li>
+                Beim Child Objekt werden Spielsimulationen
+                durchgeführt (Simulation).
+              </li>
+              <li>
+                Jede Simulation erhöht den rechten Wert (si) um
+                1.
+              </li>
+              <li>
+                Am Ende jeder Simulation wird der linke Wert
+                (wi) angepasst und zwar Sieg = +1, Niederlage -1
+                & Unentschieden 0 (Backpropagation). Aber nur
+                beim Spieler, für den der an der Reihe ist.
+              </li>
+              <li>
+                Ist die Simulation beendet, wird der Wert zurück geschrieben bis zum Parent.
+              </li>
+              <li>
+                Danach wird wieder selektiert etc.
+              </li>
+              <li>
+                Am Ende bekommt man den Wert mit dem besten
+                Verhältnis, hier (3/4), welcher dann als Spielzug ausgewählt wird.
+              </li>
+            </ol>
+            <div class="image">
+              <img src="./assets/game/built/ucb.png" alt="ucb" style="max-width: 40%; max-height: 40%;">
+            </div>
+            <p>
+              Eine etwas ausführlicher Erklärung gibt es hier
+              <a href="https://medium.com/@quasimik/monte-carlo-tree-search-applied-to-letterpress-34f41c86e238">
+                General Game-Plaing With Monte Carlo Tree Search</a>
+            </p>
+
+            <h5>Explotation vs Exploration</h5>
+            <p>
+              Wofür ist der c Value in der UCB Formel? Wie im oberen Punkt bereits beschrieben, ist der
+              Value fürs Verhältnis zwischen Explotation und Exploration. Was heisst das nun aber im
+              Spiel? Im Tree Search sollte jeder Zug nur einmal ausgewertet werden. Es kann aber
+              jedoch sein, dass durch die Zufall Simulationen der Wert sehr schlecht ist und man daher
+              nochmals den gleichen Zug auswerten sollte. Dafür hilft der c-Value. Dieser gibt an, wann
+              ein bereits ausgewerteter Zug, nochmals ausgewertet werden darf, eben nochmals
+              verwertet (exploitation). Im Normalfall jedoch möchte man möglichst viel Neues erkunden
+              (Exploration), sprich also ein neuer Zug ausgewertet haben. Dafür gibt es aber keinen
+              einheitlichen Wert, der für alle gleich ist. Nur durch mehrmaliges Testen und anpassen
+              dieses Werts, kann er optimal ermittelt werden. I.d.R. sagt man, je weniger Simulationen
+              gemacht werden können, desto kleiner sollte auch der C-Wert sein. Da der Algorithmus
+              ansonsten viel zu oft nur erkundet und nur selten auch mal ein bereits bewerteter Node,
+              wieder in die Selection aufnimmt.
+            </p>
+
+
+            <h4>Mini-Max</h4>
+            <p>
+              Mini-Max ist ebenfalls ein Such-Baum Algorithmus, hingegen zu MCTS Mini-Max aber jeden
+              möglichen Zug bewertet. Ziel des Mini-Max Algorithmus ist es, für den maximierenden den
+              besten Zug zu finden mit dem positivsten Resultat und für den minimierenden den besten
+              Zug zu finden, mit dem negativsten Resultat.
+            </p>
+
+            <h5>Tree Search</h5>
+            <p>
+              Wie funktioniert nun aber der Mini-Max Algorithmus bzw. wie sieht das in Bezug auf den
+              Tree aus. Jeder Endpunkt (Node) ist ein möglicher Spielzug, der bewertet wurde.
+            </p>
+            <ol>
+              <li>
+                Der Mini-Max startet in diesem Beispielsbild, auf der untersten
+                Ebene 4, indem er die Nodes bewertet. Beim Maximierer bedeutet
+                eine hohe Zahl, dass es sich um einen sehr guten Zug handelt.
+              </li>
+              <li>
+                Der Minimierer auf Ebene 3, wählt nun zwischen einen dieser beiden
+                Nodes einen aus. Da es sich um den minimierer handelt, wählt er den negativsten Node aus, um möglichst
+                dem Maximierer schaden zu können.
+              </li>
+              <li>
+                Nun ist der Maximierer wieder an der Reihe, er macht das Gegenteil und wählt für
+                sich den besten möglichen Node aus. Hier im Beispiel zwischen 10 & 5, also nimmt
+                er die 10.
+              </li>
+              <li>
+                Erneut wählt der Minimierer auf Ebene 1. den schlechtesten Node.
+              </li>
+              <li>
+                Übrig bleibt nun auf Ebene 0 die Wahl für den Maximierer zwischen -10 & -7 und
+                wählt die -7. Somit ist das der beste Zug.
+              </li>
+            </ol>
+            <div class="image">
+              <img src="./assets/game/built/mini-max01.png" alt="mini-max01" style="max-width: 40%; max-height: 40%;">
+            </div>
+
+            <h5>Alpha Beta Suche</h5>
+            <p>
+              Je nach grösse des aufgebauten Trees, kann die Suche mit Mini-Max sehr
+              Zeitintensiv sein. Es gibt verschiedene Möglichkeiten die Suchzeit zu verringern.
+              Eine davon ist die Ergänzung von „AlphaBeta pruning“. Ziel davon ist es, gewisse
+              Nodes, teile vom Baum auschliessen zu können. <br>
+              <br>
+              Im nachfolgenden Beispielbild können die „?“ mit Alpha-Beta suche ausgeschlossen
+              werden. Wenn wir auf der untersten Ebene schauen, wo sich die „5“ & das „?“
+              befinden, dann kann der 2. Node weggelassen werden. Das ist so, weil auf der 1. Ebene mit der „3“, der
+              Minimierer garantiert den kleineren Wert auswählt und es daher egal ist,
+              ob der Maximierer auf der Ebene 2. Etwas grösserer wie die 5 findet. <br>
+              <br>
+              Durch dieses weglassen der Nodes, kann in der Suche einige Zeit eingespart werden. Im
+              Beispiel sieht man das sehr gut. Das ist aber keinesfalls eine Garantie. Je nach Anordnung
+              der Nodes, werden gar keine Nodes weggelassen. Es empfiehlt sich daher, die Ebenen zu
+              Sortieren nach deren Bewertungen. <br>
+              <br>
+              Im Ganzen mit Pseudocode sieht, dass dann so aus:
+            </p>
+
+            <div class="image">
+              <img src="./assets/game/built/mini-max02.png" alt="mini-max02" style="max-width: 100%; max-height: 100%;">
+            </div>
+
+            <p>
+              Eine detailliertere Erklärung zu Mini-Max und Alpha-Beta gibt es hier
+              <a href="https://www.youtube.com/watch?v=l-hh51ncgDI">
+                Algorithmus Explained – minimax und alpha-beta pruning</a>
+            </p>
+
+
+            <h4>MCTS vs Mini-Max</h4>
+            <p>
+              Ein kurzer Vergleich zwischen diesen beiden Algorithmen, was sind die Vorteile von MCTS
+              & Mini-Max bzw. deren Nachteile.
+            </p>
+
+            <h5>Probleme beider Algorithmen</h5>
+            <p>
+              Gleich zu Beginn, beide Algorithmen haben ihre Grenzen schnell erreicht. Das liegt jedoch
+              am Spiel und nicht am Algorithmus. Divine Light hat pro Durchgang ca. 90 mögliche
+              Spielzüge. Ein Vergleich zum Schach, dieses hat in der Anfangsstellung gerade mal 20
+              mögliche Züge. Möchte man nun eine Tiefensuche von 3 bewertet haben, was ja nur 3
+              Spielzüge im Voraus sind, muss der Algorithmus unter Umständen 90^3, also 729'000
+              mögliche Spielzüge analysieren und bewerten. Bei 4 Durchgänge wären wir dann bei
+              65’610'000 Zügen. Ein normaler Computer, den man zu Hause stehen hat, ist dafür eine
+              längere Zeit beschäftigt. <br>
+              <br>
+              Ein weiteres Problem ist, dass nicht nur die Anzahl mögliche Züge die Suche erschwert,
+              sondern auch der Faktor Licht. Nach jedem Zug, muss das Licht ausgeführt und der neue
+              Spielstand an den Child-Node übergeben werden. Somit werden pro Node 2 Züge
+              ausgeführt. Einerseits der Zug von der Spielfigur und anderseits das Licht, was zusätzlich
+              Zeit benötigt.<br>
+              <br>
+              Können Figuren bzw. deren Züge weggelassen werden für die Bewertung, würde es für
+              beide Algorithmen die Suche wesentlich beschleunigen, was natürlich dann eine höhere
+              Tiefensuche ermöglicht.
+            </p>
+
+            <h5>Vollständige Suche</h5>
+            <p>
+              MCTS ist nicht dafür ausgelegt, dass alles Züge pro Tree-Ebene bewertet werden. Das
+              heisst bei MCTS kann es vorkommen, dass bspw. der 2. Zug eigentlich eine Niederlage
+              wäre, wenn er aber diesen Zug nie anschaut, kann er nicht verhindert werden.<br>
+              <br>
+              Im MiniMax wird jeder Zug ausgewertet, somit kann eine Niederlage im 2. Durchgang auf
+              sicher verhindert werden. <br>
+              <br>
+              Dies hatte sich auch in der Praxis gezeigt. Mit MCTS konnte ich nicht viel mehr wie 5000
+              Simulationen zulassen, da sonst die Wartezeit zu hoch ansteigt. Das Problem ist jetzt
+              aber, um 2 Durchgänge zu 100% analysieren zu können, müsste MCTS im Minimum 8100
+              Simulationen durchlaufen. MCTS führt jedoch die Simulation teilweise auf den gleichen
+              Node mehrmals aus, dadurch werden gewisse Nodes eben nicht bewertet und unter
+              Umständen genau der, den für den Sieg oder Niederlage benötigt würde.
+            </p>
+
+            <h5>Abbruch Möglichkeit</h5>
+            <p>
+              Beide Algorithmen könnten zu jederzeit abgebrochen werden. Das ist vor allem nötig,
+              damit die Wartezeit für den Spieler nicht unangenehm wird und das Spiel langweilig wird.
+              Bei MCTS lässt sich dies jedoch um einiges einfacher umsetzen. Nach jeder Iteration ist
+              bereits bekannt, welcher der beste Node ist. Im MiniMax muss der ganze Tree bewertet
+              werden, um ein korrektes Ergebnis zu bekommen. Daher darf der Suchlauf im MiniMax
+              nicht mittendrin abgebrochen werden.
+            </p>
+
+            <h5>Bester Zug</h5>
+            <p>
+              Wie bereits erwähnt ist die Genauigkeit auf 2 Züge im Voraus bei MiniMax besser. Schaut
+              man jedoch weiter in die Zukunft, erzielt MCTS das bessere Ergebnis, da MiniMax mit 4
+              Tiefensuche bereits nicht mehr ausführbar ist auf einem Heimcomputer. Das beste
+              Ergebnis wird daher erzielt, wenn beide Algorithmen zeitgleich ausgeführt werden. Findet
+              MiniMax in 3 Durchgängen keine Niederlage/Sieg, empfiehlt es sich der Zug vom MCTS
+              auszuführen. <br>
+              <br>
+              Auch ist es besser, dass die AI nicht jede Figur gleich vom Gegner zerstört, die sie
+              zerstören könnte. Dadurch kann das Spiel verkomplizierter werden, was eher für den
+              menschlichen Gegenspieler das Ganze erschwert.
+            </p>
+
+            <h5>Verbesserungsmöglichkeit</h5>
+            <p>
+              Eine gute Verbesserungsmöglichkeit wäre die Positionen der Figuren zu bewerten. Für den
+              König ist es sicherer auf einer der Grundlinien zu stehen, weder in Mitte des Spielbretts.<br>
+              <br>
+              Eine weitere AI Steigerung könnte erreicht werden mit „Transposition Table“, vor allem
+              für MCTS. Mit der „Transposition Table“ können alte bereits bewertete Spielstände geholt
+              werden. Somit muss der MCTS die Simulation nicht erneut ausführen. Sehr oft kommt mit
+              „Transposition Table“ der Begriff „Zobrist Hashing“ zu tragen. „Zobrist Hashing“ ist eine
+              Möglichkeit, wie die Tables bzw. Spielstände verglichen werden können in einer sehr
+              schnellen Zeit.
+            </p>
+
+          </div>
+        </div>
+      </p-accordionTab>
+
+
+    </p-accordion>
+
+  </p-card>
+</div>

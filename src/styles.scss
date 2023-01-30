@@ -1,1 +1,48 @@
 /* You can add global styles to this file, and also import other style files */
+@import "src/mixins";
+
+:root {
+  --gold: #ffd600; // #daa520
+  --green: #1d7a00; // #005303
+  //https://coolors.co/fbba72-565554-2e86ab-f24236-c5fffd
+  --color1: #FBBA72;
+  --color2: #565554;
+  --color3: #2E86AB;
+  --color4: #F24236;
+  --color5: #C5FFFD;
+  --light: 0.2vw solid red;
+  --particles: hsl(0, 100%, 50%);
+}
+//body { background-color: var(--green); }
+
+@media only screen and (min-width: 1080px) {
+  :root {
+    --light: 0.2rem solid red;
+  }
+}
+
+body {
+  background-color: var(--surface-b);
+  color: var(--text-color);
+  font-family: var(--font-family);
+
+  /* Application Variables */
+  &.LIGHT {
+    // light
+  }
+
+  &.DARK {
+    // dark
+  }
+}
+
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  overflow: auto;
+  transition: background-color 200ms, color 200ms, border-color 200ms, box-shadow 200ms;
+}
+
+

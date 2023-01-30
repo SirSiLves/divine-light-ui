@@ -1,0 +1,9 @@
+<form *ngIf="formGroup" [formGroup]="formGroup">
+  <div class="mode">
+    <p-dropdown [options]="algorithm"
+                [formControl]="botAlgorithm"
+                [optionLabel]="'label'"
+                [appendTo]="'body'"
+                [style]="{'width':'100%'}"></p-dropdown>
+  </div>
+</form>

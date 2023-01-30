@@ -1,0 +1,23 @@
+<div class="container">
+  <app-board></app-board>
+</div>
+
+<app-winner [(open)]="openWinner"></app-winner>
+
+<app-draw [(open)]="openDraw"></app-draw>
+
+<div *ngIf="((winner$ | async) && !openWinner) || ((draw$ | async) && !openDraw) ; else placeholder" class="settings">
+  <p-button icon="pi pi-refresh"
+            (click)="rematch()"
+            label="{{'features.game.winner.rematch' | translate}}"
+            class="p-button-text mr-2"></p-button>
+  <button pButton pRipple
+          type="button"
+          icon="pi pi-plus"
+          label="{{'features.game.winner.new' | translate}}"
+          (click)="new()"
+          class="p-button-warning"></button>
+</div>
+<ng-template #placeholder>
+  <div class="placeholder"></div>
+</ng-template>

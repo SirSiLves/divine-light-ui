@@ -1,0 +1,29 @@
+<ng-container *ngIf="showGameTimeline">
+  <app-history></app-history>
+</ng-container>
+
+<div class="box">
+  <div class="version">
+    <small>v{{version}}</small>
+  </div>
+
+  <div class="middle">
+    <div class="coppyright">
+      <small>&copy; Copyright {{currentDate | date:'yyyy-MM-dd'}} - {{'core.footer.copyright' | translate}}</small>
+    </div>
+
+    <div class="rights">
+      <span><a href="/dsgvo">{{'core.menu.dsgvo' | translate}}</a></span>
+      /
+      <span><a href="/impressum">{{'core.menu.impressum' | translate}}</a></span>
+    </div>
+  </div>
+
+  <div class="language">
+    <ng-container *ngIf="language$ | async as language">
+      <small class="mr-2" [class.bold]="language === 'en'" (click)="switchLanguage(LanguageType.en)">EN</small>
+      <small class="ml-1" [class.bold]="language === 'de'" (click)="switchLanguage(LanguageType.de)">DE</small>
+    </ng-container>
+  </div>
+</div>
+

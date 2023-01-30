@@ -1,0 +1,153 @@
+<button pButton pRipple
+        type="button"
+        [icon]="'pi pi-cog'"
+        [disabled]="(isLoading$ | async) || (isReloading$ | async)"
+        class="p-button-rounded p-button-text"
+        (click)="openSettings()"></button>
+
+<p-dialog header="{{'core.settings.title' | translate}}"
+          [(visible)]="display"
+          [closable]="false"
+          [position]="position" [modal]="true"
+          [style]="{width: '40rem'}" [baseZIndex]="10000"
+          [draggable]="true" [resizable]="false">
+
+  <p-tabView>
+    <p-tabPanel header="{{'core.settings.game' | translate}}" [disabled]="(isLoading$ | async) === true">
+      <div class="container">
+        <div class="grid">
+          <div class="col-12 mb-2">
+            <div class="grid">
+              <div class="col-5">{{'core.settings.new' | translate}}</div>
+              <div class="col-7">
+                <p-checkbox [(ngModel)]="createNew" [binary]="true" inputId="new-game"></p-checkbox>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 mb-2">
+            <div class="grid">
+              <div class="col-5">{{'core.settings.autoSwitch' | translate}}</div>
+              <div class="col-7">
+                <p-checkbox [(ngModel)]="unsavedAutoSwitch" [binary]="true" inputId="auto-switch"></p-checkbox>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 mb-2">
+            <div class="grid">
+              <div class="col-5">{{'core.settings.rematch' | translate}}</div>
+              <div class="col-7">
+                <p-dropdown [options]="rematchOptions"
+                            [(ngModel)]="unsavedRematchSettings"
+                            [appendTo]="'body'"
+                            [style]="{'width':'100%'}">
+                  <ng-template pTemplate="selectedItem">
+                    <div *ngIf="unsavedRematchSettings === 'auto'">{{'core.settings.rematchAuto' | translate}}</div>
+                    <div *ngIf="unsavedRematchSettings === 'manual'">{{'core.settings.rematchManual' | translate}}</div>
+                  </ng-template>
+                  <ng-template let-rematchSettings pTemplate="item">
+                    <div>{{rematchSettings.label | translate}}</div>
+                  </ng-template>
+                </p-dropdown>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="grid">
+              <div class="col-5">
+                {{'core.settings.starting' | translate}}
+              </div>
+              <div class="col-7">
+                <app-god-playing *ngIf="display" [currentGod]="godPlaying"
+                                 (godChange$)="unsavedGodPlaying = $event"></app-god-playing>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="grid">
+              <div class="col-5">{{'core.settings.mode' | translate}}</div>
+              <div class="col-7">
+                <app-mode *ngIf="display" [currentMode]="mode" (modeChange$)="unsavedMode = $event"></app-mode>
+              </div>
+            </div>
+          </div>
+          <ng-container *ngIf="(mode !== unsavedMode && (unsavedMode === 'p1vb' || unsavedMode === 'bvb'))
+      || (this.mode === 'p1vb' && this.unsavedMode === 'p1vb') || (this.mode === 'bvb' && this.unsavedMode === 'bvb');">
+            <ng-container *ngIf="(mode !== unsavedMode && unsavedMode === 'bvb')
+      || (this.mode === 'bvb' && this.unsavedMode === 'bvb'); else onePlayer">
+              <div class="col-12">
+                <div class="grid">
+                  <div class="col-5">{{'core.settings.bot1Level' | translate}}</div>
+                  <div class="col-7">
+                    <app-bot-level *ngIf="display" [currentAlgorithm]="botTypeP1"
+                                   (algorithmChange$)="unsavedGBotTypeP1 = $event"></app-bot-level>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="grid">
+                  <div class="col-5">{{'core.settings.bot2Level' | translate}}</div>
+                  <div class="col-7 mb-5">
+                    <app-bot-level *ngIf="display" [currentAlgorithm]="botTypeP2"
+                                   (algorithmChange$)="unsavedGBotTypeP2 = $event"></app-bot-level>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #onePlayer>
+              <div class="col-12">
+                <div class="grid">
+                  <div class="col-5">{{'core.settings.botLevel' | translate}}</div>
+                  <div class="col-7 mb-2">
+                    <app-bot-level *ngIf="display" [currentAlgorithm]="botTypeP2"
+                                   (algorithmChange$)="unsavedGBotTypeP2 = $event"></app-bot-level>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </ng-container>
+        </div>
+      </div>
+    </p-tabPanel>
+
+    <p-tabPanel header="{{'core.settings.load' | translate}}" [disabled]="(isLoading$ | async) === true">
+      <div class="container">
+        <div class="grid">
+          <div class="col-12">
+            <div class="grid">
+              <div class="col-12 mt-2">
+                <app-pgn-loader *ngIf="display" (matrix$)="matrixFromPGN = $event" [notation]="notation"
+                                (notationChange$)="unsavedNotation = $event"></app-pgn-loader>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </p-tabPanel>
+
+    <p-tabPanel header="{{'core.settings.simulation.title' | translate}}" [disabled]="(isLoading$ | async) === true">
+      <div class="container">
+        <div class="grid">
+          <div class="col-12">
+            <app-simulation *ngIf="display"></app-simulation>
+          </div>
+        </div>
+      </div>
+    </p-tabPanel>
+  </p-tabView>
+
+  <ng-template pTemplate="footer">
+    <button pButton type="button"
+            [label]="'core.settings.cancel' | translate"
+            class="p-button-warning"
+            [disabled]="isLoading$ | async"
+            (click)="close(false)"></button>
+    <button pButton type="button"
+            [label]="'core.settings.save' | translate"
+            class="p-button-primary"
+            [disabled]="isSaveDisabled() || (isLoading$ | async)"
+            (click)="close(true)"></button>
+  </ng-template>
+
+</p-dialog>

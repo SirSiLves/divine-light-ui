@@ -1,0 +1,53 @@
+.winner {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+
+  .player {
+    font-weight: bold;
+  }
+
+  .camaxtli {
+    color: var(--green);
+  }
+
+  .nanahuatzin {
+    color: var(--gold);
+  }
+
+  .king {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+
+    img {
+      width: 40%;
+    }
+  }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  button {
+    margin: 1rem;
+    width: 100%;
+  }
+}
+
+
+@media only screen and (min-width: 786px) {
+  .actions {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+
+    button {
+      margin: 1rem;
+      width: 100%;
+    }
+  }
+}

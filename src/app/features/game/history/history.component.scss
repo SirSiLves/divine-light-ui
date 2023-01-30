@@ -1,0 +1,33 @@
+@import "src/mixins";
+
+.container {
+  display: grid;
+  padding: 0 0.5rem 0 0.5rem;
+  width: 100%;
+  overflow: hidden;
+
+  .action-list {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    overflow: auto;
+
+    @include custom-scrollbar;
+
+    .placeholder {
+      height: 2.27rem;
+    }
+
+    .action {
+      p {
+        white-space: nowrap;
+      }
+
+      .current {
+        color: var(--color4);
+      }
+    }
+  }
+}
+
+

@@ -1,0 +1,86 @@
+<div class="grid">
+  <div class="col-5 mb-2">{{'core.settings.simulation.rounds' | translate}}</div>
+  <div class="col-7 mb-2">
+    <div>
+      <p-inputNumber [(ngModel)]="episodeInput" locale="de-CH"
+                     [disabled]="(isSimulationOnGoing | async) === true"></p-inputNumber>
+    </div>
+  </div>
+
+  <div class="col-5 mb-3">
+    {{'core.settings.simulation.currentRound' | translate}}
+  </div>
+  <div class="col-7 mb-3">
+    {{episode}}
+  </div>
+
+  <div class="col-12">
+    <hr>
+  </div>
+
+  <div class="col-6 type">
+    <h4 class="mt-0 mr-0 mb-0 ml-0 p-0">Camaxtli</h4>
+  </div>
+
+  <div class="col-6 type">
+    <h4 class="mt-0 mr-0 mb-0 ml-0 p-0">Nanahuatzin</h4>
+  </div>
+
+  <div class="col-5">
+    <div class="type">
+      <p-dropdown [options]="camaxtliAlgorithmOptions"
+                  [disabled]="(isSimulationOnGoing | async) === true"
+                  [(ngModel)]="camaxtliAlgorithm">
+        <ng-template let-bot pTemplate="item">
+          <div>{{bot.label | translate}}</div>
+        </ng-template>
+      </p-dropdown>
+    </div>
+
+    <div class="score">
+      <h2>{{camaxtliScore}}</h2>
+    </div>
+  </div>
+
+  <div class="col-2 vs">
+    <h3 class="mt-1 mr-0 mb-0 ml-0 p-0">VS</h3>
+  </div>
+
+  <div class="col-5">
+    <div class="type">
+      <p-dropdown [options]="nanahuatzinAlgorithmOptions"
+                  [disabled]="(isSimulationOnGoing | async) === true"
+                  [(ngModel)]="nanahuatzinAlgorithm">
+        <ng-template let-bot pTemplate="item">
+          <div>{{bot.label | translate}}</div>
+        </ng-template>
+      </p-dropdown>
+
+    </div>
+
+    <div class="score">
+      <h2>{{nanahuatzinScore}}</h2>
+    </div>
+  </div>
+
+
+  <div class="col-12 mt-4">
+    <ng-container *ngIf="isSimulationOnGoing | async; else ready">
+      <button pButton pRipple type="button"
+              [disabled]="true"
+              [label]="'core.settings.simulation.playing' | translate"
+              [style]="{'width':'100%'}"
+              class="p-button-danger"></button>
+    </ng-container>
+    <ng-template #ready>
+      <button pButton pRipple type="button"
+              [label]="'core.settings.simulation.start' | translate"
+              (click)="prepare()"
+              [style]="{'width':'100%'}"
+              class="p-button-info"></button>
+    </ng-template>
+
+  </div>
+
+
+</div>

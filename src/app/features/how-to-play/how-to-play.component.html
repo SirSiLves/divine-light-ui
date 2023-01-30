@@ -1,0 +1,184 @@
+<div class="container">
+  <div></div>
+  <p-card>
+    <div>
+      <h2>How to play</h2>
+      <p>This section will explain more about Divine-Light with his rules and how to play the game.</p>
+
+      <p-accordion [multiple]="true">
+        <p-accordionTab header="What is Divine-Light" [selected]="true">
+          <div class="text-area">
+            <div class="text">
+              <p>
+                Divine-Light is a chess-like strategy game but with rays of light.
+                Each player alternately draws one of their pawns. The figures may only be moved 1 space at a time.
+                A move also counts if the figure is rotated by 90 °, for example. At the end of each turn,
+                your own light beam must be activated. If the light beam hits a pawn on a non-mirrored side,
+                it is removed from the game. This also applies if your own beam of light hits your own figure.
+                If the light beam hits the king, the game is won or lost for the other player.
+              </p>
+            </div>
+            <div class="image">
+              <img src="./assets/game/howto/Start.png" alt="me" style="max-width: 70%; max-height: 70%;">
+            </div>
+          </div>
+        </p-accordionTab>
+        <p-accordionTab header="How to play the game">
+          <div class="text-area">
+            <div class="text">
+              <p>
+                At the beginning each player has 13 pawns in the colors gold or silver.
+                There are different types of figures. Some can either redirect or block the light.
+              </p>
+            </div>
+            <div class="image">
+              <img src="./assets/game/howto/Start.png" alt="me" style="max-width: 70%; max-height: 70%;">
+            </div>
+          </div>
+
+          <div class="text-area">
+            <div class="text">
+              <p>
+                A move consists of either moving a pawn in any direction (even diagonally)
+                onto an immediately adjacent free space or rotating it.
+              </p>
+            </div>
+            <div class="image">
+              <img src="./assets/game/howto/Angler.png" alt="me" style="max-width: 70%; max-height: 70%;">
+            </div>
+          </div>
+
+          <div class="text-area">
+            <div class="text">
+              <p>
+                The fields vertically above the opposing sun as well as certain other fields may not be entered,
+                they are marked in color accordingly.
+              </p>
+            </div>
+            <div class="image">
+              <img src="./assets/game/howto/Angler_Safe_Zone.png" alt="me" style="max-width: 70%; max-height: 70%;">
+            </div>
+          </div>
+
+          <div class="text-area">
+            <div class="text">
+              <p>
+                After moving, the light of God is activated.
+                Since the figures are aligned at right angles on the playing field,
+                the light always moves horizontally and vertically within the playing area.
+              </p>
+            </div>
+            <div class="image">
+              <img src="./assets/game/howto/Light.png" alt="me" style="max-width: 70%; max-height: 70%;">
+            </div>
+          </div>
+
+          <div class="text-area">
+            <div class="text">
+              <p>
+                Distracted by mirrors, he either hits the edge of the playing field or a non-mirrored side of a figure.
+                In the latter case, this figure is removed from the game, even if it is your own.
+              </p>
+            </div>
+            <div class="image">
+              <img src="./assets/game/howto/Angler_Destroy.png" alt="me" style="max-width: 70%; max-height: 70%;">
+            </div>
+          </div>
+
+          <div class="text-area">
+            <div class="text">
+              <p>
+                If it hits the king, the game is over.
+              </p>
+            </div>
+            <div class="image">
+              <img src="./assets/game/howto/King_Destroy_I.png" alt="me" style="max-width: 70%; max-height: 70%;">
+            </div>
+          </div>
+
+        </p-accordionTab>
+        <p-accordionTab header="Figure types">
+
+          <h3>Reflector</h3>
+          <div class="text-area">
+            <div class="text">
+              <p>
+                The two reflector figures have a diagonal mirror on both sides.
+                They reflect rays from all sides, deflect it by 90 degrees and cannot be hit.
+              </p>
+            </div>
+            <div class="image">
+              <img src="./assets/game/howto/Reflector_Light.png" alt="me" style="max-width: 70%; max-height: 70%;">
+            </div>
+          </div>
+          <div class="text-area">
+            <div class="text">
+              <p>
+                However, they can also be useful to the enemy.
+                The reflectors are the only ones allowed to swap places with certain directly adjacent figures of
+                both colors.
+              </p>
+            </div>
+            <div class="image">
+              <img src="./assets/game/howto/Reflector.png" alt="me" style="max-width: 70%; max-height: 70%;">
+            </div>
+          </div>
+
+          <h3>Angler</h3>
+          <div class="text-area">
+            <div class="text">
+              <p>
+                The Winkler is only mirrored on one side of the diagonal and can therefore be hit from
+                two of the four sides.
+              </p>
+            </div>
+            <div class="image">
+              <img src="./assets/game/howto/Angler.png" alt="me" style="max-width: 70%; max-height: 70%;">
+            </div>
+          </div>
+
+          <h3>Wall</h3>
+          <div class="text-area">
+            <div class="text">
+              <p>
+                The stone wall has no mirrored sides. However, it has a filter and can therefore block the light
+                on one side.
+              </p>
+            </div>
+            <div class="image">
+              <img src="./assets/game/howto/Wall_Blocked.png" alt="me" style="max-width: 70%; max-height: 70%;">
+            </div>
+          </div>
+
+          <h3>Sun</h3>
+          <div class="text-area">
+            <div class="text">
+              <p>
+                The light of God comes from the sun. This figure can only turn 90 ° in the direction of the board.
+              </p>
+            </div>
+            <div class="image">
+              <img src="./assets/game/howto/Sun.png" alt="me" style="max-width: 70%; max-height: 70%;">
+            </div>
+          </div>
+
+          <h3>King</h3>
+          <div class="text-area">
+            <div class="text">
+              <p>
+                The king is the most important character in the game. It has no mirrored sides.
+                If the king is hit, the player has lost.
+              </p>
+            </div>
+            <div class="image">
+              <img src="./assets/game/howto/King.png" alt="me" style="max-width: 70%; max-height: 70%;">
+            </div>
+          </div>
+
+        </p-accordionTab>
+      </p-accordion>
+
+    </div>
+  </p-card>
+  <div></div>
+</div>

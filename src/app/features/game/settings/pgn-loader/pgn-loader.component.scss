@@ -1,0 +1,25 @@
+.title {
+  display: flex;
+  align-items: center;
+
+  button {
+    max-height: 2rem;
+    max-width: 2rem;
+  }
+}
+
+.copy {
+  display: flex;
+  flex-direction: row;
+
+  input {
+    width: 95%;
+  }
+}
+
+.error {
+  display: flex;
+  justify-content: flex-start;
+  color: var(--color4);
+  font-size: 0.9rem;
+}

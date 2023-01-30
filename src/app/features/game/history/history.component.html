@@ -1,0 +1,28 @@
+<div class="container">
+  <div *ngIf="actions$ | async as actions" class="action-list">
+    <div *ngIf="actions.length === 0" class="placeholder"></div>
+    <div *ngFor="let action of actions.reverse(); let i = index; let first = first;" class="action">
+      <ng-container *ngIf="active?.id === action.id || !active && first ; else normal">
+        <button pButton
+                pRipple
+                type="button"
+                (click)="load(action)"
+                class="p-button-secondary p-button-text m-1 p-1">
+          <p class="m-0 p-0 current">{{getCount(i, actions.length) + action.pgn}}</p>
+        </button>
+      </ng-container>
+      <ng-template #normal>
+        <button pButton
+                pRipple
+                type="button"
+                (click)="load(action)"
+                class="p-button-secondary p-button-text m-1 p-1">
+          <p class="m-0 p-0">{{getCount(i, actions.length) + action.pgn}}</p>
+        </button>
+      </ng-template>
+
+    </div>
+  </div>
+</div>
+
+

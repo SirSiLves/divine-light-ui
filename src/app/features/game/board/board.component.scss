@@ -1,0 +1,34 @@
+.board {
+  display: flex;
+  justify-content: center;
+
+  .frame {
+    display: inline-flex;
+    flex-direction: column;
+    background: var(--surface-f);
+    border-radius: 0.25rem;
+
+    .y {
+      display: flex;
+      flex-wrap: nowrap;
+
+      .x {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0.1rem;
+        width: 8vw;
+        height: 8vw;
+        max-height: 10vh;
+        max-width: 10vh;
+        min-height: 2.5rem;
+        min-width: 2.5rem;
+      }
+    }
+  }
+}
+
+
+
+

@@ -5,6 +5,7 @@
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true, // https://stackoverflow.com/questions/54675549/tfjs-throws-ts2411-as-error-when-importing-using-typescript
     "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,

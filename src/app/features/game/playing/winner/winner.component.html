@@ -1,0 +1,53 @@
+<p-dialog [(visible)]="displayModal" [modal]="true"
+          [style]="{width: '50vw', 'max-width': '30rem',  'min-width': '20rem'}"
+          [baseZIndex]="10000"
+          [draggable]="true"
+          (onHide)="escape()"
+          [resizable]="false">
+  <ng-template pTemplate="header">
+    <h1>
+      {{'features.game.winner.title' | translate}}
+    </h1>
+
+  </ng-template>
+
+  <div *ngIf="winner" class="winner">
+    <h2 class="m-0">
+      <ng-container *ngIf="winner.godType === PlayerType.CAMAXTLI; else nanahuatzin">
+        <span class="player camaxtli">{{winner.name}}</span>
+        ({{winner.nick}}) {{'features.game.winner.won' | translate}}
+      </ng-container>
+      <ng-template #nanahuatzin>
+        <span class="player nanahuatzin">{{winner.name}}</span>
+        ({{winner.nick}}) {{'features.game.winner.won' | translate}}
+      </ng-template>
+    </h2>
+
+    <div class="king">
+      <ng-container *ngIf="winner.godType === PlayerType.CAMAXTLI; else p2">
+        <img src="assets/game/pieces/{{winner.godType}}_King.png"
+             [alt]="'winner-king-'+ winner.godType">
+      </ng-container>
+      <ng-template #p2>
+        <img src="assets/game/pieces/{{winner.godType}}_King.png"
+             [alt]="'winner-king-'+ winner.godType">
+      </ng-template>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="actions">
+      <button pButton pRipple
+              icon="pi pi-refresh"
+              (click)="rematch()"
+              label="{{'features.game.winner.rematch' | translate}}"
+              class="p-button-primary"></button>
+      <button pButton pRipple
+              type="button"
+              icon="pi pi-plus"
+              label="{{'features.game.winner.new' | translate}}"
+              (click)="new()"
+              class="p-button-warning"></button>
+    </div>
+  </ng-template>
+</p-dialog>
