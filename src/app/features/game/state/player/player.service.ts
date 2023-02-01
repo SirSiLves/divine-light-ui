@@ -164,8 +164,9 @@ export class PlayerService {
 
     const matrix: number[][] = MatrixService.copy(this.matrixQuery.getLatestMatrixState());
     const winner: Player | undefined = WinnerValidatorService.checkWinnerWithPlayer(matrix, this.playerQuery.getPlayer1(), this.playerQuery.getPlayer2());
+    const draw: boolean = winner === undefined ? this.drawValidatorService.checkDrawFromStates(matrix) : true;
 
-    if (!winner) {
+    if (!winner && !draw) {
       this.triggerAIMove();
     }
   }
@@ -196,19 +197,6 @@ export class PlayerService {
         }
 
         this.aiService.aiTriggered = false;
-
-        // if (winner === undefined) {
-        //   const player = this.playerQuery.isPlaying();
-        //   this.http.post(environment.api + '/ai/move', {botType: player.botType, matrix, isPlaying: player.godType})
-        //     .subscribe((nextAIMove: any) => {
-        //       // const nextAIMove: Move | undefined = winner === undefined ? this.aiService.getMoveCurrentPlayer(matrix) : undefined;
-        //
-        //       this.actionQuery.lastMove$.next(nextAIMove);
-        //       this.switchPlayer(nextAIMove);
-        //
-        //       this.aiService.aiTriggered = false;
-        //     });
-        // }
 
       }, this.aiService.timeout);
     }
