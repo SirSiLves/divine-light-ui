@@ -229,7 +229,6 @@ export class PlayerService {
     });
 
     this.resetStarter();
-    this.playerQuery.colorMapping$.next(this.playerQuery.defaultColor);
 
     this.searchAndTriggerAIMove();
   }

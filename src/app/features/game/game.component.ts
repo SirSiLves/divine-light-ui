@@ -5,6 +5,7 @@ import { GodType, Player } from './state/player/player.model';
 import { takeUntil } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { MatrixQuery } from './state/matrix/matrix.query';
 
 
 @Component({
@@ -42,11 +43,10 @@ export class GameComponent implements OnInit, OnDestroy {
     this.activatedRoute.queryParams.pipe(takeUntil(this.onDestroy$)).subscribe({
       next: params => {
         const p1: Player = this.playerQuery.getPlayer1();
-
         if (params['nanahuatzin'] === 'p1' && p1.godType === GodType.CAMAXTLI) {
-          this.gameManagerService.swapGods();
+          this.gameManagerService.swapAll();
         } else if (params['camaxtli'] === 'p1' && p1.godType === GodType.NANAHUATZIN) {
-          this.gameManagerService.swapGods();
+          this.gameManagerService.swapAll();
         }
       }
     });

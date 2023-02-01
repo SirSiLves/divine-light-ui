@@ -56,12 +56,18 @@ export class GameManagerService {
   }
 
   newGame(): void {
+    const isSwappedMatrixPosition = MatrixQuery.isSwappedMatrixPosition(this.matrixQuery.getLatestMatrixState());
+
     this.gameManagerQuery.reloading$.next(true);
     this.actionService.reset();
     this.matrixService.reset();
     this.playerService.resetWinner();
     this.playerService.resetDraw();
     this.playerService.resetGameToInitState();
+
+    if (isSwappedMatrixPosition) {
+      this.swapStates();
+    }
   }
 
   loadWithPGN(matrix: number[][], notation: string): void {
@@ -122,10 +128,14 @@ export class GameManagerService {
     });
   }
 
-  swapGods(): void {
+  swapAll(): void {
     this.playerService.swapGods();
     this.matrixService.swapStates();
     this.actionService.swapActions();
+  }
+
+  swapStates(): void {
+    this.matrixService.swapStates();
   }
 
   save(): void {

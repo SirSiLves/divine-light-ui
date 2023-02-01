@@ -175,15 +175,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       const autoSwitchSetting = this.autoSwitch !== this.unsavedAutoSwitch;
 
       if (this.createNew) {
-
-        const isSwappedMatrixPosition = MatrixQuery.isSwappedMatrixPosition(this.matrixQuery.getLatestMatrixState());
-        this.queryParams.camaxtli = isSwappedMatrixPosition ? 'p2' : 'p1';
-        this.queryParams.nanahuatzin = isSwappedMatrixPosition ? 'p1' : 'p2';
-
         this.gameManagerService.newGame();
-        if (isSwappedMatrixPosition) {
-          this.gameManagerService.swapGods()
-        }
       }
 
       if (autoSwitchSetting) this.prepareAutoSwitch();
