@@ -3,19 +3,20 @@
   justify-content: center;
 
   .frame {
-    display: inline-flex;
-    flex-direction: column;
     background: var(--surface-f);
-    border-radius: 0.25rem;
+    border-radius: 0.5rem;
+    padding: 0.1rem;
 
     .y {
       display: flex;
       flex-wrap: nowrap;
+      flex-direction: row;
 
       .x {
         position: relative;
         display: flex;
         justify-content: center;
+        row-gap: 1rem;
         align-items: center;
         margin: 0.1rem;
         width: 8vw;
