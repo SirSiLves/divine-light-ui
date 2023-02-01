@@ -106,7 +106,6 @@ export class MenuComponent implements OnInit, OnDestroy {
 
   openPage(path: string): void {
     this.router.navigateByUrl(path).then(() => {
-      console.log('ON PAGE PROMISE');
       this.lastVisited = this.router.url;
     });
   }
