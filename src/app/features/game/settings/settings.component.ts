@@ -97,7 +97,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.gameManagerQuery.settingsOpen$.pipe(takeUntil(this.onDestroy$)).subscribe(state => this.display = state);
-    this.gameManagerQuery.isLoading$.pipe(takeUntil(this.onDestroy$)).subscribe(isLoading => this.isLoading = isLoading);
+    this.gameManagerQuery.isLoading$.pipe(takeUntil(this.onDestroy$)).subscribe(isLoading => {
+      if (isLoading) this.isLoading = isLoading;
+    });
 
     this.playerQuery.player$(this.playerQuery.getPlayer1().id).pipe(takeUntil(this.onDestroy$)).subscribe(player => {
       if (player) {
