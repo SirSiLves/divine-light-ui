@@ -40,7 +40,7 @@ export class SimulationComponent implements OnInit, OnDestroy {
   episodeInput: number = 10;
   episode: number = 0;
 
-  public isSimulationOnGoing = new BehaviorSubject<boolean>(false);
+  public isSimulationOnGoing = new BehaviorSubject<boolean | undefined>(undefined);
 
 
   constructor(
@@ -54,7 +54,7 @@ export class SimulationComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.isSimulationOnGoing.pipe(takeUntil(this.onDestroy$)).subscribe(train => {
-      this.gameManagerService.setLoading(train);
+      if (train) this.gameManagerService.setLoading(train);
     });
   }
 
