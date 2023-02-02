@@ -77,5 +77,7 @@
 	"features.game.winner.won": "has won!",
 	"features.news.august2922": "Welcome to my new homepage about Divine-Light. Not everything is completed yet, so have please patient with me.",
 	"features.news.september1922": "Finally the first Version 1.0.0 of the game Divine-Light is online.",
-	"features.news.title": "News"
+	"features.news.title": "News",
+	"features.profile.guest": "Guest",
+	"features.profile.login.title": "Log In"
 }

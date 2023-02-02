@@ -5,7 +5,6 @@ import { GodType, Player } from './state/player/player.model';
 import { takeUntil } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { MatrixQuery } from './state/matrix/matrix.query';
 
 
 @Component({
@@ -33,14 +32,6 @@ export class GameComponent implements OnInit, OnDestroy {
   ) {
   }
 
-  rematch(): void {
-    this.gameManagerService.rematch();
-  }
-
-  new(): void {
-    this.gameManagerService.newGame();
-  }
-
   ngOnInit(): void {
     this.activatedRoute.queryParams.pipe(takeUntil(this.onDestroy$)).subscribe({
       next: params => {
@@ -57,6 +48,14 @@ export class GameComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.onDestroy$.next();
     this.onDestroy$.complete();
+  }
+
+  rematch(): void {
+    this.gameManagerService.rematch();
+  }
+
+  new(): void {
+    this.gameManagerService.newGame();
   }
 
 

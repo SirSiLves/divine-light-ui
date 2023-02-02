@@ -6,7 +6,8 @@ import { HowToPlayComponent } from './features/how-to-play/how-to-play.component
 import { HowItWasBuiltComponent } from './features/how-it-was-built/how-it-was-built.component';
 import { DsgvoComponent } from './features/dsgvo/dsgvo.component';
 import { ImpressumComponent } from './features/impressum/impressum.component';
-import { GameComponent } from './features/game/game.component';
+import { AuthenticationService } from './core/authentiction/authentication.service';
+import { LoginComponent } from './features/user/login/login.component';
 
 const routes: Routes = [
   {path: 'news', component: InfoComponent},
@@ -15,7 +16,16 @@ const routes: Routes = [
   {path: 'how-it-was-built', component: HowItWasBuiltComponent},
   {path: 'dsgvo', component: DsgvoComponent},
   {path: 'impressum', component: ImpressumComponent},
-  {path: 'game', component: GameComponent},
+  {
+    path: 'game', loadChildren: () => import('./features/game/game.module').then(m => m.GameModule),
+  },
+  {
+    path: 'user', loadChildren: () => import('./features/user/user.module').then(m => m.UserModule),
+    canLoad: [AuthenticationService]
+  },
+  {
+    path: 'login', component: LoginComponent
+  },
   {path: '', pathMatch: 'full', redirectTo: 'news'},
   {path: '**', redirectTo: 'news'}
 ];
@@ -24,4 +34,5 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}

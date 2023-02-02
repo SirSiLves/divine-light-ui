@@ -1,8 +1,13 @@
-.container {
+:host {
   display: grid;
   grid-template-columns: 1fr 10fr 1fr;
-  margin-top: 2rem;
-  margin-bottom: 6rem;
+  grid-template-areas: '. content .';
+
+  .content {
+    grid-area: content;
+    margin-top: 2rem;
+    margin-bottom: 6rem;
+  }
 }
 
 .text-area {
@@ -22,5 +27,9 @@
       0 1px 5px 0 rgba(0, 0, 0, 0.5);
   }
 }
+
+
+
+
 
 

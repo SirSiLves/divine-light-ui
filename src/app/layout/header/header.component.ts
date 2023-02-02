@@ -7,6 +7,7 @@ import { PrimeIcons } from 'primeng/api';
 import { Theme } from '../../core/state/theme/theme';
 import { takeUntil } from 'rxjs/operators';
 import { GameManagerQuery } from '../../core/state/game-manager/game-manager.query';
+import { AuthenticationService } from '../../core/authentiction/authentication.service';
 
 
 @Component({
@@ -17,6 +18,8 @@ import { GameManagerQuery } from '../../core/state/game-manager/game-manager.que
 export class HeaderComponent implements OnInit, OnDestroy {
 
   private onDestroy$ = new Subject<void>();
+
+  user$ = this.authenticationService.user$;
 
   isLoading$ = this.gameManagerQuery.isLoading$;
 
@@ -30,6 +33,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   checked = true;
 
   constructor(
+    private authenticationService: AuthenticationService,
     private themeService: ThemeService,
     private themeQuery: ThemeQuery,
     private gameManagerQuery: GameManagerQuery

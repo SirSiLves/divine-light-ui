@@ -13,7 +13,6 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { DropdownModule } from 'primeng/dropdown';
 import { DialogModule } from 'primeng/dialog';
 import { TranslateModule } from '@ngx-translate/core';
-import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
 import { HistoryComponent } from './history/history.component';
 import { PgnLoaderComponent } from './settings/pgn-loader/pgn-loader.component';
@@ -34,6 +33,8 @@ import { SimulationComponent } from './settings/simulation/simulation.component'
 import { DrawComponent } from './playing/draw/draw.component';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { PollComponent } from './poll/poll.component';
+import { SharedModule } from '../../shared/shared.module';
+import { GameRoutingModule } from './game-routing.module';
 
 
 @NgModule({
@@ -62,16 +63,13 @@ import { PollComponent } from './poll/poll.component';
   ],
   imports: [
     CommonModule,
-    ButtonModule,
-    RippleModule,
+    GameRoutingModule,
     InputSwitchModule,
     ReactiveFormsModule,
     CardModule,
     SelectButtonModule,
     DropdownModule,
     DialogModule,
-    TranslateModule,
-    InputTextModule,
     FormsModule,
     TooltipModule,
     CheckboxModule,
@@ -80,7 +78,10 @@ import { PollComponent } from './poll/poll.component';
     TabViewModule,
     InputNumberModule,
     FileUploadModule,
-    ClipboardModule
+    ClipboardModule,
+    SharedModule,
+    TranslateModule,
+    RippleModule
   ]
 })
 export class GameModule {

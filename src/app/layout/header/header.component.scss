@@ -2,7 +2,7 @@
   width: 100%;
   display: grid;
   grid-template-areas:
-      'menus toggle';
+      'menus profile toggle';
   grid-template-columns: 1fr auto;
   grid-template-rows: 1fr;
   background-color: var(--surface-d);

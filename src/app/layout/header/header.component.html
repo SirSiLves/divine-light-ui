@@ -4,6 +4,28 @@
     <img [routerLink]="'/news'" src="./assets/game/King.png" alt="King-Logo" style="width:40px;height:40px;">
   </div>
 
+  <div>
+    <ng-container *ngIf="(user$ | async) as user; else guest">
+      <button pButton pRipple
+              type="button"
+              [label]="user.name"
+              [iconPos]="'left'"
+              [icon]="'pi pi-user'"
+              [routerLink]="'user/profile'"
+              class="p-button-rounded p-button-text mr-2"></button>
+    </ng-container>
+    <ng-template #guest>
+      <button pButton pRipple
+              type="button"
+              [label]="'features.profile.guest' | translate"
+              [iconPos]="'left'"
+              [icon]="'pi pi-user'"
+              [routerLink]="'login'"
+              class="p-button-rounded p-button-text mr-2"></button>
+    </ng-template>
+
+  </div>
+
   <div class="toggle">
     <button pButton pRipple
             type="button"
