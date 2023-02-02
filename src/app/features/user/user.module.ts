@@ -12,6 +12,7 @@ import { DividerModule } from 'primeng/divider';
 import { LoginComponent } from './login/login.component';
 import { ProfileComponent } from './profile/profile.component';
 import { SharedModule } from '../../shared/shared.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { SharedModule } from '../../shared/shared.module';
     FormsModule,
     PasswordModule,
     DividerModule,
-    SharedModule
+    SharedModule,
+    TranslateModule
   ]
 })
 export class UserModule { }

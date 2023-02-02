@@ -11,14 +11,21 @@ export class AuthenticationService {
   private userData$ = new BehaviorSubject<any>(undefined);
   user$ = this.userData$.asObservable();
 
-  // FIXME remove
+  private readonly LOCAL_STORAGE_KEY = 'divine-light-user';
+
+  // FIXME remove after firebase
   private readonly users = users;
 
   constructor(
     private router: Router
   ) {
-    // FIXME remove
-    // this.userData$.next(users[0]);
+    const localStorageUser = localStorage.getItem(this.LOCAL_STORAGE_KEY);
+    if (localStorageUser) {
+      const exist = this.users.filter(u => u.id === localStorageUser);
+      if (exist && exist.length === 1) {
+        this.userData$.next(exist[0]);
+      }
+    }
   }
 
   canLoad(route: Route, segments: UrlSegment[]): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
@@ -34,10 +41,12 @@ export class AuthenticationService {
   }
 
   setUser(user: any): void {
+    localStorage.setItem(this.LOCAL_STORAGE_KEY, user.id);
     this.userData$.next(user);
   }
 
   logout(): void {
+    localStorage.removeItem(this.LOCAL_STORAGE_KEY);
     this.userData$.next(undefined);
   }
 

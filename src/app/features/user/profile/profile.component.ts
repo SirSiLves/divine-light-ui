@@ -4,11 +4,20 @@ import { FormBuilder, FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AuthenticationService } from '../../../core/authentiction/authentication.service';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss']
+  styleUrls: ['./profile.component.scss'],
+  animations: [
+    trigger('fade', [
+      transition(':enter', [
+        style({opacity: '0'}),
+        animate('250ms ease-out', style({opacity: '1'})),
+      ]),
+    ]),
+  ]
 })
 export class ProfileComponent implements OnInit, OnDestroy {
 
@@ -17,9 +26,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
   private user$ = this.authenticationService.user$;
 
   formGroup = this.formBuilder.group({
-    vorname: {value: null, disabled: true},
-    nachname: {value: null, disabled: true},
-    rolle: {value: null, disabled: true}
+    firstName: {value: null, disabled: true},
+    lastName: {value: null, disabled: true},
+    role: {value: null, disabled: true},
+    id: {value: null, disabled: true}
   });
 
   constructor(
@@ -32,9 +42,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.user$.pipe(takeUntil(this.onDestroy$)).subscribe(user => {
       if (user) {
-        this.vorname.patchValue(user.vorname);
-        this.nachname.patchValue(user.nachname);
-        this.rolle.patchValue(user.rolle);
+        this.firstName.patchValue(user.firstName);
+        this.lastName.patchValue(user.lastName);
+        this.role.patchValue(user.role);
+        this.id.patchValue(user.id);
       } else {
         this.formGroup.reset();
       }
@@ -51,16 +62,20 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.router.navigate(['/user/login']);
   }
 
-  get vorname(): FormControl {
-    return this.formGroup.controls.vorname as FormControl;
+  get firstName(): FormControl {
+    return this.formGroup.controls.firstName as FormControl;
   }
 
-  get nachname(): FormControl {
-    return this.formGroup.controls.nachname as FormControl;
+  get lastName(): FormControl {
+    return this.formGroup.controls.lastName as FormControl;
   }
 
-  get rolle(): FormControl {
-    return this.formGroup.controls.rolle as FormControl;
+  get role(): FormControl {
+    return this.formGroup.controls.role as FormControl;
+  }
+
+  get id(): FormControl {
+    return this.formGroup.controls.id as FormControl;
   }
 
 

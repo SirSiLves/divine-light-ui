@@ -3,12 +3,22 @@ import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AuthenticationService } from '../../../core/authentiction/authentication.service';
+import { animate, style, transition, trigger } from '@angular/animations';
+import { Router } from '@angular/router';
 
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
+  animations: [
+    trigger('fade', [
+      transition(':enter', [
+        style({opacity: '0'}),
+        animate('250ms ease-out', style({opacity: '1'})),
+      ]),
+    ]),
+  ]
 })
 export class LoginComponent implements OnInit, OnDestroy {
 
@@ -24,7 +34,8 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   constructor(
     private formBuilder: FormBuilder,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private router: Router
   ) {
   }
 
@@ -33,6 +44,8 @@ export class LoginComponent implements OnInit, OnDestroy {
       if (!user) {
         this.searched = false;
         this.formGroup.reset();
+      } else {
+        this.router.navigateByUrl('/user/profile');
       }
     });
   }

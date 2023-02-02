@@ -9,20 +9,20 @@ export interface User {
 export const users = [
   {
     id: '999',
-    vorname: 'Yves',
-    nachname: 'Ruosch',
+    firstName: 'Yves',
+    lastName: 'Ruosch',
     name: 'Yves Ruosch',
     password: 'asdfasdfasdf',
-    rolle: 'Admin',
+    role: 'Admin',
     mail: 'yves@ruosch.me'
   },
   {
     id: '100',
-    vorname: 'Test',
-    nachname: 'Tester',
+    firstName: 'Test',
+    lastName: 'Tester',
     name: 'Test Tester',
     password: 'tester',
-    rolle: 'Tester',
+    role: 'Tester',
     mail: 'test@tester.me'
   },
 ];

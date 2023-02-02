@@ -78,6 +78,20 @@
 	"features.news.august2922": "Willkommen auf meiner neuen Webseite von Divine-Light. Ein paar Dinge sind immer noch in Arbeit. Daher habt bitte etwas Geduld mit mir.",
 	"features.news.september1922": "Die erste Version 1.0.0 vom Spiel Divine-Light ist ab sofort verfügbar.",
 	"features.news.title": "Neuigkeiten",
-	"features.profile.guest": "Gast",
-	"features.profile.login.title": "Anmelden"
+	"features.user.guest": "Gast",
+	"features.user.login.confirm": "Weiter",
+	"features.user.login.game": "Zum Spiel",
+	"features.user.login.invalid": "Ungültiger Benutzername oder Passwort",
+	"features.user.login.invalidInput": "Ungültige Eingabe",
+	"features.user.login.password": "Passwort",
+	"features.user.login.success": "Ihre Anmeldung war erfolgreich.",
+	"features.user.login.title": "Anmelden",
+	"features.user.login.title2": "Willkommen",
+	"features.user.profile.firstname": "Vorname",
+	"features.user.profile.id": "ID",
+	"features.user.profile.lastname": "Nachname",
+	"features.user.profile.logoff": "Abmelden",
+	"features.user.profile.role": "Rolle",
+	"features.user.profile.title": "Angemeldet",
+	"features.user.profile.user": "Benutzerinformationen"
 }

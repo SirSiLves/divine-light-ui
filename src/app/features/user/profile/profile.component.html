@@ -1,44 +1,55 @@
-<h1>Profil</h1>
+<script src="../login/login.component.spec.ts"></script>
+<div class="content" [@fade]="''">
+  <h1>{{'features.user.profile.title' | translate}}</h1>
+  <p-card>
+    <ng-container>
+      <h2>{{'features.user.profile.user' | translate}}</h2>
 
-<p-card>
-  <ng-container>
-    <h2>Benutzerinformationen</h2>
-
-    <div class="formgrid grid mt-5 p-fluid">
-      <div class="field col-12 md:col-6 xl:col-4">
-        <label>Vorname</label>
-        <div class="p-inputgroup">
-          <span class="p-inputgroup-addon"><i class="pi pi-user"></i></span>
-          <input type="text" [formControl]="vorname" pInputText>
+      <div class="formgrid grid mt-5 p-fluid">
+        <div class="field col-12 md:col-6">
+          <label>{{'features.user.profile.firstname' | translate}}</label>
+          <div class="p-inputgroup">
+            <span class="p-inputgroup-addon"><i class="pi pi-user"></i></span>
+            <input type="text" [formControl]="firstName" pInputText>
+          </div>
         </div>
+
+        <div class="field col-12 md:col-6">
+          <label>{{'features.user.profile.lastname' | translate}}</label>
+          <div class="p-inputgroup">
+            <span class="p-inputgroup-addon"><i class="pi pi-user"></i></span>
+            <input type="text" [formControl]="lastName" pInputText>
+          </div>
+        </div>
+
+        <div class="field col-12 md:col-6">
+          <label>{{'features.user.profile.id' | translate}}</label>
+          <div class="p-inputgroup">
+            <span class="p-inputgroup-addon"><i class="pi pi-id-card"></i></span>
+            <input type="text" [formControl]="id" pInputText>
+          </div>
+        </div>
+
+        <div class="field col-12 md:col-6">
+          <label>{{'features.user.profile.role' | translate}}</label>
+          <div class="p-inputgroup">
+            <span class="p-inputgroup-addon"><i class="pi pi-users"></i></span>
+            <input type="text" [formControl]="role" pInputText>
+          </div>
+        </div>
+
       </div>
 
-      <div class="field col-12 md:col-6 xl:col-4">
-        <label>Nachname</label>
-        <div class="p-inputgroup">
-          <span class="p-inputgroup-addon"><i class="pi pi-user"></i></span>
-          <input type="text" [formControl]="nachname" pInputText>
-        </div>
+      <div class="action mt-5">
+        <button pButton
+                pRipple
+                type="button"
+                (click)="logout()"
+                label="{{'features.user.profile.logoff' | translate}}"></button>
       </div>
+    </ng-container>
 
-      <div class="field col-12 md:col-6 xl:col-4">
-        <label>Rolle</label>
-        <div class="p-inputgroup">
-          <span class="p-inputgroup-addon"><i class="pi pi-users"></i></span>
-          <input type="text" [formControl]="rolle" pInputText>
-        </div>
-      </div>
-
-    </div>
+  </p-card>
+</div>
 
 
-    <div class="action mt-5">
-      <button pButton
-              pRipple
-              type="button"
-              (click)="logout()"
-              label="Abmelden"></button>
-    </div>
-  </ng-container>
-
-</p-card>
