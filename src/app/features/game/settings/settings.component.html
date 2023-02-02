@@ -126,15 +126,17 @@
       </div>
     </p-tabPanel>
 
-    <p-tabPanel header="{{'core.settings.simulation.title' | translate}}" [disabled]="(isLoading$ | async) === true">
-      <div class="container">
-        <div class="grid">
-          <div class="col-12">
-            <app-simulation *ngIf="display"></app-simulation>
+    <ng-container *ngIf="user$ | async">
+      <p-tabPanel header="{{'core.settings.simulation.title' | translate}}" [disabled]="(isLoading$ | async) === true">
+        <div class="container">
+          <div class="grid">
+            <div class="col-12">
+              <app-simulation *ngIf="display"></app-simulation>
+            </div>
           </div>
         </div>
-      </div>
-    </p-tabPanel>
+      </p-tabPanel>
+    </ng-container>
   </p-tabView>
 
   <ng-template pTemplate="footer">

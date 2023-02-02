@@ -6,6 +6,7 @@
           [resizable]="false">
   <ng-template pTemplate="header">
     // HEADER
+    {{step}}
 
   </ng-template>
 
@@ -13,5 +14,13 @@
 
   <ng-template pTemplate="footer">
     // FOOTER
+    <button pButton type="button"
+            [label]="'features.poll.back' | translate"
+            class="p-button-warning"
+            (click)="back()"></button>
+    <button pButton type="button"
+            [label]="'features.poll.next' | translate"
+            class="p-button-primary"
+            (click)="next()"></button>
   </ng-template>
 </p-dialog>

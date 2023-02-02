@@ -10,6 +10,7 @@ import { ActionQuery } from '../state/action/action.query';
 import { ActionService } from '../state/action/action.service';
 import { MatrixQuery } from '../state/matrix/matrix.query';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { AuthenticationService } from '../../../core/authentiction/authentication.service';
 
 
 @Component({
@@ -20,6 +21,8 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 export class SettingsComponent implements OnInit, OnDestroy {
 
   private onDestroy$ = new Subject<void>();
+
+  user$ = this.authenticationService.user$;
 
   isLoading$ = this.gameManagerQuery.isLoading$;
   isReloading$ = this.gameManagerQuery.reloading$;
@@ -92,6 +95,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     private matrixQuery: MatrixQuery,
     private router: Router,
     private activatedRoute: ActivatedRoute,
+    private authenticationService: AuthenticationService
   ) {
   }
 

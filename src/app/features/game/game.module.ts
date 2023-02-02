@@ -35,6 +35,7 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
 import { PollComponent } from './poll/poll.component';
 import { SharedModule } from '../../shared/shared.module';
 import { GameRoutingModule } from './game-routing.module';
+import { InputTextModule } from 'primeng/inputtext';
 
 
 @NgModule({
@@ -81,7 +82,8 @@ import { GameRoutingModule } from './game-routing.module';
     ClipboardModule,
     SharedModule,
     TranslateModule,
-    RippleModule
+    RippleModule,
+    InputTextModule
   ]
 })
 export class GameModule {
