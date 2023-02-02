@@ -22,6 +22,8 @@ export class GameComponent implements OnInit, OnDestroy {
   PlayerType = GodType;
   openWinner: boolean = true;
   openDraw: boolean = true;
+  openPoll: boolean = true;
+
 
   constructor(
     private playerQuery: PlayerQuery,

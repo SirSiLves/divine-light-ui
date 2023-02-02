@@ -33,6 +33,7 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { SimulationComponent } from './settings/simulation/simulation.component';
 import { DrawComponent } from './playing/draw/draw.component';
 import { ClipboardModule } from '@angular/cdk/clipboard';
+import { PollComponent } from './poll/poll.component';
 
 
 @NgModule({
@@ -52,6 +53,7 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
     BotLevelComponent,
     SimulationComponent,
     DrawComponent,
+    PollComponent,
   ],
   exports: [
     ResultComponent,

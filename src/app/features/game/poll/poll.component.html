@@ -1,0 +1,17 @@
+<p-dialog [(visible)]="displayModal" [modal]="true"
+          [style]="{width: '50vw', 'max-width': '30rem',  'min-width': '20rem'}"
+          [baseZIndex]="10000"
+          [draggable]="true"
+          (onHide)="escape()"
+          [resizable]="false">
+  <ng-template pTemplate="header">
+    // HEADER
+
+  </ng-template>
+
+  // CONTENT
+
+  <ng-template pTemplate="footer">
+    // FOOTER
+  </ng-template>
+</p-dialog>

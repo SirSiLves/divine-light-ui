@@ -6,6 +6,8 @@
 
 <app-draw [(open)]="openDraw"></app-draw>
 
+<app-poll [(open)]="openPoll"></app-poll>
+
 <div *ngIf="((winner$ | async) && !openWinner) || ((draw$ | async) && !openDraw) ; else placeholder" class="settings">
   <p-button icon="pi pi-refresh"
             (click)="rematch()"
