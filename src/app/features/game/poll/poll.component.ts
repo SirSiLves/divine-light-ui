@@ -7,8 +7,9 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class PollComponent implements OnInit {
 
-  private readonly LOCAL_STORAGE_KEY = 'divine-light-poll';
+  public static readonly LOCAL_STORAGE_KEY = 'divine-light-poll';
 
+  // TODO disable settings while poll is not completed
   // TODO add queryparam for starting poll-workflow with current step
   // TODO if poll-workflow, hide setting button open info area an start with mcts
   // TODO if route mcts, set step 2 and open next dqn
@@ -26,7 +27,7 @@ export class PollComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const item = localStorage.getItem(this.LOCAL_STORAGE_KEY);
+    const item = localStorage.getItem(PollComponent.LOCAL_STORAGE_KEY);
     if (item !== 'end') {
       this.displayModal = true;
     }
@@ -43,7 +44,7 @@ export class PollComponent implements OnInit {
     else if (this.step === 'dqn') this.step = 'mcts';
     else if (this.step === 'mcts') this.step = 'start';
 
-    localStorage.setItem(this.LOCAL_STORAGE_KEY, this.step);
+    localStorage.setItem(PollComponent.LOCAL_STORAGE_KEY, this.step);
   }
 
   next(): void {
@@ -53,6 +54,6 @@ export class PollComponent implements OnInit {
     else if (this.step === 'minimax') this.step = 'questions';
     else if (this.step === 'questions') this.step = 'end';
 
-    localStorage.setItem(this.LOCAL_STORAGE_KEY, this.step);
+    localStorage.setItem(PollComponent.LOCAL_STORAGE_KEY, this.step);
   }
 }

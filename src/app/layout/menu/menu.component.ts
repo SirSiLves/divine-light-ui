@@ -4,6 +4,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { animate, query, stagger, style, transition, trigger } from '@angular/animations';
 import { ActionQuery } from '../../features/game/state/action/action.query';
+import { AuthenticationService } from '../../core/authentiction/authentication.service';
 
 
 @Component({
@@ -69,11 +70,14 @@ export class MenuComponent implements OnInit, OnDestroy {
   isAnimating = false;
   showScoreBoard = false;
 
+  user$ = this.authenticationService.user$;
+
   constructor(
     private location: Location,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private actionQuery: ActionQuery
+    private actionQuery: ActionQuery,
+    private authenticationService: AuthenticationService
   ) {
   }
 
@@ -93,6 +97,12 @@ export class MenuComponent implements OnInit, OnDestroy {
     this.actionQuery.preparedMove$.pipe(takeUntil(this.onDestroy$)).subscribe(() => {
       this.close();
     });
+
+    // TODO
+    // const item = localStorage.getItem(this.LOCAL_STORAGE_KEY);
+    // if (item !== 'end') {
+    //   this.displayModal = true;
+    // }
   }
 
   ngOnDestroy(): void {

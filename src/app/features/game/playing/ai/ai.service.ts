@@ -12,11 +12,9 @@ import { MatrixService } from '../../state/matrix/matrix.service';
 import { WinnerValidatorService } from '../../validator/winner-validator.service';
 import { Direction } from '../../light/direction.model';
 import { LightValidatorService } from '../../validator/light-validator.service';
-import { AiMctsService } from './mcts/ai-mcts.service';
 import { Rewards } from './rewards';
 import { MatrixStore } from '../../state/matrix/matrix.store';
 import { AiDqnService } from './dqn/ai-dqn.service';
-import { AiCustomService } from './custom/ai-custom.service';
 import { MatrixQuery } from '../../state/matrix/matrix.query';
 
 @Injectable({
@@ -34,9 +32,7 @@ export class AiService {
     private playerQuery: PlayerQuery,
     private aiRandomService: AiRandomService,
     private aiMinimaxingService: AiMinimaxingService,
-    private aiMctsService: AiMctsService,
-    private aiDqnService: AiDqnService,
-    private aiCustomService: AiCustomService
+    private aiDqnService: AiDqnService
   ) {
   }
 
@@ -48,12 +44,8 @@ export class AiService {
         return this.aiRandomService.getMove(matrix, player.godType);
       case 'minimax':
         return this.aiMinimaxingService.getMove(matrix, player.godType);
-      case 'mcts':
-        return this.aiMctsService.getMove(matrix, player.godType);
       case 'dqn':
         return this.aiDqnService.getMove(matrix, player.godType);
-      case 'custom':
-        return this.aiCustomService.getMove(matrix, player.godType);
       default:
         return this.aiRandomService.getMove(matrix, player.godType);
     }
@@ -65,13 +57,8 @@ export class AiService {
         return this.aiRandomService.getMove(matrix, godType);
       case BotTypes.MINIMAX:
         return this.aiMinimaxingService.getMove(matrix, godType);
-      case BotTypes.MCTS:
-        return this.aiMctsService.getMove(matrix, godType);
       case BotTypes.DQN:
         return this.aiDqnService.getMove(matrix, godType);
-      case BotTypes.CUSTOM:
-        return this.aiCustomService.getMove(matrix, godType);
-        // return this.aiMinimaxingService.getMove2(matrix, godType);
       default:
         return this.aiRandomService.getMove(matrix, godType);
     }

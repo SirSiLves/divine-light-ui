@@ -33,7 +33,7 @@ export class MatrixQuery extends QueryEntity<MatrixState> {
 
   static getCellID(x: number, y: number): number {
     const xPosition = x
-    const yPosition = y * 10;
+    const yPosition = y * MatrixStore.WIDTH_NUMBER;
 
     return xPosition + yPosition + 1;
   }

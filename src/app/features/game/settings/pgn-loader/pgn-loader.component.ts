@@ -25,13 +25,8 @@ export class PgnLoaderComponent implements OnInit, OnDestroy {
   // Empty fields with: 1-9
   // Next Player: -c, -n
   public static readonly defaultPGN10x8: string = 's23w2k0w2a12/2a27/3A36/a01A21R1r01a11A3/a11A31R0r11a01A2/6a13/7A02/2A3W0K0W03S0-c';
-  // public static readonly defaultPGN10x8: string = 's23w2k01a12/9A2/4R1r04/a01A22r11a12/1a1A31R05/6a13/10/2A3W0K0W0A02S0-n'; // if negative moves are filtered, AI does not find the right move
-  // public static readonly defaultPGN10x8: string = 's23w2k0w23/7a11A2/a04R12a11/5r04/2A31R0r11a02/1a14a13/7A02/2A3W0K0W03S0-c'; // next move is checkmate if wrong is taken
-  // public static readonly defaultPGN10x8: string = 's23w2k0w2a12/2a27/2A35A31/2A24a12/4r0R11a01A2/3R01A24/a03r1K01A02/9S0-c'; // only one move saves the king
-  // public static readonly defaultPGN5x4: string = 's21k0a1A2/2r02/2R02/a0A3K01S0-c'; // two reflector in center
-  public static readonly defaultPGN5x4: string = 's21k0r01/4A2/a04/1R0K01S0-c'; // smallest possible state
-  public static readonly defaultPGN6x5: string = 's21k0w0a1A2/1r14/2A2a02/4R11/a0A3W0K01S0-c'; // 6x5
-  public static readonly defaultPGN7x6: string = 's21w0k0r01A2/1r15/2A31a02/2A21a12/5R11/a01R0K0W01S0-c'; // 7x6
+  public static readonly defaultPGN7x6: string = 's21w0k0r02/1r15/2A31a01A2/a01A21a12/5R11/2R0K0W01S0-c'; // 7x6
+  public static readonly defaultPGN5x4: string = 's21k0r0R1/2a12/2A32/r1R0K01S0-c'; // 1 anglers and 2 reflectors
 
   private onDestroy$ = new Subject<void>();
 

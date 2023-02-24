@@ -20,10 +20,11 @@ export class MatrixService {
   }
 
   static copy(matrix: number[][]): number[][] {
-    const len = matrix.length, copiedMatrix = new Array(len);
-    for (let i = 0; i < len; ++i) copiedMatrix[i] = matrix[i].slice(0);
-
-    return copiedMatrix;
+    return structuredClone(matrix);
+    // const len = matrix.length, copiedMatrix = new Array(len);
+    // for (let i = 0; i < len; ++i) copiedMatrix[i] = matrix[i].slice(0);
+    //
+    // return copiedMatrix;
   }
 
   updateMoveOnMatrix(move: Move, playing: GodType): void {
