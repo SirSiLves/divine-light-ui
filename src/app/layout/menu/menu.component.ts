@@ -71,7 +71,6 @@ export class MenuComponent implements OnInit, OnDestroy {
   back = false;
   isAnimating = false;
   showScoreBoard = false;
-  showSettings = false;
 
   user$ = this.authenticationService.user$;
 
@@ -106,11 +105,6 @@ export class MenuComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       const item = localStorage.getItem(PollComponent.LOCAL_STORAGE_KEY);
       if (item !== 'end') this.gameManagerQuery.pollOpen$.next(true);
-      else this.showSettings = true;
-
-      this.gameManagerQuery.pollOpen$.pipe(takeUntil(this.onDestroy$)).subscribe({
-        next: state => this.showSettings = !state
-      });
     }, 1000);
   }
 

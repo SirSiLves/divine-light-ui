@@ -1,9 +1,21 @@
-<button pButton pRipple
-        type="button"
-        [icon]="'pi pi-cog'"
-        [disabled]="(isLoading$ | async) || (isReloading$ | async)"
-        class="p-button-rounded p-button-text"
-        (click)="openSettings()"></button>
+
+
+<ng-container *ngIf="isPoll$ | async; else setting">
+  <button pButton pRipple
+          type="button"
+          [icon]="'pi pi-info-circle'"
+          class="p-button-rounded p-button-text"
+          (click)="openPoll()"></button>
+</ng-container>
+<ng-template #setting>
+  <button pButton pRipple
+          type="button"
+          [icon]="'pi pi-cog'"
+          [disabled]="(isLoading$ | async) || (isReloading$ | async)"
+          class="p-button-rounded p-button-text"
+          (click)="openSettings()"></button>
+</ng-template>
+
 
 <p-dialog header="{{'core.settings.title' | translate}}"
           [(visible)]="display"

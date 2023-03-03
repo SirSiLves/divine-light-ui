@@ -29,6 +29,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   isLoading$ = this.gameManagerQuery.isLoading$;
   isReloading$ = this.gameManagerQuery.reloading$;
+  isPoll$ = this.gameManagerQuery.pollOpen$;
   isLoading = false;
 
   display: boolean = false;
@@ -142,6 +143,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
     });
 
     this.initQueryListener();
+
+    // this.gameManagerQuery.pollOpen$.pipe(takeUntil(this.onDestroy$)).subscribe({
+    //   next: state => this.showSettings = !state
+    // });
   }
 
   ngOnDestroy(): void {
@@ -413,5 +418,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
         throw Error("Impossible Index List is not completed");
       }
     });
+  }
+
+  openPoll(): void {
+    this.gameManagerQuery.pollOpen$.next(true);
+
   }
 }
