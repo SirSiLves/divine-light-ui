@@ -11,6 +11,9 @@ import { ActionService } from '../state/action/action.service';
 import { MatrixQuery } from '../state/matrix/matrix.query';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { AuthenticationService } from '../../../core/authentiction/authentication.service';
+import { MatrixStore } from '../state/matrix/matrix.store';
+import { environment } from '../../../../environments/environment';
+import { AiService } from '../playing/ai/ai.service';
 
 
 @Component({
@@ -100,6 +103,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.validateImpossibleIndexList();
+
     this.gameManagerQuery.settingsOpen$.pipe(takeUntil(this.onDestroy$)).subscribe(state => this.display = state);
     this.gameManagerQuery.isLoading$.pipe(takeUntil(this.onDestroy$)).subscribe(isLoading => {
       if (isLoading) this.isLoading = isLoading;
@@ -396,5 +401,17 @@ export class SettingsComponent implements OnInit, OnDestroy {
         this.playerService.searchAndTriggerAIMove();
       }
     }, 100);
+  }
+
+  private validateImpossibleIndexList(): void {
+    const indexListToSkip = AiService.getIndexListToSkip(MatrixStore.WIDTH_NUMBER, MatrixStore.HEIGHT_NUMBER);
+    if (environment.log) console.log('INDEX LIST to SKIP', indexListToSkip);
+
+    indexListToSkip.forEach(index => {
+      if (!MatrixStore.IMPOSSIBLE_INDEXES.includes(index)) {
+        console.error('Missing number in the skip index list: ', index)
+        throw Error("Impossible Index List is not completed");
+      }
+    });
   }
 }
