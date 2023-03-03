@@ -5,6 +5,8 @@ import { Subject, takeUntil } from 'rxjs';
 import { animate, query, stagger, style, transition, trigger } from '@angular/animations';
 import { ActionQuery } from '../../features/game/state/action/action.query';
 import { AuthenticationService } from '../../core/authentiction/authentication.service';
+import { PollComponent } from '../../features/game/poll/poll.component';
+import { GameManagerQuery } from '../../core/state/game-manager/game-manager.query';
 
 
 @Component({
@@ -77,7 +79,8 @@ export class MenuComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private actionQuery: ActionQuery,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private gameManagerQuery: GameManagerQuery
   ) {
   }
 
@@ -98,11 +101,11 @@ export class MenuComponent implements OnInit, OnDestroy {
       this.close();
     });
 
-    // TODO
-    // const item = localStorage.getItem(this.LOCAL_STORAGE_KEY);
-    // if (item !== 'end') {
-    //   this.displayModal = true;
-    // }
+    // open poll
+    setTimeout(() => {
+      const item = localStorage.getItem(PollComponent.LOCAL_STORAGE_KEY);
+      if (item !== 'end') this.gameManagerQuery.pollOpen$.next(true);
+    }, 1000)
   }
 
   ngOnDestroy(): void {
