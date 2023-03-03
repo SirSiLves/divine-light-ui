@@ -32,7 +32,7 @@ export class AiService {
     private playerQuery: PlayerQuery,
     private aiRandomService: AiRandomService,
     private aiMinimaxingService: AiMinimaxingService,
-    private aiDqnService: AiDqnService
+    private aiDqnService: AiDqnService,
   ) {
   }
 
@@ -163,7 +163,7 @@ export class AiService {
     matrix[position.y][position.x] = toPiece;
   }
 
-  private static executeLight(matrix: number[][], isPlaying: GodType): { lightCount: number, destroy: number | undefined, block: true | undefined } {
+  public static executeLight(matrix: number[][], isPlaying: GodType): { lightCount: number, destroy: number | undefined, block: true | undefined } {
     let startPosition: Field = this.getStartPosition(isPlaying, matrix);
 
     let direction: Direction = LightValidatorService.getSUNDirection(matrix[startPosition.y][startPosition.x]);
@@ -195,7 +195,7 @@ export class AiService {
   }
 
   // formula: cell id * actions count + chosen action => gives position of the action index
-  // action space: 12 for each piece
+  // action space: 11 for each piece
   // SUN on cell 0, walk up left -> 0
   // SUN on cell 0, walk up -> 1
   // SUN on cell 0, walk up-right -> 2
@@ -204,27 +204,51 @@ export class AiService {
   // SUN on cell 0, walk down -> 5
   // SUN on cell 0, walk down-left -> 6
   // SUN on cell 0, walk left -> 7
-  // SUN on cell 0, rotate right -> 8
-  // SUN on cell 0, rotate down -> 9
-  // SUN on cell 0, rotate left -> 10
-  // SUN on cell 0, rotate up -> 11
-  // example 1 with formula: KING on cell 1 goes right -> 2 * 12 + 3 = 27
-  // example 2 with formula: ANGLER on cell 15 rotates left -> 15 * 12 + 10 = 190
+  // SUN on cell 0, rotate up -> 8
+  // SUN on cell 0, rotate right -> 9
+  // SUN on cell 0, rotate down -> 10
+  // SUN on cell 0, rotate left -> 11
+  // example 1 with formula: KING on cell 1 goes right -> 1 * 11 + 3 = 14
+  // example 2 with formula: ANGLER on cell 15 rotates left -> 15 * 11 + 10 = 175
+  // example 3 with formula: SUN on cell 41 rotates right -> 41 * 11 + 11 = 462
   public static getPossibleMoveIndexList(state: number[][], isPlaying: GodType): MoveIndex[] {
     const possiblesMoves: Move[] = this.getPossiblesMoves(state, isPlaying);
     const possibleMoveIndexList: MoveIndex[] = [];
 
     for (let i = 0; i < possiblesMoves.length; i++) {
       const possibleMove: Move = possiblesMoves[i];
-      const cellID: number = this.getCellID(possibleMove.position);
       const actionIndex: number = this.getActionIndex(possibleMove);
-      const indexValue: number = cellID * MatrixStore.MAX_ACTIONS + actionIndex;
+      const indexValue: number = this.getIndexValue(possibleMove.position, actionIndex);
 
       possibleMoveIndexList.push({
         index: indexValue,
         move: possibleMove
       });
     }
+
+    // last possible action
+    // const move: Rotation = {
+    //   type: MoveType.ROTATE,
+    //   piece: 1,
+    //   position: {x: 6, y: 5},
+    //   toPiece: 31
+    // };
+
+    // smallest possible action (piece can't go upwards)
+    // const move: Walk = {
+    //   type: MoveType.WALK,
+    //   piece: 121,
+    //   position: {x: 0, y: 0},
+    //   to: {x: 1, y: 0}
+    // };
+
+    // console.log('LAST');
+    // console.log('CELL ID', this.getCellID(move.position));
+    // console.log('ACTION INDEX', this.getActionIndex(move));
+    // console.log('INDEX VALUE', this.getIndexValue(move.position, this.getActionIndex(move)));
+
+    // const indexValueTEST = this.getIndexValue(move.position, this.getActionIndex(move));
+    // console.log(indexValueTEST);
 
     return possibleMoveIndexList;
   }
@@ -297,12 +321,6 @@ export class AiService {
     throw Error("Error on finding action index for move");
   }
 
-  private static getMoveToIndex(move: Move): number {
-    const cellID: number = this.getCellID(move.position);
-    const actionIndex: number = this.getActionIndex(move);
-    return cellID * MatrixStore.MAX_ACTIONS + actionIndex;
-  }
-
   public static getMoveFromIndex(state: number[][], isPlaying: GodType, move: number): Move {
     const possiblesMoves = this.getPossiblesMoves(state, isPlaying);
 
@@ -338,9 +356,7 @@ export class AiService {
     return adjustReward;
   }
 
-  public static adjustRewardWithKingPosition(
-    isPlaying: GodType, normalizedMatrix: number[][], adjustReward: number
-  ): number {
+  public static adjustRewardWithKingPosition(isPlaying: GodType, normalizedMatrix: number[][], adjustReward: number): number {
     // locate king position
     const kingPosition: Field = this.getKingPosition(normalizedMatrix, isPlaying);
 
@@ -491,11 +507,9 @@ export class AiService {
 
     console.error("King should exist on board", matrix, isPlaying);
     throw Error("King should exists");
-  }
-
-  // shoot light from is playing if light is hitting a piece
+  }  // shoot light from is playing if light is hitting a piece
   // or a piece is around x square away from the light add it to possible peaces
-  static getAffectedMoves(matrix: number[][], isPlaying: GodType, lightRadius: number): Move[] {
+  public static getAffectedMoves(matrix: number[][], isPlaying: GodType, lightRadius: number): Move[] {
     // cell id and field
     const pieces: Map<string, Field> = new Map();
 
@@ -525,9 +539,7 @@ export class AiService {
     return moves;
   }
 
-  private static collectPiecesAndDistance(
-    sun: GodType, matrix: number[][], pieces: Map<string, Field>, lightRadius: number
-  ): number {
+  private static collectPiecesAndDistance(sun: GodType, matrix: number[][], pieces: Map<string, Field>, lightRadius: number): number {
     let startPosition: Field = this.getStartPosition(sun, matrix);
     this.checkPiecesAround(pieces, matrix, startPosition, lightRadius);
     let direction: Direction = LightValidatorService.getSUNDirection(matrix[startPosition.y][startPosition.x]);
@@ -593,4 +605,116 @@ export class AiService {
     return false;
   }
 
+  public static getIndexListToSkip(W: number, H: number): number[] {
+    // some actions are not possible, filter those, ex. from rank 0 go upwards / from last rank go down
+    const skipIndexList = [];
+
+    for (let y = 0; y < H; y++) {
+      for (let x = 0; x < W; x++) {
+
+        // corner top left
+        if (y === 0 && x === 0) {
+          skipIndexList.push(
+            this.getRAWIndexValue({x, y}, ActionSpace.W_UP_LEFT),
+            this.getRAWIndexValue({x, y}, ActionSpace.W_UP_MID),
+            this.getRAWIndexValue({x, y}, ActionSpace.W_UP_RIGHT),
+            this.getRAWIndexValue({x, y}, ActionSpace.W_MID_LEFT),
+            this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_LEFT),
+            this.getRAWIndexValue({x, y}, ActionSpace.R_UP),
+            this.getRAWIndexValue({x, y}, ActionSpace.R_LEFT)
+          )
+        }
+        // corner top right
+        else if (y === 0 && x === W - 1) {
+          skipIndexList.push(
+            this.getIndexValue({x, y}, ActionSpace.W_UP_LEFT),
+            this.getIndexValue({x, y}, ActionSpace.W_UP_MID),
+            this.getIndexValue({x, y}, ActionSpace.W_UP_RIGHT),
+            this.getIndexValue({x, y}, ActionSpace.W_MID_RIGHT),
+            this.getIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT),
+          )
+        }
+        // corner bottom left
+        else if (y === H - 1 && x === 0) {
+          skipIndexList.push(
+            this.getRAWIndexValue({x, y}, ActionSpace.W_UP_LEFT),
+            this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT),
+            this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_MID),
+            this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_LEFT),
+            this.getRAWIndexValue({x, y}, ActionSpace.W_MID_LEFT),
+          )
+        }
+        // corner bottom right
+        else if (y === H - 1 && x === W - 1) {
+          skipIndexList.push(
+            this.getRAWIndexValue({x, y}, ActionSpace.W_UP_RIGHT),
+            this.getRAWIndexValue({x, y}, ActionSpace.W_MID_RIGHT),
+            this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT),
+            this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_MID),
+            this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_LEFT),
+            this.getRAWIndexValue({x, y}, ActionSpace.R_RIGHT),
+            this.getRAWIndexValue({x, y}, ActionSpace.R_DOWN)
+          )
+        }
+        // top rank without corners
+        else if (y === 0 && x < W - 1) {
+          skipIndexList.push(
+            this.getRAWIndexValue({x, y}, ActionSpace.W_UP_LEFT),
+            this.getRAWIndexValue({x, y}, ActionSpace.W_UP_MID),
+            this.getRAWIndexValue({x, y}, ActionSpace.W_UP_RIGHT),
+          )
+        }
+        // bottom rank without corners
+        else if (y === H - 1 && x > 0 && x < W - 1) {
+          skipIndexList.push(
+            this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT),
+            this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_MID),
+            this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_LEFT),
+          )
+        }
+        // left rank without corners
+        else if (y > 0 && x === 0 && y < H - 1) {
+          skipIndexList.push(
+            this.getRAWIndexValue({x, y}, ActionSpace.W_UP_LEFT),
+            this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_LEFT),
+            this.getRAWIndexValue({x, y}, ActionSpace.W_MID_LEFT),
+          )
+        }
+        // right rank without corners
+        else if (y > 0 && x === W - 1 && y < H - 1) {
+          skipIndexList.push(
+            this.getRAWIndexValue({x, y}, ActionSpace.W_UP_RIGHT),
+            this.getRAWIndexValue({x, y}, ActionSpace.W_MID_RIGHT),
+            this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT),
+          )
+        }
+      }
+    }
+
+    return skipIndexList;
+  }
+
+  private static getIndexValue(field: Field, actionSpace: ActionSpace) {
+    const cellID = this.getCellID({x: field.x, y: field.y});
+    let indexValue = cellID * MatrixStore.MAX_ACTION_INDEX + actionSpace;
+
+    let subtract = 0;
+    for (let i = 0; i < MatrixStore.IMPOSSIBLE_INDEX_LENGTH; i++) {
+      const entry = MatrixStore.IMPOSSIBLE_INDEXES[i];
+      if (entry < indexValue) subtract += 1;
+      else break;
+    }
+
+    return indexValue - subtract;
+  }
+
+  private static getRAWIndexValue(field: Field, actionSpace: ActionSpace) {
+    const cellID = this.getCellID({x: field.x, y: field.y});
+    return cellID * MatrixStore.MAX_ACTION_INDEX + actionSpace;
+  }
+
+  public static getMoveToIndex(move: Move): number {
+    const actionIndex: number = this.getActionIndex(move);
+    return this.getIndexValue(move.position, actionIndex);
+  }
 }

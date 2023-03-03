@@ -21,8 +21,13 @@ export class MatrixStore extends EntityStore<MatrixState> {
   public static readonly BOARD_SIZE: '10x8' | '7x6' = '7x6';
   public static readonly NORMAL = false;
 
-  public static readonly MAX_ACTIONS = 12;
-  public static readonly TOTAL_POSSIBLE_ACTIONS = 7 * 6 * 12 + 12; // board size * max actions + max actions (516)
+  public static readonly MAX_ACTION_INDEX = 11;
+  public static readonly IMPOSSIBLE_INDEXES = [
+    0, 1, 2, 7, 6, 8, 11, 11, 12, 13, 22, 23, 24, 33, 34, 35, 44, 45, 46, 55, 56, 57, 39, 40, 41, 42, 43, 77, 83, 84, 145, 146, 147, 154, 160, 161, 222, 223, 224, 231, 237, 238, 299, 300, 301, 308, 314, 315, 376, 377, 378, 385, 389, 390, 391, 392, 400, 401, 402, 411, 412, 413, 422, 423, 424, 433, 434, 435, 444, 445, 446, 453, 454, 455, 456, 457, 460, 461
+  ] // 78 entries
+  public static readonly IMPOSSIBLE_INDEX_LENGTH = 78;
+  // board size * max action index - impossible index length + 1 => 385, last possible action index is 384, array[384] -> 385 actions
+  public static readonly TOTAL_POSSIBLE_ACTIONS = 7 * 6 * 11 - 78 + 1;
 
 
   constructor() {
