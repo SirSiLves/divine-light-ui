@@ -9,18 +9,29 @@
     {{step}}
 
   </ng-template>
-
   // CONTENT
 
   <ng-template pTemplate="footer">
     // FOOTER
-    <button pButton type="button"
-            [label]="'features.poll.back' | translate"
-            class="p-button-warning"
-            (click)="back()"></button>
-    <button pButton type="button"
-            [label]="'features.poll.next' | translate"
-            class="p-button-primary"
-            (click)="next()"></button>
+
+    <div class="footer">
+      <button pButton type="button"
+              [label]="'features.poll.back' | translate"
+              class="p-button-warning"
+              (click)="back()"></button>
+
+      <ng-container *ngIf="step !== 'end'; else end">
+        <button pButton type="button"
+                [label]="'features.poll.next' | translate"
+                class="p-button-primary"
+                (click)="next()"></button>
+      </ng-container>
+      <ng-template #end>
+        <button pButton type="button"
+                [label]="'features.poll.close' | translate"
+                class="p-button-primary"
+                (click)="close()"></button>
+      </ng-template>
+    </div>
   </ng-template>
 </p-dialog>

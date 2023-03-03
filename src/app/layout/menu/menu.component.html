@@ -34,7 +34,7 @@
     </div>
   </div>
 
-  <div class="settings" *ngIf="lastVisited.includes(MENU.GAME)">
+  <div class="settings" *ngIf="lastVisited.includes(MENU.GAME) && showSettings">
     <app-settings></app-settings>
   </div>
 </div>

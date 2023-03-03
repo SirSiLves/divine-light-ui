@@ -64,8 +64,13 @@ export class PollComponent implements OnInit, OnDestroy {
   next(): void {
     if (this.step === 'start') this.step = 'minimax';
     else if (this.step === 'minimax') this.step = 'dqn';
+    else if (this.step === 'dqn') this.step = 'questions';
     else if (this.step === 'questions') this.step = 'end';
 
     localStorage.setItem(PollComponent.LOCAL_STORAGE_KEY, this.step);
+  }
+
+  close(): void {
+    this.gameManagerQuery.pollOpen$.next(false);
   }
 }
