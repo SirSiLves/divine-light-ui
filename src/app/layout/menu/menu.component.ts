@@ -104,7 +104,7 @@ export class MenuComponent implements OnInit, OnDestroy {
     // open poll
     setTimeout(() => {
       const item = localStorage.getItem(PollComponent.LOCAL_STORAGE_KEY);
-      if (item !== 'end') this.gameManagerQuery.pollOpen$.next(true);
+      if (item !== 'end') this.gameManagerQuery.polling$.next(true);
     }, 1000);
   }
 

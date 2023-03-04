@@ -13,7 +13,7 @@ export class GameManagerQuery extends Query<GameManagerState> {
 
   settingsOpen$ = new BehaviorSubject<boolean>(false);
   reloading$ = new BehaviorSubject<boolean>(true);
-  pollOpen$ = new BehaviorSubject<boolean>(false);
+  polling$ = new BehaviorSubject<boolean>(false);
 
   constructor(protected override store: GameManagerStore) {
     super(store);

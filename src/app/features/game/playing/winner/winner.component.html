@@ -47,6 +47,7 @@
               icon="pi pi-plus"
               label="{{'features.game.winner.new' | translate}}"
               (click)="new()"
+              [disabled]="poll$ | async"
               class="p-button-warning"></button>
     </div>
   </ng-template>

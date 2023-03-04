@@ -222,11 +222,15 @@ export class PlayerService {
   }
 
   private setWinner(winner: Player): void {
-    this.playerQuery.winner$.next(winner);
+
     this.playerStore.update(winner.id, {
       ...winner,
       wins: winner.wins + 1
     });
+
+    if (this.gameManagerQuery.polling$.value
+      && this.playerQuery.getPlayer1().wins + this.playerQuery.getPlayer2().wins >= 3) return;
+    else this.playerQuery.winner$.next(winner);
   }
 
   setWinnerAfterPGN(matrix: number[][]): void {

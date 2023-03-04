@@ -5,33 +5,152 @@
           (onHide)="escape()"
           [resizable]="false">
   <ng-template pTemplate="header">
-    // HEADER
-    {{step}}
+    <ng-container [ngSwitch]="step">
+      <h3>
+        <ng-container *ngSwitchCase="'start'">
+          {{'features.poll.start.title' | translate}}
+        </ng-container>
 
+        <ng-container *ngSwitchCase="'minimax'">
+          {{'features.poll.minimax.title' | translate}}
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'dqn'">
+          {{'features.poll.dqn.title' | translate}}
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'questions'">
+          {{'features.poll.questions.title' | translate}}
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'end'">
+          {{'features.poll.end.title' | translate}}
+        </ng-container>
+
+        <ng-container *ngSwitchDefault>
+          // HEADER {{step}}
+        </ng-container>
+      </h3>
+    </ng-container>
   </ng-template>
-  // CONTENT
+
+  <!-- CONTENT -->
+  <ng-container [ngSwitch]="step">
+    <ng-container *ngSwitchCase="'start'">
+      {{'features.poll.start.description' | translate}} <br>
+      {{'features.poll.start.howto' | translate}}
+      <a href="/how-to-play">{{'features.poll.start.howtolink' | translate}}</a>. <br>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="'minimax'">
+      {{'features.poll.minimax.description' | translate}}
+    </ng-container>
+
+    <ng-container *ngSwitchCase="'dqn'">
+      {{'features.poll.dqn.description' | translate}}
+    </ng-container>
+
+    <ng-container *ngSwitchCase="'questions'">
+      {{'features.poll.questions.description' | translate}}
+    </ng-container>
+
+    <ng-container *ngSwitchCase="'end'">
+      {{'features.poll.end.description' | translate}}
+    </ng-container>
+
+    <ng-container *ngSwitchDefault>
+      // CONTENT {{step}}
+    </ng-container>
+  </ng-container>
 
   <ng-template pTemplate="footer">
-    // FOOTER
 
     <div class="footer">
-      <button pButton type="button"
-              [label]="'features.poll.back' | translate"
-              class="p-button-warning"
-              (click)="back()"></button>
+      <ng-container [ngSwitch]="step">
+        <ng-container *ngSwitchCase="'start'">
+          <div></div>
+          <button pButton type="button"
+                  [label]="'features.poll.next' | translate"
+                  class="p-button-primary"
+                  (click)="next()"></button>
+        </ng-container>
 
-      <ng-container *ngIf="step !== 'end'; else end">
-        <button pButton type="button"
-                [label]="'features.poll.next' | translate"
-                class="p-button-primary"
-                (click)="next()"></button>
+        <ng-container *ngSwitchCase="'minimax'">
+          <button pButton type="button"
+                  [pTooltip]="'features.poll.back' | translate"
+                  class="p-button-warning p-button-text"
+                  [icon]="'pi pi-angle-left'"
+                  [disabled]="step === 'start'"
+                  (click)="back()"></button>
+          <button pButton type="button"
+                  [label]="'features.poll.play' | translate"
+                  class="p-button-primary"
+                  (click)="play('minimax')"></button>
+          <button pButton type="button"
+                  [pTooltip]="'features.poll.next' | translate"
+                  class="p-button-text"
+                  [icon]="'pi pi-angle-right'"
+                  (click)="next()"></button>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'dqn'">
+          <button pButton type="button"
+                  [pTooltip]="'features.poll.back' | translate"
+                  class="p-button-warning p-button-text"
+                  [icon]="'pi pi-angle-left'"
+                  [disabled]="step === 'start'"
+                  (click)="back()"></button>
+          <button pButton type="button"
+                  [label]="'features.poll.play' | translate"
+                  class="p-button-primary"
+                  (click)="play('dqn')"></button>
+          <button pButton type="button"
+                  [pTooltip]="'features.poll.next' | translate"
+                  class="p-button-text"
+                  [icon]="'pi pi-angle-right'"
+                  (click)="next()"></button>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'questions'">
+          <button pButton type="button"
+                  [pTooltip]="'features.poll.back' | translate"
+                  class="p-button-warning p-button-text"
+                  [icon]="'pi pi-angle-left'"
+                  [disabled]="step === 'start'"
+                  (click)="back()"></button>
+          <button pButton type="button"
+                  [label]="'features.poll.send' | translate"
+                  class="p-button-primary"
+                  (click)="send()"></button>
+          <button pButton type="button"
+                  [pTooltip]="'features.poll.next' | translate"
+                  class="p-button-text"
+                  [icon]="'pi pi-angle-right'"
+                  (click)="next()"></button>
+        </ng-container>
+
+        <ng-container *ngSwitchDefault>
+          <button pButton type="button"
+                  [pTooltip]="'features.poll.back' | translate"
+                  class="p-button-warning p-button-text"
+                  [icon]="'pi pi-angle-left'"
+                  [disabled]="step === 'start'"
+                  (click)="back()"></button>
+          <ng-container *ngIf="step !== 'end'; else end">
+            <button pButton type="button"
+                    [pTooltip]="'features.poll.next' | translate"
+                    class="p-button-text"
+                    [icon]="'pi pi-angle-right'"
+                    (click)="next()"></button>
+          </ng-container>
+          <ng-template #end>
+            <button pButton type="button"
+                    [label]="'features.poll.close' | translate"
+                    class="p-button-primary"
+                    (click)="close()"></button>
+          </ng-template>
+        </ng-container>
       </ng-container>
-      <ng-template #end>
-        <button pButton type="button"
-                [label]="'features.poll.close' | translate"
-                class="p-button-primary"
-                (click)="close()"></button>
-      </ng-template>
     </div>
   </ng-template>
 </p-dialog>

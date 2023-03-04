@@ -22,6 +22,8 @@ export class WinnerComponent implements OnInit, OnDestroy {
   PlayerType = GodType;
   displayModal: boolean = false;
 
+  poll$ = this.gameManagerQuery.polling$;
+
 
   constructor(
     private playerQuery: PlayerQuery,

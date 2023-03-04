@@ -29,7 +29,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   isLoading$ = this.gameManagerQuery.isLoading$;
   isReloading$ = this.gameManagerQuery.reloading$;
-  isPoll$ = this.gameManagerQuery.pollOpen$;
+  isPoll$ = this.gameManagerQuery.polling$;
   isLoading = false;
 
   display: boolean = false;
@@ -421,7 +421,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   openPoll(): void {
-    this.gameManagerQuery.pollOpen$.next(true);
+    this.gameManagerQuery.polling$.next(true);
 
   }
 }

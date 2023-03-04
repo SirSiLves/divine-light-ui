@@ -5,6 +5,7 @@ import { GodType, Player } from './state/player/player.model';
 import { takeUntil } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { GameManagerQuery } from '../../core/state/game-manager/game-manager.query';
 
 
 @Component({
@@ -23,12 +24,15 @@ export class GameComponent implements OnInit, OnDestroy {
   openDraw: boolean = true;
   openPoll: boolean = true;
 
+  poll$ = this.gameManagerQuery.polling$;
+
 
   constructor(
     private playerQuery: PlayerQuery,
     private gameManagerService: GameManagerService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private gameManagerQuery: GameManagerQuery
   ) {
   }
 
