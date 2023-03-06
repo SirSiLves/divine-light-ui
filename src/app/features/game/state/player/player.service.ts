@@ -228,9 +228,7 @@ export class PlayerService {
       wins: winner.wins + 1
     });
 
-    if (this.gameManagerQuery.polling$.value
-      && this.playerQuery.getPlayer1().wins + this.playerQuery.getPlayer2().wins >= 3) return;
-    else this.playerQuery.winner$.next(winner);
+    this.playerQuery.winner$.next(winner);
   }
 
   setWinnerAfterPGN(matrix: number[][]): void {

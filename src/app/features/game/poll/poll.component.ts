@@ -69,7 +69,7 @@ export class PollComponent implements OnInit, OnDestroy {
     this.wins$.pipe(takeUntil(this.onDestroy$)).subscribe({
       next: wins => {
         if (wins >= 3) {
-          this.next();
+          if (this.step !== 'questions') this.next();
           this.displayModal = true;
         }
       }

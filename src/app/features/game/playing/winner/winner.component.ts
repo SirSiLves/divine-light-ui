@@ -34,7 +34,8 @@ export class WinnerComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.playerQuery.winner$.pipe(takeUntil(this.onDestroy$)).subscribe(winner => {
-      if (winner) {
+      if (winner && !(this.gameManagerQuery.polling$.value &&
+        this.playerQuery.getPlayer1().wins + this.playerQuery.getPlayer2().wins >= 3)) {
         this.winner = winner;
         this.displayModal = true;
 
