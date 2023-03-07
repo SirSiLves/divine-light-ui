@@ -1,5 +1,7 @@
 {
+	"core.error.firebase": "Bitte prüfe deine Internetverbindung",
 	"core.error.pgn": "PGN ist nicht gültig",
+	"core.error.title": "Fehler",
 	"core.footer.copyright": "Alle Rechte vorbehalten",
 	"core.menu.about": "Über mich",
 	"core.menu.dsgvo": "Datenschutzerklärung",

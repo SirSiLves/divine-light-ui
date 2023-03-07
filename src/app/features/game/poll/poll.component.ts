@@ -5,7 +5,9 @@ import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { PlayerQuery } from '../state/player/player.query';
 import { GameManagerService } from '../../../core/state/game-manager/game-manager.service';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+
 
 @Component({
   selector: 'app-poll',
@@ -15,12 +17,6 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 export class PollComponent implements OnInit, OnDestroy {
 
   public static readonly LOCAL_STORAGE_KEY = 'divine-light-poll';
-
-  // TODO disable settings while poll is not completed
-  // TODO add queryparam for starting poll-workflow with current step
-  // TODO if poll-workflow, hide setting button open info area an start with minimax
-  // TODO if route minimax, set step 2 and open next dqn
-  // TODO end is only available if poll has been completed
 
   private onDestroy$ = new Subject<void>();
 
@@ -59,12 +55,15 @@ export class PollComponent implements OnInit, OnDestroy {
     question7: [null, Validators.required]
   });
 
+  isSaving = false;
+
   constructor(
     private gameManagerQuery: GameManagerQuery,
     private router: Router,
     private playerQuery: PlayerQuery,
     private gameManagerService: GameManagerService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private angularFirestore: AngularFirestore,
   ) {
   }
 
@@ -156,8 +155,17 @@ export class PollComponent implements OnInit, OnDestroy {
   }
 
   send(): void {
-    // TODO
-    this.next();
+    this.isSaving = true;
+
+    const pollCollection = this.angularFirestore.collection(GameManagerService.FIRE_STORE_DEFINITIONS.poll.name);
+    const poll = {...this.formGroup.value};
+    pollCollection.add({...poll}).then(() => {
+      this.formGroup.reset();
+      this.formGroup.markAsUntouched();
+      this.formGroup.markAsPristine();
+      this.isSaving = false;
+      this.next();
+    });
   }
 
   get question1(): FormControl {

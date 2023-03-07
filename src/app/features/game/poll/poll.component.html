@@ -93,13 +93,13 @@
           </div>
           <div class="col-12">
             <div class="grid">
-              <div class="col-2">
+              <div class="col-3">
                 <div class="p-field-radiobutton">
                   <p-radioButton [value]="'YES'" [formControlName]="'question6'" inputId="q6-1"></p-radioButton>
                   <label for="q6-1" class="ml-2">{{'features.poll.questions.6.yes' | translate}}</label>
                 </div>
               </div>
-              <div class="col-2">
+              <div class="col-3">
                 <div class="p-field-radiobutton">
                   <p-radioButton [value]="'NO'" [formControlName]="'question6'" inputId="q6-2"></p-radioButton>
                   <label for="q6-2" class="ml-2">{{'features.poll.questions.6.no' | translate}}</label>
@@ -277,6 +277,7 @@
           <button pButton type="button"
                   [label]="'features.poll.next' | translate"
                   class="p-button-primary"
+                  [disabled]="isSaving"
                   (click)="next()"></button>
         </ng-container>
 
@@ -285,16 +286,18 @@
                   [pTooltip]="'features.poll.back' | translate"
                   class="p-button-warning p-button-text"
                   [icon]="'pi pi-angle-left'"
-                  [disabled]="step === 'start'"
+                  [disabled]="step === 'start' || isSaving"
                   (click)="back()"></button>
           <button pButton type="button"
                   [label]="'features.poll.play' | translate"
                   class="p-button-primary"
+                  [disabled]="isSaving"
                   (click)="play('minimax')"></button>
           <button pButton type="button"
                   [pTooltip]="'features.poll.next' | translate"
                   class="p-button-text"
                   [icon]="'pi pi-angle-right'"
+                  [disabled]="isSaving"
                   (click)="next()"></button>
         </ng-container>
 
@@ -303,16 +306,18 @@
                   [pTooltip]="'features.poll.back' | translate"
                   class="p-button-warning p-button-text"
                   [icon]="'pi pi-angle-left'"
-                  [disabled]="step === 'start'"
+                  [disabled]="step === 'start' || isSaving"
                   (click)="back()"></button>
           <button pButton type="button"
                   [label]="'features.poll.play' | translate"
                   class="p-button-primary"
+                  [disabled]="isSaving"
                   (click)="play('dqn')"></button>
           <button pButton type="button"
                   [pTooltip]="'features.poll.next' | translate"
                   class="p-button-text"
                   [icon]="'pi pi-angle-right'"
+                  [disabled]="isSaving"
                   (click)="next()"></button>
         </ng-container>
 
@@ -321,17 +326,18 @@
                   [pTooltip]="'features.poll.back' | translate"
                   class="p-button-warning p-button-text"
                   [icon]="'pi pi-angle-left'"
-                  [disabled]="step === 'start'"
+                  [disabled]="step === 'start' || isSaving"
                   (click)="back()"></button>
           <button pButton type="button"
                   [label]="'features.poll.send' | translate"
                   class="p-button-primary"
-                  [disabled]="formGroup.invalid"
+                  [disabled]="formGroup.invalid || isSaving"
                   (click)="send()"></button>
           <button pButton type="button"
                   [pTooltip]="'features.poll.next' | translate"
                   class="p-button-text"
                   [icon]="'pi pi-angle-right'"
+                  [disabled]="isSaving"
                   (click)="next()"></button>
         </ng-container>
 
@@ -340,12 +346,13 @@
                   [pTooltip]="'features.poll.back' | translate"
                   class="p-button-warning p-button-text"
                   [icon]="'pi pi-angle-left'"
-                  [disabled]="step === 'start'"
+                  [disabled]="step === 'start' || isSaving"
                   (click)="back()"></button>
           <ng-container *ngIf="step !== 'end'; else end">
             <button pButton type="button"
                     [pTooltip]="'features.poll.next' | translate"
                     class="p-button-text"
+                    [disabled]="isSaving"
                     [icon]="'pi pi-angle-right'"
                     (click)="next()"></button>
           </ng-container>
@@ -353,6 +360,7 @@
             <button pButton type="button"
                     [label]="'features.poll.close' | translate"
                     class="p-button-primary"
+                    [disabled]="isSaving"
                     (click)="close()"></button>
           </ng-template>
         </ng-container>

@@ -1,5 +1,7 @@
 {
+	"core.error.firebase": "Please check your internet connection",
 	"core.error.pgn": "PGN is not valid",
+	"core.error.title": "Error",
 	"core.footer.copyright": "All Rights Reserved",
 	"core.menu.about": "About me",
 	"core.menu.dsgvo": "Data Protection",

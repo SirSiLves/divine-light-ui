@@ -2,6 +2,10 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { ActivatedRouteSnapshot, Route, Router, RouterStateSnapshot, UrlSegment, UrlTree } from '@angular/router';
 import { users } from './user.model';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { environment } from '../../../environments/environment';
+import firebase from 'firebase/compat';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +21,9 @@ export class AuthenticationService {
   private readonly users = users;
 
   constructor(
-    private router: Router
+    private router: Router,
+    private firestore: AngularFirestore,
+    private fireAuth: AngularFireAuth
   ) {
     const localStorageUser = localStorage.getItem(this.LOCAL_STORAGE_KEY);
     if (localStorageUser) {
@@ -26,6 +32,13 @@ export class AuthenticationService {
         this.userData$.next(exist[0]);
       }
     }
+  }
+
+  signIn(): Promise<firebase.auth.UserCredential> {
+    return this.fireAuth.signInWithEmailAndPassword(
+      environment.authenticationConfig.user,
+      environment.authenticationConfig.password
+    );
   }
 
   canLoad(route: Route, segments: UrlSegment[]): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {

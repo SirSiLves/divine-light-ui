@@ -20,6 +20,11 @@ import { MessageService } from 'primeng/api';
 import { themeInitializer, ThemeService } from './state/theme/theme.service';
 import { languageInitializer, LanguageService } from './state/language/language.service';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { AngularFireStorageModule } from '@angular/fire/compat/storage';
+import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 
 
 
@@ -44,6 +49,11 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
         deps: [HttpClient]
       }
     }),
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFireAuthModule,
+    AngularFirestoreModule,
+    AngularFireStorageModule,
+    AngularFireDatabaseModule,
     TabMenuModule,
     CardModule,
     HttpClientModule,
