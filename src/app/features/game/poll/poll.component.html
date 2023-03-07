@@ -51,11 +51,210 @@
     </ng-container>
 
     <ng-container *ngSwitchCase="'questions'">
-      {{'features.poll.questions.description' | translate}}<br>
+      {{'features.poll.questions.description' | translate}}<br><br>
 
-      <form>
+      <form [formGroup]="formGroup">
         <div class="grid">
 
+          <div class="col-12 mt-2 question">
+            {{'features.poll.questions.7.question' | translate}}
+          </div>
+          <div class="col-12">
+            <div class="grid">
+              <div class="col-3">
+                <div class="p-field-radiobutton">
+                  <p-radioButton [value]="'1-20'" [formControlName]="'question7'" inputId="q7-1"></p-radioButton>
+                  <label for="q7-1" class="ml-2">1-20</label>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="p-field-radiobutton">
+                  <p-radioButton [value]="'21-34'" [formControlName]="'question7'" inputId="q7-2"></p-radioButton>
+                  <label for="q7-2" class="ml-2">21-34</label>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="p-field-radiobutton">
+                  <p-radioButton [value]="'35-50'" [formControlName]="'question7'" inputId="q7-3"></p-radioButton>
+                  <label for="q7-3" class="ml-2">35-50</label>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="p-field-radiobutton">
+                  <p-radioButton [value]="'51-99'" [formControlName]="'question7'" inputId="q7-4"></p-radioButton>
+                  <label for="q7-4" class="ml-2">51-99</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 mt-2 question">
+            {{'features.poll.questions.6.question' | translate}}
+          </div>
+          <div class="col-12">
+            <div class="grid">
+              <div class="col-2">
+                <div class="p-field-radiobutton">
+                  <p-radioButton [value]="'YES'" [formControlName]="'question6'" inputId="q6-1"></p-radioButton>
+                  <label for="q6-1" class="ml-2">{{'features.poll.questions.6.yes' | translate}}</label>
+                </div>
+              </div>
+              <div class="col-2">
+                <div class="p-field-radiobutton">
+                  <p-radioButton [value]="'NO'" [formControlName]="'question6'" inputId="q6-2"></p-radioButton>
+                  <label for="q6-2" class="ml-2">{{'features.poll.questions.6.no' | translate}}</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 mt-2 question">
+            {{'features.poll.questions.4.question' | translate}}
+          </div>
+          <div class="col-12">
+            <div class="grid">
+              <div class="col-2">
+                <div class="p-field-radiobutton">
+                  <p-radioButton [value]="'1'" [formControlName]="'question4'" inputId="q4-1"></p-radioButton>
+                  <label for="q4-1" class="ml-2">1</label>
+                </div>
+              </div>
+              <div class="col-2">
+                <div class="p-field-radiobutton">
+                  <p-radioButton [value]="'2'" [formControlName]="'question4'" inputId="q4-2"></p-radioButton>
+                  <label for="q4-2" class="ml-2">2</label>
+                </div>
+              </div>
+              <div class="col-2">
+                <div class="p-field-radiobutton">
+                  <p-radioButton [value]="'3'" [formControlName]="'question4'" inputId="q4-3"></p-radioButton>
+                  <label for="q4-3" class="ml-2">3</label>
+                </div>
+              </div>
+              <div class="col-2">
+                <div class="p-field-radiobutton">
+                  <p-radioButton [value]="'4'" [formControlName]="'question4'" inputId="q4-4"></p-radioButton>
+                  <label for="q4-4" class="ml-2">4</label>
+                </div>
+              </div>
+              <div class="col-2">
+                <div class="p-field-radiobutton">
+                  <p-radioButton [value]="'5'" [formControlName]="'question4'" inputId="q4-5"></p-radioButton>
+                  <label for="q4-5" class="ml-2">5</label>
+                </div>
+              </div>
+              <div class="col-2">
+                <div class="p-field-radiobutton">
+                  <p-radioButton [value]="'6'" [formControlName]="'question4'" inputId="q4-6"></p-radioButton>
+                  <label for="q4-6" class="ml-2">6</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 mt-2 question">
+            {{'features.poll.questions.5.question' | translate}}
+          </div>
+          <div class="col-12">
+            <div class="grid">
+              <div class="col-2">
+                <div class="p-field-radiobutton">
+                  <p-radioButton [value]="'1'" [formControlName]="'question5'" inputId="q5-1"></p-radioButton>
+                  <label for="q5-1" class="ml-2">1</label>
+                </div>
+              </div>
+              <div class="col-2">
+                <div class="p-field-radiobutton">
+                  <p-radioButton [value]="'2'" [formControlName]="'question5'" inputId="q5-2"></p-radioButton>
+                  <label for="q5-2" class="ml-2">2</label>
+                </div>
+              </div>
+              <div class="col-2">
+                <div class="p-field-radiobutton">
+                  <p-radioButton [value]="'3'" [formControlName]="'question5'" inputId="q5-3"></p-radioButton>
+                  <label for="q5-3" class="ml-2">3</label>
+                </div>
+              </div>
+              <div class="col-2">
+                <div class="p-field-radiobutton">
+                  <p-radioButton [value]="'4'" [formControlName]="'question5'" inputId="q5-4"></p-radioButton>
+                  <label for="q5-4" class="ml-2">4</label>
+                </div>
+              </div>
+              <div class="col-2">
+                <div class="p-field-radiobutton">
+                  <p-radioButton [value]="'5'" [formControlName]="'question5'" inputId="q5-5"></p-radioButton>
+                  <label for="q5-5" class="ml-2">5</label>
+                </div>
+              </div>
+              <div class="col-2">
+                <div class="p-field-radiobutton">
+                  <p-radioButton [value]="'6'" [formControlName]="'question5'" inputId="q5-6"></p-radioButton>
+                  <label for="q5-6" class="ml-2">6</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 mt-2 question">
+            {{'features.poll.questions.2.question' | translate}}
+          </div>
+          <div class="col-12">
+            <div class="grid">
+              <div class="col-6">
+                <div class="p-field-radiobutton">
+                  <p-radioButton [value]="'MINIMAX'" [formControlName]="'question2'" inputId="minimax2"></p-radioButton>
+                  <label for="minimax2" class="ml-2">{{'features.poll.questions.2.minimax' | translate}}</label>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="p-field-radiobutton">
+                  <p-radioButton [value]="'DQN'" [formControlName]="'question2'" inputId="dqn2"></p-radioButton>
+                  <label for="dqn2" class="ml-2">{{'features.poll.questions.2.dqn' | translate}}</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 mt-2 question">
+            {{'features.poll.questions.3.question' | translate}}
+          </div>
+          <div class="col-12">
+            <div class="grid">
+              <div class="col-6">
+                <div class="p-field-radiobutton">
+                  <p-radioButton [value]="'MINIMAX'" [formControlName]="'question3'" inputId="minimax3"></p-radioButton>
+                  <label for="minimax3" class="ml-2">{{'features.poll.questions.3.minimax' | translate}}</label>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="p-field-radiobutton">
+                  <p-radioButton [value]="'DQN'" [formControlName]="'question3'" inputId="dqn3"></p-radioButton>
+                  <label for="dqn3" class="ml-2">{{'features.poll.questions.3.dqn' | translate}}</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 mt-2 question">
+            {{'features.poll.questions.1.question' | translate}}
+          </div>
+          <div class="col-12">
+            <div class="grid">
+              <div class="col-6">
+                <div class="p-field-radiobutton">
+                  <p-radioButton [value]="'MINIMAX'" [formControlName]="'question1'" inputId="minimax1"></p-radioButton>
+                  <label for="minimax1" class="ml-2">{{'features.poll.questions.1.minimax' | translate}}</label>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="p-field-radiobutton">
+                  <p-radioButton [value]="'DQN'" [formControlName]="'question1'" inputId="dqn1"></p-radioButton>
+                  <label for="dqn1" class="ml-2">{{'features.poll.questions.1.dqn' | translate}}</label>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </form>
     </ng-container>
@@ -127,6 +326,7 @@
           <button pButton type="button"
                   [label]="'features.poll.send' | translate"
                   class="p-button-primary"
+                  [disabled]="formGroup.invalid"
                   (click)="send()"></button>
           <button pButton type="button"
                   [pTooltip]="'features.poll.next' | translate"

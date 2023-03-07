@@ -5,6 +5,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { PlayerQuery } from '../state/player/player.query';
 import { GameManagerService } from '../../../core/state/game-manager/game-manager.service';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-poll',
@@ -48,11 +49,22 @@ export class PollComponent implements OnInit, OnDestroy {
       }
     ));
 
+  formGroup = this.formBuilder.group({
+    question1: [null, Validators.required],
+    question2: [null, Validators.required],
+    question3: [null, Validators.required],
+    question4: [null, Validators.required],
+    question5: [null, Validators.required],
+    question6: [null, Validators.required],
+    question7: [null, Validators.required]
+  });
+
   constructor(
     private gameManagerQuery: GameManagerQuery,
     private router: Router,
     private playerQuery: PlayerQuery,
-    private gameManagerService: GameManagerService
+    private gameManagerService: GameManagerService,
+    private formBuilder: FormBuilder
   ) {
   }
 
@@ -146,5 +158,33 @@ export class PollComponent implements OnInit, OnDestroy {
   send(): void {
     // TODO
     this.next();
+  }
+
+  get question1(): FormControl {
+    return this.formGroup.controls.question1 as FormControl;
+  }
+
+  get question2(): FormControl {
+    return this.formGroup.controls.question2 as FormControl;
+  }
+
+  get question3(): FormControl {
+    return this.formGroup.controls.question3 as FormControl;
+  }
+
+  get question4(): FormControl {
+    return this.formGroup.controls.question4 as FormControl;
+  }
+
+  get question5(): FormControl {
+    return this.formGroup.controls.question5 as FormControl;
+  }
+
+  get question6(): FormControl {
+    return this.formGroup.controls.question6 as FormControl;
+  }
+
+  get question7(): FormControl {
+    return this.formGroup.controls.question7 as FormControl;
   }
 }

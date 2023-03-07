@@ -36,6 +36,7 @@ import { PollComponent } from './poll/poll.component';
 import { SharedModule } from '../../shared/shared.module';
 import { GameRoutingModule } from './game-routing.module';
 import { InputTextModule } from 'primeng/inputtext';
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 
 @NgModule({
@@ -62,29 +63,30 @@ import { InputTextModule } from 'primeng/inputtext';
     HistoryComponent,
     SettingsComponent
   ],
-  imports: [
-    CommonModule,
-    GameRoutingModule,
-    InputSwitchModule,
-    ReactiveFormsModule,
-    CardModule,
-    SelectButtonModule,
-    DropdownModule,
-    DialogModule,
-    FormsModule,
-    TooltipModule,
-    CheckboxModule,
-    DragDropModule,
-    TriStateCheckboxModule,
-    TabViewModule,
-    InputNumberModule,
-    FileUploadModule,
-    ClipboardModule,
-    SharedModule,
-    TranslateModule,
-    RippleModule,
-    InputTextModule
-  ]
+    imports: [
+        CommonModule,
+        GameRoutingModule,
+        InputSwitchModule,
+        ReactiveFormsModule,
+        CardModule,
+        SelectButtonModule,
+        DropdownModule,
+        DialogModule,
+        FormsModule,
+        TooltipModule,
+        CheckboxModule,
+        DragDropModule,
+        TriStateCheckboxModule,
+        TabViewModule,
+        InputNumberModule,
+        FileUploadModule,
+        ClipboardModule,
+        SharedModule,
+        TranslateModule,
+        RippleModule,
+        InputTextModule,
+        RadioButtonModule
+    ]
 })
 export class GameModule {
 }
