@@ -22,8 +22,8 @@ export class AuthenticationService {
 
   constructor(
     private router: Router,
-    private firestore: AngularFirestore,
-    private fireAuth: AngularFireAuth
+    private angularFirestore: AngularFirestore,
+    private angularFireAuth: AngularFireAuth
   ) {
     const localStorageUser = localStorage.getItem(this.LOCAL_STORAGE_KEY);
     if (localStorageUser) {
@@ -35,7 +35,7 @@ export class AuthenticationService {
   }
 
   signIn(): Promise<firebase.auth.UserCredential> {
-    return this.fireAuth.signInWithEmailAndPassword(
+    return this.angularFireAuth.signInWithEmailAndPassword(
       environment.authenticationConfig.user,
       environment.authenticationConfig.password
     );

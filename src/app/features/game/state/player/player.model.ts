@@ -5,7 +5,7 @@ export interface Player {
   godType: GodType,
   playerType: PlayerType,
   bot: boolean,
-  botType: 'random' | 'minimax' | 'mcts' | 'dqn' | 'custom' | undefined;
+  botType: 'random' | 'minimax' | 'dqn' | undefined;
   wins: number
 }
 

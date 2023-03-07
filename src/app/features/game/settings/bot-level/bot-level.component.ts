@@ -12,7 +12,7 @@ export class BotLevelComponent implements OnInit, OnDestroy {
 
   private onDestroy$ = new Subject<void>();
 
-  @Input() set currentAlgorithm(currentAlgorithm: 'random' | 'minimax' | 'mcts' | 'dqn' | 'custom' | undefined) {
+  @Input() set currentAlgorithm(currentAlgorithm: 'random' | 'minimax' | 'dqn' | undefined) {
     console.log('aktueller algorithm: ' + currentAlgorithm);
 
     if (currentAlgorithm === undefined) {
@@ -25,14 +25,12 @@ export class BotLevelComponent implements OnInit, OnDestroy {
     }
   }
 
-  @Output() algorithmChange$ = new EventEmitter<'random' | 'minimax' | 'mcts' | 'dqn' | 'custom' | undefined>();
+  @Output() algorithmChange$ = new EventEmitter<'random' | 'minimax' | 'dqn' | undefined>();
 
   algorithm = [
     {label: 'Random', value: 'random'},
     {label: 'Minimax', value: 'minimax'},
-    {label: 'Monte Carlo Tree Search', value: 'mcts'},
     {label: 'Deep Q-Learning', value: 'dqn'},
-    {label: 'Custom Tree Search', value: 'custom'}
   ];
 
   formGroup: FormGroup = this.formBuilder.group({

@@ -250,7 +250,7 @@ export class PlayerService {
     this.playerQuery.isPlayingGod$.next(GodType.CAMAXTLI);
   }
 
-  setP1Algorithm(algorithm: 'random' | 'minimax' | 'mcts' | 'dqn' | 'custom' | undefined): void {
+  setP1Algorithm(algorithm: 'random' | 'minimax' | 'dqn' | undefined): void {
     const player = this.playerQuery.getPlayer1();
 
     this.playerStore.update(player.id, {
@@ -260,7 +260,7 @@ export class PlayerService {
     });
   }
 
-  setP2Algorithm(algorithm: 'random' | 'minimax' | 'mcts' | 'dqn' | 'custom' | undefined): void {
+  setP2Algorithm(algorithm: 'random' | 'minimax' | 'dqn' | undefined): void {
     const player = this.playerQuery.getPlayer2();
 
     this.playerStore.update(player.id, {
