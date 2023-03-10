@@ -1,34 +1,24 @@
 <div class="content" [@fade]="''">
-  <h1>How to play</h1>
+  <h1>{{'features.howto.title' | translate}}</h1>
   <p-card>
     <div>
-      <p>This section will explain more about Divine-Light with his rules and how to play the game.</p>
+      <p>{{'features.howto.subTitle' | translate}}</p>
 
       <p-accordion [multiple]="true">
-        <p-accordionTab header="What is Divine-Light" [selected]="true">
+        <p-accordionTab [header]="'features.howto.what' | translate" [selected]="true">
           <div class="text-area">
             <div class="text">
-              <p>
-                Divine-Light is a chess-like strategy game but with rays of light.
-                Each player alternately draws one of their pawns. The figures may only be moved 1 space at a time.
-                A move also counts if the figure is rotated by 90 °, for example. At the end of each turn,
-                your own light beam must be activated. If the light beam hits a pawn on a non-mirrored side,
-                it is removed from the game. This also applies if your own beam of light hits your own figure.
-                If the light beam hits the king, the game is won or lost for the other player.
-              </p>
+              <p>{{'features.howto.explain' | translate}}</p>
             </div>
             <div class="image">
               <img src="./assets/game/howto/Start.png" alt="me" style="max-width: 70%; max-height: 70%;">
             </div>
           </div>
         </p-accordionTab>
-        <p-accordionTab header="How to play the game">
+        <p-accordionTab [header]="'features.howto.how' | translate">
           <div class="text-area">
             <div class="text">
-              <p>
-                At the beginning each player has 13 pawns in the colors gold or silver.
-                There are different types of figures. Some can either redirect or block the light.
-              </p>
+              <p>{{'features.howto.rule1' | translate}}</p>
             </div>
             <div class="image">
               <img src="./assets/game/howto/Start.png" alt="me" style="max-width: 70%; max-height: 70%;">
@@ -37,10 +27,7 @@
 
           <div class="text-area">
             <div class="text">
-              <p>
-                A move consists of either moving a pawn in any direction (even diagonally)
-                onto an immediately adjacent free space or rotating it.
-              </p>
+              <p>{{'features.howto.rule2' | translate}}</p>
             </div>
             <div class="image">
               <img src="./assets/game/howto/Angler.png" alt="me" style="max-width: 70%; max-height: 70%;">
@@ -49,10 +36,7 @@
 
           <div class="text-area">
             <div class="text">
-              <p>
-                The fields vertically above the opposing sun as well as certain other fields may not be entered,
-                they are marked in color accordingly.
-              </p>
+              <p>{{'features.howto.rule3' | translate}}</p>
             </div>
             <div class="image">
               <img src="./assets/game/howto/Angler_Safe_Zone.png" alt="me" style="max-width: 70%; max-height: 70%;">
@@ -61,11 +45,7 @@
 
           <div class="text-area">
             <div class="text">
-              <p>
-                After moving, the light of God is activated.
-                Since the figures are aligned at right angles on the playing field,
-                the light always moves horizontally and vertically within the playing area.
-              </p>
+              <p>{{'features.howto.rule4' | translate}}</p>
             </div>
             <div class="image">
               <img src="./assets/game/howto/Light.png" alt="me" style="max-width: 70%; max-height: 70%;">
@@ -74,10 +54,7 @@
 
           <div class="text-area">
             <div class="text">
-              <p>
-                Distracted by mirrors, he either hits the edge of the playing field or a non-mirrored side of a figure.
-                In the latter case, this figure is removed from the game, even if it is your own.
-              </p>
+              <p>{{'features.howto.rule5' | translate}}</p>
             </div>
             <div class="image">
               <img src="./assets/game/howto/Angler_Destroy.png" alt="me" style="max-width: 70%; max-height: 70%;">
@@ -86,9 +63,7 @@
 
           <div class="text-area">
             <div class="text">
-              <p>
-                If it hits the king, the game is over.
-              </p>
+              <p>{{'features.howto.rule6' | translate}}</p>
             </div>
             <div class="image">
               <img src="./assets/game/howto/King_Destroy_I.png" alt="me" style="max-width: 70%; max-height: 70%;">
@@ -140,12 +115,11 @@
           <div class="text-area">
             <div class="text">
               <p>
-                The stone wall has no mirrored sides. However, it has a filter and can therefore block the light
-                on one side.
+                The stone wall has no mirrored sides.
               </p>
             </div>
             <div class="image">
-              <img src="./assets/game/howto/Wall_Blocked.png" alt="me" style="max-width: 70%; max-height: 70%;">
+              <img src="./assets/game/howto/Wall.png" alt="me" style="max-width: 70%; max-height: 70%;">
             </div>
           </div>
 
