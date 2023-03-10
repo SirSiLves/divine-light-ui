@@ -15,7 +15,6 @@ import { WinnerValidatorService } from '../../validator/winner-validator.service
 import { LightService } from '../../light/light.service';
 import { AiService } from '../../playing/ai/ai.service';
 import { DrawValidatorService } from '../../validator/draw-validator.service';
-import { HttpClient } from '@angular/common/http';
 
 
 @Injectable({providedIn: 'root'})
@@ -34,8 +33,7 @@ export class PlayerService {
     private actionStore: ActionStore,
     private actionQuery: ActionQuery,
     private gameManagerQuery: GameManagerQuery,
-    private drawValidatorService: DrawValidatorService,
-    private http: HttpClient
+    private drawValidatorService: DrawValidatorService
   ) {
   }
 

@@ -15,10 +15,6 @@ export const environment = {
     messagingSenderId: "5940556724",
     appId: "1:5940556724:web:695382731f4814b2d7b8e1",
     measurementId: "G-TRPK9L2MVR"
-  },
-  authenticationConfig: {
-    user: 'register@ruosch.me',
-    password: 'F+AV#n9%sfA=H!,=DGIfZZ'
   }
 };
 

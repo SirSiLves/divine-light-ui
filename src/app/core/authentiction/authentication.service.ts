@@ -4,13 +4,16 @@ import { ActivatedRouteSnapshot, Route, Router, RouterStateSnapshot, UrlSegment,
 import { users } from './user.model';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { environment } from '../../../environments/environment';
 import firebase from 'firebase/compat';
+import { credentials } from '../config/credentials';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
+
+  // TODO encrypt firebase login
 
   private userData$ = new BehaviorSubject<any>(undefined);
   user$ = this.userData$.asObservable();
@@ -36,8 +39,8 @@ export class AuthenticationService {
 
   signIn(): Promise<firebase.auth.UserCredential> {
     return this.angularFireAuth.signInWithEmailAndPassword(
-      environment.authenticationConfig.user,
-      environment.authenticationConfig.password
+      credentials.authenticationConfig.user,
+      credentials.authenticationConfig.password
     );
   }
 
@@ -74,8 +77,6 @@ export class AuthenticationService {
       return false;
     }
   }
-
-
 
 
 }
