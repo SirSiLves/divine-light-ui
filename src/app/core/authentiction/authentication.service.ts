@@ -12,8 +12,6 @@ import firebase from 'firebase/compat';
 })
 export class AuthenticationService {
 
-  // TODO encrypt firebase login
-
   private userData$ = new BehaviorSubject<any>(undefined);
   user$ = this.userData$.asObservable();
 
