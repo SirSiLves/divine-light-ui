@@ -9,10 +9,6 @@ import { PlayerQuery } from '../../../features/game/state/player/player.query';
 import { GodType } from '../../../features/game/state/player/player.model';
 import { MatrixQuery } from '../../../features/game/state/matrix/matrix.query';
 import { GameManagerSettings } from './game-manager-settings.model';
-import { AuthenticationService } from '../../authentiction/authentication.service';
-import { environment } from '../../../../environments/environment';
-import { MessageService } from 'primeng/api';
-import { TranslateService } from '@ngx-translate/core';
 
 
 @Injectable({providedIn: 'root'})
@@ -39,20 +35,7 @@ export class GameManagerService {
     private playerService: PlayerService,
     private gameManagerQuery: GameManagerQuery,
     private playerQuery: PlayerQuery,
-    private authenticationService: AuthenticationService,
-    private messageService: MessageService,
-    private translateService: TranslateService
   ) {
-    this.authenticationService.signIn().then(() => {
-      if (environment.log) console.log('Firebase login successfully');
-    }, error => {
-      console.error(error);
-      this.messageService.add({
-        severity: 'error',
-        summary: this.translateService.instant('core.error.title'),
-        detail: this.translateService.instant('core.error.firebase')
-      })
-    });
   }
 
   rematch(): void {
