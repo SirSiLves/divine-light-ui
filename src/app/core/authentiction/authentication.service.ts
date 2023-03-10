@@ -5,7 +5,6 @@ import { users } from './user.model';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import firebase from 'firebase/compat';
-import { credentials } from '../config/credentials';
 
 
 @Injectable({
@@ -37,11 +36,8 @@ export class AuthenticationService {
     }
   }
 
-  signIn(): Promise<firebase.auth.UserCredential> {
-    return this.angularFireAuth.signInWithEmailAndPassword(
-      credentials.authenticationConfig.user,
-      credentials.authenticationConfig.password
-    );
+  signIn(user: string, password: string): Promise<firebase.auth.UserCredential> {
+    return this.angularFireAuth.signInWithEmailAndPassword(user, password);
   }
 
   canLoad(route: Route, segments: UrlSegment[]): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
