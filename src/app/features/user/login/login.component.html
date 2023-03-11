@@ -27,7 +27,7 @@
             <label>{{'features.user.login.password' | translate}}</label>
             <div class="p-inputgroup">
               <span class="p-inputgroup-addon"><i class="pi pi-shield"></i></span>
-              <input type="password" [formControl]="password" pInputText>
+              <input type="password" [formControl]="password" pInputText autocomplete="on">
             </div>
             <app-input-error-message *ngIf="password.touched && password.invalid">
               {{'features.user.login.invalidInput' | translate}}
