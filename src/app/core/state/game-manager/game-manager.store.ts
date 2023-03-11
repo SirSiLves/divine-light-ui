@@ -23,7 +23,6 @@ export class GameManagerStore extends Store<GameManagerState> {
         id: guid(),
         log: environment.log,
         displayCellIDs: environment.displayCellIDs,
-        displayStateLoader: environment.displayStateLoader,
         mode: 'p1vb', // p1vp2
         rematch: 'manual',
         autoSwitch: true
