@@ -22,8 +22,6 @@ import { MatrixQuery } from '../../state/matrix/matrix.query';
 })
 export class AiService {
 
-  static readonly LIGHT_RADIUS = 2;
-
   // decrease value on AI thinking time
   readonly timeout = 1;
   aiTriggered = false;
@@ -218,7 +216,7 @@ export class AiService {
     for (let i = 0; i < possiblesMoves.length; i++) {
       const possibleMove: Move = possiblesMoves[i];
       const actionIndex: number = this.getActionIndex(possibleMove);
-      const indexValue: number = this.getIndexValue(possibleMove.position, actionIndex);
+      const indexValue: number = this.getIndexValue(possibleMove.position, actionIndex, isPlaying);
 
       possibleMoveIndexList.push({
         index: indexValue,
@@ -327,7 +325,7 @@ export class AiService {
     for (let i = 0; i < possiblesMoves.length; i++) {
       const possibleMove = possiblesMoves[i];
 
-      if (this.getMoveToIndex(possibleMove) === move) {
+      if (this.getMoveToIndex(possibleMove, isPlaying) === move) {
         return possibleMove;
       }
     }
@@ -605,102 +603,201 @@ export class AiService {
     return false;
   }
 
-  public static getIndexListToSkip(W: number, H: number): number[] {
+  public static getIndexListToSkip(W: number, H: number, isPlaying: GodType): number[] {
     // some actions are not possible, filter those, ex. from rank 0 go upwards / from last rank go down
-    const skipIndexList = [];
+    const skipIndexList: Set<number> = new Set();
 
     for (let y = 0; y < H; y++) {
       for (let x = 0; x < W; x++) {
 
-        // corner top left
+        // corner top left - sun can not walk
         if (y === 0 && x === 0) {
-          skipIndexList.push(
-            this.getRAWIndexValue({x, y}, ActionSpace.W_UP_LEFT),
-            this.getRAWIndexValue({x, y}, ActionSpace.W_UP_MID),
-            this.getRAWIndexValue({x, y}, ActionSpace.W_UP_RIGHT),
-            this.getRAWIndexValue({x, y}, ActionSpace.W_MID_LEFT),
-            this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_LEFT),
-            this.getRAWIndexValue({x, y}, ActionSpace.R_UP),
-            this.getRAWIndexValue({x, y}, ActionSpace.R_LEFT)
-          )
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_LEFT));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_MID));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_RIGHT));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_RIGHT));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_MID));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_LEFT));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_LEFT));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.R_UP));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.R_LEFT));
         }
         // corner top right
         else if (y === 0 && x === W - 1) {
-          skipIndexList.push(
-            this.getIndexValue({x, y}, ActionSpace.W_UP_LEFT),
-            this.getIndexValue({x, y}, ActionSpace.W_UP_MID),
-            this.getIndexValue({x, y}, ActionSpace.W_UP_RIGHT),
-            this.getIndexValue({x, y}, ActionSpace.W_MID_RIGHT),
-            this.getIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT),
-          )
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_LEFT));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_MID));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_RIGHT));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_RIGHT));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT));
         }
         // corner bottom left
         else if (y === H - 1 && x === 0) {
-          skipIndexList.push(
-            this.getRAWIndexValue({x, y}, ActionSpace.W_UP_LEFT),
-            this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT),
-            this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_MID),
-            this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_LEFT),
-            this.getRAWIndexValue({x, y}, ActionSpace.W_MID_LEFT),
-          )
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_LEFT));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_MID));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_LEFT));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_LEFT));
         }
-        // corner bottom right
+        // corner bottom right - sun can not walk
         else if (y === H - 1 && x === W - 1) {
-          skipIndexList.push(
-            this.getRAWIndexValue({x, y}, ActionSpace.W_UP_RIGHT),
-            this.getRAWIndexValue({x, y}, ActionSpace.W_MID_RIGHT),
-            this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT),
-            this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_MID),
-            this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_LEFT),
-            this.getRAWIndexValue({x, y}, ActionSpace.R_RIGHT),
-            this.getRAWIndexValue({x, y}, ActionSpace.R_DOWN)
-          )
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_LEFT));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_MID));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_RIGHT));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_RIGHT));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_MID));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_LEFT));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_LEFT));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.R_RIGHT));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.R_DOWN));
         }
         // top rank without corners
         else if (y === 0 && x < W - 1) {
-          skipIndexList.push(
-            this.getRAWIndexValue({x, y}, ActionSpace.W_UP_LEFT),
-            this.getRAWIndexValue({x, y}, ActionSpace.W_UP_MID),
-            this.getRAWIndexValue({x, y}, ActionSpace.W_UP_RIGHT),
-          )
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_LEFT));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_MID));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_RIGHT));
         }
         // bottom rank without corners
         else if (y === H - 1 && x > 0 && x < W - 1) {
-          skipIndexList.push(
-            this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT),
-            this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_MID),
-            this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_LEFT),
-          )
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_MID));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_LEFT));
         }
         // left rank without corners
         else if (y > 0 && x === 0 && y < H - 1) {
-          skipIndexList.push(
-            this.getRAWIndexValue({x, y}, ActionSpace.W_UP_LEFT),
-            this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_LEFT),
-            this.getRAWIndexValue({x, y}, ActionSpace.W_MID_LEFT),
-          )
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_LEFT));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_LEFT));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_LEFT));
         }
         // right rank without corners
         else if (y > 0 && x === W - 1 && y < H - 1) {
-          skipIndexList.push(
-            this.getRAWIndexValue({x, y}, ActionSpace.W_UP_RIGHT),
-            this.getRAWIndexValue({x, y}, ActionSpace.W_MID_RIGHT),
-            this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT),
-          )
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_RIGHT));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_RIGHT));
+          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT));
         }
+
+        // forbidden fields from Nanahuatzin
+        if (isPlaying === GodType.CAMAXTLI) {
+          // rank Nanahuatzin
+          if (x === 1) {
+            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_LEFT));
+            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_LEFT));
+            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_LEFT));
+          }
+
+          // single field 1 - (W-2/0)
+          else if (x === W - 3 && y === 0) {
+            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_RIGHT));
+          }
+          // single field 1 - (W-2/0)
+          else if (x === W - 3 && y === 1) {
+            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_RIGHT));
+          }
+          // single field 1 - (W-2/0)
+          else if (x === W - 2 && y === 1) {
+            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_MID));
+          }
+          // single field 1 - (W-2/0)
+          else if (x === W - 1 && y === 1) {
+            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_LEFT));
+          }
+          // single field 1 - (W-2/0)
+          else if (x === W - 1 && y === 0) {
+            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_LEFT));
+          }
+
+          // single field 2 - (W-3/H-1)
+          else if (x === W - 3 && y === H - 1) {
+            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_RIGHT));
+          }
+          // single field 2 - (W-3/H-1)
+          else if (x === W - 3 && y === H - 2) {
+            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT));
+          }
+          // single field 2 - (W-3/H-1)
+          else if (x === W - 2 && y === H - 2) {
+            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT));
+            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_MID));
+          }
+          // single field 2 - (1/H-1)
+          else if (x === W - 1 && y === H - 2) {
+            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_MID));
+            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_LEFT));
+          }
+          // single field 2 - (W-3/H-1)
+          else if (x === W - 1 && y === H - 1) {
+            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_LEFT));
+          }
+        }
+
+        // forbidden fields from Camaxtli
+        if (isPlaying === GodType.NANAHUATZIN) {
+          // rank Camaxtli
+          if (x === W - 2) {
+            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_RIGHT));
+            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_RIGHT));
+            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT));
+          }
+
+          // single field 1 - (1/0)
+          else if (x === 0 && y === 0) {
+            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_RIGHT));
+          }
+          // single field 1 - (1/0)
+          else if (x === 0 && y === 1) {
+            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_MID));
+            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_RIGHT));
+          }
+          // single field 1 - (1/0)
+          else if (x === 1 && y === 1) {
+            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_LEFT));
+            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_MID));
+          }
+          // single field 1 - (1/0)
+          else if (x === 2 && y === 1) {
+            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_LEFT));
+          }
+          // single field 1 - (1/0)
+          else if (x === 2 && y === 0) {
+            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_LEFT));
+          }
+
+          // single field 2 - (1/H-1)
+          else if (x === 0 && y === H - 1) {
+            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_RIGHT));
+          }
+          // single field 2 - (1/H-1)
+          else if (x === 0 && y === H - 2) {
+            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT));
+          }
+          // single field 2 - (1/H-1)
+          else if (x === 1 && y === H - 2) {
+            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_MID));
+          }
+          // single field 2 - (1/H-1)
+          else if (x === 2 && y === H - 2) {
+            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_LEFT));
+          }
+          // single field 2 - (1/H-1)
+          else if (x === 2 && y === H - 1) {
+            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_LEFT));
+          }
+        }
+
       }
     }
 
-    return skipIndexList;
+    return [...skipIndexList]
   }
 
-  private static getIndexValue(field: Field, actionSpace: ActionSpace) {
+  private static getIndexValue(field: Field, actionSpace: ActionSpace, isPlaying: GodType) {
     const cellID = this.getCellID({x: field.x, y: field.y});
     let indexValue = cellID * MatrixStore.MAX_ACTION_INDEX + actionSpace;
 
     let subtract = 0;
     for (let i = 0; i < MatrixStore.IMPOSSIBLE_INDEX_LENGTH; i++) {
-      const entry = MatrixStore.IMPOSSIBLE_INDEXES[i];
+      const entry = isPlaying === GodType.CAMAXTLI ? MatrixStore.IMPOSSIBLE_INDEXES_CAMAXTLI[i] : MatrixStore.IMPOSSIBLE_INDEXES_NANAHUATZIN[i];
       if (entry < indexValue) subtract += 1;
       else break;
     }
@@ -713,8 +810,9 @@ export class AiService {
     return cellID * MatrixStore.MAX_ACTION_INDEX + actionSpace;
   }
 
-  public static getMoveToIndex(move: Move): number {
+  public static getMoveToIndex(move: Move,  isPlaying: GodType): number {
     const actionIndex: number = this.getActionIndex(move);
-    return this.getIndexValue(move.position, actionIndex);
+    return this.getIndexValue(move.position, actionIndex, isPlaying);
   }
+
 }
