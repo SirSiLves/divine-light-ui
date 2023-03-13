@@ -216,13 +216,37 @@ export class AiService {
     for (let i = 0; i < possiblesMoves.length; i++) {
       const possibleMove: Move = possiblesMoves[i];
       const actionIndex: number = this.getActionIndex(possibleMove);
-      const indexValue: number = this.getIndexValue(possibleMove.position, actionIndex, isPlaying);
+      const indexValue: number = this.getMinimizedIndexValue(possibleMove.position, actionIndex);
 
       possibleMoveIndexList.push({
         index: indexValue,
         move: possibleMove
       });
     }
+
+    // smallest possible action (piece can't walk around) -> should be indexed 0
+    // const move: Rotation = {
+    //   type: MoveType.ROTATE,
+    //   piece: 121,
+    //   position: {x: 0, y: 0},
+    //   toPiece: 111
+    // };
+
+    // should be indexed 1
+    // const move: Rotation = {
+    //   type: MoveType.ROTATE,
+    //   piece: 111,
+    //   position: {x: 0, y: 0},
+    //   toPiece: 121
+    // };
+
+    // first possible walk - should be indexed 2
+    // const move: Walk = {
+    //   type: MoveType.WALK,
+    //   piece: 3,
+    //   position: {x: 1, y: 0},
+    //   to: {x: 2, y: 0}
+    // };
 
     // last possible action
     // const move: Rotation = {
@@ -232,7 +256,7 @@ export class AiService {
     //   toPiece: 31
     // };
 
-    // smallest possible action (piece can't go upwards)
+    // impossible move
     // const move: Walk = {
     //   type: MoveType.WALK,
     //   piece: 121,
@@ -240,13 +264,11 @@ export class AiService {
     //   to: {x: 1, y: 0}
     // };
 
-    // console.log('LAST');
+
     // console.log('CELL ID', this.getCellID(move.position));
     // console.log('ACTION INDEX', this.getActionIndex(move));
-    // console.log('INDEX VALUE', this.getIndexValue(move.position, this.getActionIndex(move)));
+    // console.log('INDEX VALUE', this.getMinimizedIndexValue(move.position, this.getActionIndex(move)));
 
-    // const indexValueTEST = this.getIndexValue(move.position, this.getActionIndex(move));
-    // console.log(indexValueTEST);
 
     return possibleMoveIndexList;
   }
@@ -325,7 +347,7 @@ export class AiService {
     for (let i = 0; i < possiblesMoves.length; i++) {
       const possibleMove = possiblesMoves[i];
 
-      if (this.getMoveToIndex(possibleMove, isPlaying) === move) {
+      if (this.getMoveToIndex(possibleMove) === move) {
         return possibleMove;
       }
     }
@@ -603,7 +625,7 @@ export class AiService {
     return false;
   }
 
-  public static getIndexListToSkip(W: number, H: number, isPlaying: GodType): number[] {
+  public static getIndexListToSkip(W: number, H: number): number[] {
     // some actions are not possible, filter those, ex. from rank 0 go upwards / from last rank go down
     const skipIndexList: Set<number> = new Set();
 
@@ -612,192 +634,87 @@ export class AiService {
 
         // corner top left - sun can not walk
         if (y === 0 && x === 0) {
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_LEFT));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_MID));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_RIGHT));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_RIGHT));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_MID));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_LEFT));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_LEFT));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.R_UP));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.R_LEFT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_UP_LEFT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_UP_MID));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_UP_RIGHT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_MID_RIGHT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_DOWN_MID));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_DOWN_LEFT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_MID_LEFT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.R_UP));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.R_LEFT));
         }
         // corner top right
         else if (y === 0 && x === W - 1) {
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_LEFT));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_MID));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_RIGHT));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_RIGHT));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_UP_LEFT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_UP_MID));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_UP_RIGHT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_MID_RIGHT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT));
         }
         // corner bottom left
         else if (y === H - 1 && x === 0) {
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_LEFT));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_MID));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_LEFT));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_LEFT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_UP_LEFT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_DOWN_MID));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_DOWN_LEFT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_MID_LEFT));
         }
         // corner bottom right - sun can not walk
         else if (y === H - 1 && x === W - 1) {
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_LEFT));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_MID));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_RIGHT));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_RIGHT));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_MID));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_LEFT));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_LEFT));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.R_RIGHT));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.R_DOWN));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_UP_LEFT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_UP_MID));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_UP_RIGHT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_MID_RIGHT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_DOWN_MID));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_DOWN_LEFT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_MID_LEFT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.R_RIGHT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.R_DOWN));
         }
         // top rank without corners
         else if (y === 0 && x < W - 1) {
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_LEFT));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_MID));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_RIGHT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_UP_LEFT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_UP_MID));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_UP_RIGHT));
         }
         // bottom rank without corners
         else if (y === H - 1 && x > 0 && x < W - 1) {
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_MID));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_LEFT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_DOWN_MID));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_DOWN_LEFT));
         }
         // left rank without corners
         else if (y > 0 && x === 0 && y < H - 1) {
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_LEFT));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_LEFT));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_LEFT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_UP_LEFT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_DOWN_LEFT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_MID_LEFT));
         }
         // right rank without corners
         else if (y > 0 && x === W - 1 && y < H - 1) {
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_RIGHT));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_RIGHT));
-          skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_UP_RIGHT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_MID_RIGHT));
+          skipIndexList.add(this.getIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT));
         }
-
-        // forbidden fields from Nanahuatzin
-        if (isPlaying === GodType.CAMAXTLI) {
-          // rank Nanahuatzin
-          if (x === 1) {
-            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_LEFT));
-            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_LEFT));
-            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_LEFT));
-          }
-
-          // single field 1 - (W-2/0)
-          else if (x === W - 3 && y === 0) {
-            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_RIGHT));
-          }
-          // single field 1 - (W-2/0)
-          else if (x === W - 3 && y === 1) {
-            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_RIGHT));
-          }
-          // single field 1 - (W-2/0)
-          else if (x === W - 2 && y === 1) {
-            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_MID));
-          }
-          // single field 1 - (W-2/0)
-          else if (x === W - 1 && y === 1) {
-            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_LEFT));
-          }
-          // single field 1 - (W-2/0)
-          else if (x === W - 1 && y === 0) {
-            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_LEFT));
-          }
-
-          // single field 2 - (W-3/H-1)
-          else if (x === W - 3 && y === H - 1) {
-            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_RIGHT));
-          }
-          // single field 2 - (W-3/H-1)
-          else if (x === W - 3 && y === H - 2) {
-            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT));
-          }
-          // single field 2 - (W-3/H-1)
-          else if (x === W - 2 && y === H - 2) {
-            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT));
-            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_MID));
-          }
-          // single field 2 - (1/H-1)
-          else if (x === W - 1 && y === H - 2) {
-            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_MID));
-            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_LEFT));
-          }
-          // single field 2 - (W-3/H-1)
-          else if (x === W - 1 && y === H - 1) {
-            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_LEFT));
-          }
-        }
-
-        // forbidden fields from Camaxtli
-        if (isPlaying === GodType.NANAHUATZIN) {
-          // rank Camaxtli
-          if (x === W - 2) {
-            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_RIGHT));
-            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_RIGHT));
-            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT));
-          }
-
-          // single field 1 - (1/0)
-          else if (x === 0 && y === 0) {
-            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_RIGHT));
-          }
-          // single field 1 - (1/0)
-          else if (x === 0 && y === 1) {
-            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_MID));
-            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_RIGHT));
-          }
-          // single field 1 - (1/0)
-          else if (x === 1 && y === 1) {
-            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_LEFT));
-            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_MID));
-          }
-          // single field 1 - (1/0)
-          else if (x === 2 && y === 1) {
-            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_UP_LEFT));
-          }
-          // single field 1 - (1/0)
-          else if (x === 2 && y === 0) {
-            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_LEFT));
-          }
-
-          // single field 2 - (1/H-1)
-          else if (x === 0 && y === H - 1) {
-            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_RIGHT));
-          }
-          // single field 2 - (1/H-1)
-          else if (x === 0 && y === H - 2) {
-            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_RIGHT));
-          }
-          // single field 2 - (1/H-1)
-          else if (x === 1 && y === H - 2) {
-            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_MID));
-          }
-          // single field 2 - (1/H-1)
-          else if (x === 2 && y === H - 2) {
-            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_DOWN_LEFT));
-          }
-          // single field 2 - (1/H-1)
-          else if (x === 2 && y === H - 1) {
-            skipIndexList.add(this.getRAWIndexValue({x, y}, ActionSpace.W_MID_LEFT));
-          }
-        }
-
       }
     }
 
     return [...skipIndexList]
   }
 
-  private static getIndexValue(field: Field, actionSpace: ActionSpace, isPlaying: GodType) {
-    const cellID = this.getCellID({x: field.x, y: field.y});
-    let indexValue = cellID * MatrixStore.MAX_ACTION_INDEX + actionSpace;
+  private static getMinimizedIndexValue(field: Field, actionSpace: ActionSpace) {
+    let indexValue = this.getIndexValue({x: field.x, y: field.y}, actionSpace);
+
+    if (MatrixStore.IMPOSSIBLE_INDEXES.includes(indexValue)) {
+      console.error('Move Index is wrong `field, actionSpace, isPlaying, indexValue`', field, actionSpace, indexValue);
+      throw Error('Move Index is wrong');
+    }
 
     let subtract = 0;
     for (let i = 0; i < MatrixStore.IMPOSSIBLE_INDEX_LENGTH; i++) {
-      const entry = isPlaying === GodType.CAMAXTLI ? MatrixStore.IMPOSSIBLE_INDEXES_CAMAXTLI[i] : MatrixStore.IMPOSSIBLE_INDEXES_NANAHUATZIN[i];
+      const entry = MatrixStore.IMPOSSIBLE_INDEXES[i];
       if (entry < indexValue) subtract += 1;
       else break;
     }
@@ -805,14 +722,14 @@ export class AiService {
     return indexValue - subtract;
   }
 
-  private static getRAWIndexValue(field: Field, actionSpace: ActionSpace) {
+  private static getIndexValue(field: Field, actionSpace: ActionSpace) {
     const cellID = this.getCellID({x: field.x, y: field.y});
     return cellID * MatrixStore.MAX_ACTION_INDEX + actionSpace;
   }
 
-  public static getMoveToIndex(move: Move,  isPlaying: GodType): number {
+  public static getMoveToIndex(move: Move): number {
     const actionIndex: number = this.getActionIndex(move);
-    return this.getIndexValue(move.position, actionIndex, isPlaying);
+    return this.getMinimizedIndexValue(move.position, actionIndex);
   }
 
 }

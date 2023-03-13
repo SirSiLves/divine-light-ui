@@ -409,22 +409,12 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   private validateImpossibleIndexList(): void {
-    const indexListToSkipCamaxtli = AiService.getIndexListToSkip(MatrixStore.WIDTH_NUMBER, MatrixStore.HEIGHT_NUMBER, GodType.CAMAXTLI);
-    if (environment.log) console.log('INDEX LIST to SKIP from Camaxtli', indexListToSkipCamaxtli);
+    const indexListToSkip = AiService.getIndexListToSkip(MatrixStore.WIDTH_NUMBER, MatrixStore.HEIGHT_NUMBER);
+    if (environment.log) console.log('INDEX LIST to SKIP', indexListToSkip);
 
-    indexListToSkipCamaxtli.forEach(index => {
-      if (!MatrixStore.IMPOSSIBLE_INDEXES_CAMAXTLI.includes(index)) {
-        console.error('Missing number in the skip index list from Camaxtli: ', index)
-        throw Error("Impossible Index List is not completed");
-      }
-    });
-
-    const indexListToSkipNanahuatzin = AiService.getIndexListToSkip(MatrixStore.WIDTH_NUMBER, MatrixStore.HEIGHT_NUMBER, GodType.NANAHUATZIN);
-    if (environment.log) console.log('INDEX LIST to SKIP from Nanahuatzin', indexListToSkipNanahuatzin);
-
-    indexListToSkipNanahuatzin.forEach(index => {
-      if (!MatrixStore.IMPOSSIBLE_INDEXES_NANAHUATZIN.includes(index)) {
-        console.error('Missing number in the skip index list from Nanahuatzin: ', index)
+    indexListToSkip.forEach(index => {
+      if (!MatrixStore.IMPOSSIBLE_INDEXES.includes(index)) {
+        console.error('Missing number in the skip index list: ', index)
         throw Error("Impossible Index List is not completed");
       }
     });
