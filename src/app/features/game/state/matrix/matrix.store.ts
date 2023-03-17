@@ -18,8 +18,7 @@ export class MatrixStore extends EntityStore<MatrixState> {
 
   public static readonly WIDTH_NUMBER = 7;
   public static readonly HEIGHT_NUMBER = 6;
-  public static readonly BOARD_SIZE: '10x8' | '7x6' = '7x6';
-  public static readonly NORMAL = false;
+  public static readonly BOARD_SIZE: '7x6';
 
   public static readonly MAX_ACTION_INDEX = 12;
   public static readonly IMPOSSIBLE_INDEXES = [
@@ -119,37 +118,6 @@ export class MatrixStore extends EntityStore<MatrixState> {
   }
 
   public createMatrix(): void {
-    if (MatrixStore.NORMAL) {
-      this.createNormalMatrix();
-    } else {
-      this.createSimpleMatrix();
-    }
-  }
-
-  public createNormalMatrix(): void {
-    // hint -> right-handed coordinate system 1 = 3, 3 = 1 on rotation number
-    try {
-      const matrix = PgnLoaderComponent.getMatrix(PgnLoaderComponent.defaultPGN10x8);
-      if (matrix) this.init(matrix);
-      else throw new Error('PGN not valid, load default matrix');
-    } catch (e) {
-      console.error(e);
-      const matrix: number[][] = [
-        [121, 0, 0, 0, 123, 102, 123, 115, 0, 0],
-        [0, 0, 125, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 35, 0, 0, 0, 0, 0, 0],
-        [105, 0, 25, 0, 14, 104, 0, 115, 0, 35],
-        [115, 0, 35, 0, 4, 114, 0, 105, 0, 25],
-        [0, 0, 0, 0, 0, 0, 115, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 5, 0, 0],
-        [0, 0, 35, 3, 2, 3, 0, 0, 0, 1],
-      ];
-
-      this.init(matrix);
-    }
-  }
-
-  private createSimpleMatrix(): void {
     // hint -> right-handed coordinate system 1 = 3, 3 = 1 on rotation number
     try {
       const matrix = PgnLoaderComponent.getMatrix(PgnLoaderComponent.defaultPGN7x6);
@@ -158,6 +126,18 @@ export class MatrixStore extends EntityStore<MatrixState> {
       else throw new Error('PGN not valid, load default matrix');
     } catch (e) {
       console.error(e);
+
+      // 10x8
+      // const matrix: number[][] = [
+      //   [121, 0, 0, 0, 123, 102, 123, 115, 0, 0],
+      //   [0, 0, 125, 0, 0, 0, 0, 0, 0, 0],
+      //   [0, 0, 0, 35, 0, 0, 0, 0, 0, 0],
+      //   [105, 0, 25, 0, 14, 104, 0, 115, 0, 35],
+      //   [115, 0, 35, 0, 4, 114, 0, 105, 0, 25],
+      //   [0, 0, 0, 0, 0, 0, 115, 0, 0, 0],
+      //   [0, 0, 0, 0, 0, 0, 0, 5, 0, 0],
+      //   [0, 0, 35, 3, 2, 3, 0, 0, 0, 1],
+      // ];
 
       // 7x6
       const matrix: number[][] = [
@@ -194,7 +174,7 @@ export class MatrixStore extends EntityStore<MatrixState> {
     const newID = guid();
     this.upsert(newID, {
       state: matrix,
-      pgn: MatrixStore.NORMAL ? PgnLoaderComponent.defaultPGN10x8 : PgnLoaderComponent.defaultPGN7x6
+      pgn: PgnLoaderComponent.defaultPGN7x6
     });
     this.setActive(newID);
   }
@@ -210,10 +190,6 @@ export class MatrixStore extends EntityStore<MatrixState> {
 
 
   getDefaultMatrix(): number[][] {
-    if (MatrixStore.NORMAL) {
-      return PgnLoaderComponent.getMatrix(PgnLoaderComponent.defaultPGN10x8)!;
-    } else {
-      return PgnLoaderComponent.getMatrix(PgnLoaderComponent.defaultPGN7x6)!;
-    }
+    return PgnLoaderComponent.getMatrix(PgnLoaderComponent.defaultPGN7x6)!;
   }
 }

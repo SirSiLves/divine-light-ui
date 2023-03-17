@@ -274,17 +274,17 @@ export class PgnLoaderComponent implements OnInit, OnDestroy {
 
   static getXAxisValue(x: number, godType: GodType): string {
     if (godType === GodType.CAMAXTLI) {
-      return MatrixStore.BOARD_SIZE === '10x8' ? 'abcdefghij'.charAt(x) : 'abcdefgh'.charAt(x);
+      return 'abcdefg'.charAt(x);
     } else {
-      return MatrixStore.BOARD_SIZE === '10x8' ? 'jihgfedcba'.charAt(x) : 'hgfedcba'.charAt(x);
+      return 'gfedcba'.charAt(x);
     }
   }
 
   static getYAxisValue(y: number, godType: GodType): string {
     if (godType === GodType.NANAHUATZIN) {
-      return MatrixStore.BOARD_SIZE === '10x8' ? '87654321'.charAt(y) : '654321'.charAt(y);
+      return '654321'.charAt(y);
     } else {
-      return MatrixStore.BOARD_SIZE === '10x8' ? '12345678'.charAt(y) : '123456'.charAt(y);
+      return '123456'.charAt(y);
     }
   }
 }

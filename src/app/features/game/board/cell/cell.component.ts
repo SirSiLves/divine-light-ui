@@ -123,17 +123,17 @@ export class CellComponent implements OnInit, OnDestroy {
 
   getXAxisValue(): string {
     if (this.playerQuery.colorMapping$.value.p1.godType === GodType.CAMAXTLI) {
-      return MatrixStore.BOARD_SIZE === '10x8' ? 'abcdefghij'.charAt(this.coordinateX) : 'abcdefgh'.charAt(this.coordinateX);
+      return 'abcdefg'.charAt(this.coordinateX);
     } else {
-      return MatrixStore.BOARD_SIZE === '10x8' ? 'jihgfedcba'.charAt(this.coordinateX) : 'hgfedcba'.charAt(this.coordinateX);
+      return 'gfedcba'.charAt(this.coordinateX);
     }
   }
 
   getYAxisValue(): string {
     if (this.playerQuery.colorMapping$.value.p1.godType === GodType.CAMAXTLI) {
-      return MatrixStore.BOARD_SIZE === '10x8' ? '87654321'.charAt(this.coordinateY) : '654321'.charAt(this.coordinateY);
+      return '654321'.charAt(this.coordinateY);
     } else {
-      return MatrixStore.BOARD_SIZE === '10x8' ? '12345678'.charAt(this.coordinateY) : '123456'.charAt(this.coordinateY);
+      return '123456'.charAt(this.coordinateY);
     }
   }
 
