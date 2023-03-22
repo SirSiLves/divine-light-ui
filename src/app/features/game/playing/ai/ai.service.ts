@@ -34,6 +34,7 @@ export class AiService {
   ) {
   }
 
+  // live play
   getMoveCurrentPlayer(matrix: number[][]): Move {
     const player = this.playerQuery.isPlaying();
 
@@ -49,10 +50,12 @@ export class AiService {
     }
   }
 
+  // simulations
   public getMove(matrix: number[][], godType: GodType, botType: BotTypes): Move {
     switch (botType) {
       case BotTypes.RANDOM:
         return this.aiRandomService.getMove(matrix, godType);
+        // return this.aiMinimaxingService.getMove5(matrix, godType);
       case BotTypes.MINIMAX:
         return this.aiMinimaxingService.getMove(matrix, godType);
       case BotTypes.DQN:
