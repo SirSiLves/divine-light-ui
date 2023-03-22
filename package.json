@@ -27,6 +27,7 @@
     "@ngx-translate/http-loader": "^7.0.0",
     "@sentry/angular-ivy": "^7.42.0",
     "@sentry/tracing": "^7.42.0",
+    "@tensorflow/tfjs": "^4.2.0",
     "firebase": "^9.17.2",
     "primeflex": "^3.3.0",
     "primeicons": "^6.0.1",

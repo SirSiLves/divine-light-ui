@@ -16,6 +16,7 @@ import { Rewards } from './rewards';
 import { MatrixStore } from '../../state/matrix/matrix.store';
 import { AiDqnService } from './dqn/ai-dqn.service';
 import { MatrixQuery } from '../../state/matrix/matrix.query';
+import { AiDqn1Service } from './dqn/extension-1/ai-dqn-1.service';
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +32,7 @@ export class AiService {
     private aiRandomService: AiRandomService,
     private aiMinimaxingService: AiMinimaxingService,
     private aiDqnService: AiDqnService,
+    private aiDqn1Service: AiDqn1Service
   ) {
   }
 
@@ -44,7 +46,8 @@ export class AiService {
       case 'minimax':
         return this.aiMinimaxingService.getMove(matrix, player.godType);
       case 'dqn':
-        return this.aiDqnService.getMove(matrix, player.godType);
+        return this.aiDqn1Service.getMove(matrix, player.godType);
+        // return this.aiDqnService.getMove(matrix, player.godType);
       default:
         return this.aiRandomService.getMove(matrix, player.godType);
     }
@@ -59,7 +62,8 @@ export class AiService {
       case BotTypes.MINIMAX:
         return this.aiMinimaxingService.getMove(matrix, godType);
       case BotTypes.DQN:
-        return this.aiDqnService.getMove(matrix, godType);
+        return this.aiDqn1Service.getMove(matrix, godType);
+        // return this.aiDqnService.getMove(matrix, godType);
       default:
         return this.aiRandomService.getMove(matrix, godType);
     }
