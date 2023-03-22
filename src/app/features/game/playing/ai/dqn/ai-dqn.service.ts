@@ -51,6 +51,19 @@ export class AiDqnService {
     switch (this.EXTENSION_SETTING) {
       case 1:
         this.aiDqn1Service.train(episodes, epsilonInput, isTraining);
+        break;
+      case 2:
+        this.aiDqn2Service.train(episodes, epsilonInput, isTraining);
+        break;
+      case 3:
+        this.aiDqn3Service.train(episodes, epsilonInput, isTraining);
+        break;
+      case 4:
+        this.aiDqn4Service.train(episodes, epsilonInput, isTraining);
+        break;
+      case 5:
+        this.aiDqn5Service.train(episodes, epsilonInput, isTraining);
+        break;
     }
   }
 
@@ -61,32 +74,22 @@ export class AiDqnService {
 
   // dqn with network per player
   getMove2(matrix: number[][], isPlaying: GodType): Move {
-    const moves: Move[] = AiService.getPossiblesMoves(matrix, isPlaying);
-    return moves[this.generateRandomNumber(0, moves.length - 1)];
+    return this.aiDqn2Service.getMove(matrix, isPlaying);
   }
 
   // dqn with network per player and replay memory
   getMove3(matrix: number[][], isPlaying: GodType): Move {
-    const moves: Move[] = AiService.getPossiblesMoves(matrix, isPlaying);
-    return moves[this.generateRandomNumber(0, moves.length - 1)];
+    return this.aiDqn3Service.getMove(matrix, isPlaying);
   }
 
   // dqn with network per player, replay memory and target dqn
   getMove4(matrix: number[][], isPlaying: GodType): Move {
-    const moves: Move[] = AiService.getPossiblesMoves(matrix, isPlaying);
-    return moves[this.generateRandomNumber(0, moves.length - 1)];
+    return this.aiDqn4Service.getMove(matrix, isPlaying);
   }
 
   // dqn with network per player, replay memory, target dqn and double dqn
   getMove5(matrix: number[][], isPlaying: GodType): Move {
-    const moves: Move[] = AiService.getPossiblesMoves(matrix, isPlaying);
-    return moves[this.generateRandomNumber(0, moves.length - 1)];
-  }
-
-  generateRandomNumber = (min: number, max: number) => {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    return this.aiDqn5Service.getMove(matrix, isPlaying);
   }
 
 }
