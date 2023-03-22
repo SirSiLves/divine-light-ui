@@ -6,7 +6,7 @@ import { AiService } from '../../ai.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AiDqn1Service {
+export class AiDqn5Service {
 
   constructor() { }
 
@@ -19,5 +19,10 @@ export class AiDqn1Service {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  train(episodes: number, epsilonInput: number, isTraining: GodType): void {
+
+
   }
 }
