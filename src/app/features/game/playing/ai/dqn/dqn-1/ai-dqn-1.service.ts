@@ -19,6 +19,7 @@ export class AiDqn1Service {
       camaxtli: 'divine-light-camaxtli-dqn1-model_7x6',
       nanahuatzin: 'divine-light-nanahuatzin-dqn1-model_7x6'
     },
+    epsilon: 0.3
   };
 
   // model

@@ -56,7 +56,7 @@ export class DqnComponent {
   }
 
   train(): void {
-    // TODO
+    this.aiDqnService.train(this.totalEpisodes, this.startEpsilon, this.isTraining);
   }
 
   downloadDQNModel(): void {
@@ -64,9 +64,6 @@ export class DqnComponent {
   }
 
   downloadDQNLoss() {
-    // TODO
-    if (this.isTraining === GodType.CAMAXTLI) {
-
-    }
+    this.aiDqnService.downloadDQNLoss(this.isTraining);
   }
 }

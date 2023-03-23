@@ -53,12 +53,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
   rematchSettings: 'auto' | 'manual' = this.rematchOptions[0].value as any;
   unsavedRematchSettings: 'auto' | 'manual' = this.rematchSettings;
 
-  cloudOptions = [
-    {label: 'core.settings.loadFromCloud', value: 'load'},
-    {label: 'core.settings.saveToCloud', value: 'save'},
-  ];
-  cloudSettings?: any;
-
   notation: string | undefined;
   unsavedNotation: string | undefined;
   matrixFromPGN: number[][] | undefined;
@@ -183,8 +177,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
       const setMode = this.mode !== this.unsavedMode;
       const setP1Algorithm = this.botTypeP1 !== this.unsavedGBotTypeP1;
       const setP2Algorithm = this.botTypeP2 !== this.unsavedGBotTypeP2;
-      const uploadSettings = this.cloudSettings === 'save';
-      const downloadSettings = this.cloudSettings === 'load';
       const rematchSettings = this.rematchSettings !== this.unsavedRematchSettings;
       const autoSwitchSetting = this.autoSwitch !== this.unsavedAutoSwitch;
 
@@ -198,15 +190,12 @@ export class SettingsComponent implements OnInit, OnDestroy {
       if (setPGN) this.setPGN();
       if (setMode) this.prepareMode();
       if (setGod) this.prepareSetGod();
-      if (uploadSettings) this.gameManagerService.save();
-      if (downloadSettings) this.gameManagerService.loadData();
       if (rematchSettings) this.prepareRematch();
 
       this.setQueryParams();
     }
 
     this.createNew = false;
-    this.cloudSettings = undefined;
     this.unsavedMode = this.mode;
     this.unsavedGBotTypeP1 = this.botTypeP1;
     this.unsavedGBotTypeP2 = this.botTypeP2;
@@ -304,7 +293,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
     return !(this.notation === this.unsavedNotation && this.mode === this.unsavedMode && !this.createNew &&
       this.godPlaying === this.unsavedGodPlaying &&
       this.botTypeP1 === this.unsavedGBotTypeP1 && this.botTypeP2 === this.unsavedGBotTypeP2 &&
-      this.cloudSettings === undefined &&
       this.unsavedRematchSettings === this.rematchSettings &&
       this.unsavedAutoSwitch === this.autoSwitch);
   }
