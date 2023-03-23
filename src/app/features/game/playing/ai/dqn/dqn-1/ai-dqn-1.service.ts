@@ -2,13 +2,30 @@ import { Injectable } from '@angular/core';
 import { GodType } from '../../../../state/player/player.model';
 import { Move } from '../../../../state/action/move.model';
 import { AiService } from '../../ai.service';
+import { AiDqnTrainService } from '../state/ai-dqn-train.service';
+import { MatrixStore } from '../../../../state/matrix/matrix.store';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AiDqn1Service {
 
-  constructor() { }
+  private readonly DQN_SETTINGS = {
+    model: 'divine-light-dqn1-model_' + MatrixStore.BOARD_SIZE
+  };
+
+  // model
+  private model: any;
+
+
+  constructor(
+    private aiDqnTrainService: AiDqnTrainService
+  ) {
+  }
+
+  init(): void {
+
+  }
 
   getMove(matrix: number[][], isPlaying: GodType): Move {
     const moves: Move[] = AiService.getPossiblesMoves(matrix, isPlaying);
@@ -21,8 +38,11 @@ export class AiDqn1Service {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  train(episodes: number, epsilonInput: number, isTraining: GodType): void {
+  train(episodes: number, epsilon: number, isTraining: GodType): void {
+    this.prepare(episodes, epsilon);
+  }
 
-
+  private prepare(episodes: number, epsilon: number): void {
+    this.aiDqnTrainService.init(episodes, epsilon);
   }
 }
