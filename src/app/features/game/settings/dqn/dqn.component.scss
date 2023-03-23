@@ -1,0 +1,18 @@
+.action {
+  display: flex;
+  justify-content: center;
+
+  button {
+    width: 100%;
+  }
+}
+
+.downloads {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+
+  button {
+    width: 100%;
+  }
+}

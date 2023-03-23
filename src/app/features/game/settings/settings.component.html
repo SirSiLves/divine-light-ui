@@ -139,6 +139,17 @@
     </p-tabPanel>
 
     <ng-container *ngIf="user$ | async">
+
+      <p-tabPanel header="{{'core.settings.dqn.title' | translate}}" [disabled]="(isLoading$ | async) === true">
+        <div class="container">
+          <div class="grid">
+            <div class="col-12">
+              <app-dqn *ngIf="display"></app-dqn>
+            </div>
+          </div>
+        </div>
+      </p-tabPanel>
+
       <p-tabPanel header="{{'core.settings.simulation.title' | translate}}" [disabled]="(isLoading$ | async) === true">
         <div class="container">
           <div class="grid">

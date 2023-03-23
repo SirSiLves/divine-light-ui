@@ -6,7 +6,8 @@ export interface AiDqnTrainState {
   wins: number;
   draws: number;
   defeats: number;
-  epsilon: Number;
+  winRate: number;
+  epsilon: number;
   sync: number;
 }
 

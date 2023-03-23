@@ -35,8 +35,8 @@ export class GameManagerService {
     }
   };
 
-  private isOneModelLoading = false;
-  private isPlayerModelsLoading = false;
+  private isDQNCamaxtliModelLoading = false;
+  private isDQNNanahuatzinModelLoading = false;
 
   constructor(
     private gameManagerStore: GameManagerStore,
@@ -167,7 +167,7 @@ export class GameManagerService {
 
   loadData(): void {
     this.setLoading(true);
-    this.loadModel();
+    this.loadDQNModels();
   }
 
   public setLoading(loading: boolean): void {
@@ -175,22 +175,23 @@ export class GameManagerService {
   }
 
   private stopLoading(): void {
-    if (!this.isOneModelLoading && !this.isPlayerModelsLoading) {
+    if (!this.isDQNCamaxtliModelLoading && !this.isDQNNanahuatzinModelLoading) {
       this.setLoading(false);
     }
   }
 
-  private loadModel(): void {
+  private loadDQNModels(): void {
     switch (AiDqnService.EXTENSION_SETTING) {
       case 1: {
-        this.loadOneModel(AiDqn1Service.DQN_SETTINGS.model);
+        this.getCamaxtliModelFromCloud(AiDqn1Service.DQN_SETTINGS.files.camaxtli);
+        this.getNanahuatzinModelFromCloud(AiDqn1Service.DQN_SETTINGS.files.nanahuatzin);
         break;
       }
     }
   }
 
-  private loadOneModel(model: string): void {
-    this.isOneModelLoading = true;
+  private getCamaxtliModelFromCloud(model: string): void {
+    this.isDQNCamaxtliModelLoading = true;
 
     combineLatest([
       this.angularFireStorage.ref(model + '.json').getDownloadURL(),
@@ -207,20 +208,20 @@ export class GameManagerService {
               const modelFile = new File([blobModel], model + '.json');
               const weightsFile = new File([blobWeights], model + '.bin');
 
-              this.aiDqnService.loadModel(modelFile, weightsFile);
-              this.isOneModelLoading = false;
+              this.aiDqnService.loadModel(GodType.CAMAXTLI, modelFile, weightsFile);
+              this.isDQNCamaxtliModelLoading = false;
               this.stopLoading();
             }
           },
           error: err => {
             this.messageService.add({
               severity: 'error',
-              detail: this.translateService.instant('core.settings.dqn.error')
+              detail: this.translateService.instant('core.settings.dqn.camaxtli.error')
             });
 
-            this.aiDqnService.initializeModel();
+            this.aiDqnService.initializeModel(GodType.CAMAXTLI);
 
-            this.isOneModelLoading = false;
+            this.isDQNCamaxtliModelLoading = false;
             console.error(err);
           }
         })
@@ -228,24 +229,67 @@ export class GameManagerService {
       error: err => {
         this.messageService.add({
           severity: 'error',
-          detail: this.translateService.instant('core.settings.dqn.error')
+          detail: this.translateService.instant('core.settings.dqn.camaxtli.error')
         });
 
-        this.aiDqnService.initializeModel();
+        this.aiDqnService.initializeModel(GodType.CAMAXTLI);
 
-        this.isOneModelLoading = false;
+        this.isDQNCamaxtliModelLoading = false;
         this.stopLoading();
         console.error(err);
       }
     });
   }
 
-  private loadPlayerModels(): void {
-    // TODO
-    this.isPlayerModelsLoading = true;
+  private getNanahuatzinModelFromCloud(model: string): void {
+    this.isDQNNanahuatzinModelLoading = true;
 
-    this.isPlayerModelsLoading = false;
-    this.stopLoading();
+    combineLatest([
+      this.angularFireStorage.ref(model + '.json').getDownloadURL(),
+      this.angularFireStorage.ref(model + '.bin').getDownloadURL()
+    ]).subscribe({
+      next: ([urlModel, urlWeights]) => {
+
+        combineLatest([
+          this.httpClient.get(urlModel, {responseType: 'blob'}),
+          this.httpClient.get(urlWeights, {responseType: 'blob'})
+        ]).subscribe({
+          next: ([blobModel, blobWeights]) => {
+            if (blobModel && blobWeights) {
+              const modelFile = new File([blobModel], model + '.json');
+              const weightsFile = new File([blobWeights], model + '.bin');
+
+              this.aiDqnService.loadModel(GodType.NANAHUATZIN, modelFile, weightsFile);
+              this.isDQNNanahuatzinModelLoading = false;
+              this.stopLoading();
+            }
+          },
+          error: err => {
+            this.messageService.add({
+              severity: 'error',
+              detail: this.translateService.instant('core.settings.dqn.nanahuatzin.error')
+            });
+
+            this.aiDqnService.initializeModel(GodType.NANAHUATZIN);
+
+            this.isDQNNanahuatzinModelLoading = false;
+            console.error(err);
+          }
+        })
+      },
+      error: err => {
+        this.messageService.add({
+          severity: 'error',
+          detail: this.translateService.instant('core.settings.dqn.nanahuatzin.error')
+        });
+
+        this.aiDqnService.initializeModel(GodType.NANAHUATZIN);
+
+        this.isDQNNanahuatzinModelLoading = false;
+        this.stopLoading();
+        console.error(err);
+      }
+    });
   }
 
 

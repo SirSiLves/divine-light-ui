@@ -15,12 +15,15 @@ import { environment } from '../../../../../../../environments/environment';
 export class AiDqn1Service {
 
   public static readonly DQN_SETTINGS = {
-    model: 'divine-light-dqn1-model_7x6'
+    files: {
+      camaxtli: 'divine-light-camaxtli-dqn1-model_7x6',
+      nanahuatzin: 'divine-light-nanahuatzin-dqn1-model_7x6'
+    },
   };
 
   // model
-  private model: any;
-
+  private camaxtli: any;
+  private nanahuatzin: any;
 
   constructor(
     private aiDqnTrainService: AiDqnTrainService,
@@ -30,14 +33,27 @@ export class AiDqn1Service {
   ) {
   }
 
-  initializeModel(): void {
-    this.model = this.aiTensorflowService.createBitmapDQNModel()
-    this.aiTensorflowService.compileDQNNetworks(this.model);
+  initializeModel(godType: GodType): void {
+    // camaxtli
+    if (godType === GodType.CAMAXTLI) {
+      this.camaxtli = this.aiTensorflowService.createBitmapDQNModel()
+      this.aiTensorflowService.compileDQNNetworks(this.camaxtli);
 
-    this.messageService.add({
-      severity: 'info',
-      detail: this.translateService.instant('core.settings.dqn.create')
-    });
+      this.messageService.add({
+        severity: 'info',
+        detail: this.translateService.instant('core.settings.dqn.camaxtli.create')
+      });
+    }
+    // nanahuatzin
+    else {
+      this.nanahuatzin = this.aiTensorflowService.createBitmapDQNModel()
+      this.aiTensorflowService.compileDQNNetworks(this.nanahuatzin);
+
+      this.messageService.add({
+        severity: 'info',
+        detail: this.translateService.instant('core.settings.dqn.nanahuatzin.create')
+      });
+    }
   }
 
   getMove(matrix: number[][], isPlaying: GodType): Move {
@@ -59,16 +75,23 @@ export class AiDqn1Service {
     this.aiDqnTrainService.init(episodes, epsilon);
   }
 
-  downloadModel(): void {
-    this.model.save('downloads://' + AiDqn1Service.DQN_SETTINGS.model); // https://www.tensorflow.org/js/guide/save_load
-  }
-
-  loadModel(modelFile: File, weightsFile: File): void {
+  loadModel(godType: GodType, modelFile: File, weightsFile: File): void {
     this.aiTensorflowService.loadModel(modelFile, weightsFile).then(response => {
-      this.model = response;
-      this.aiTensorflowService.compileDQNNetworks(this.model);
-
-      if (environment.log) console.log('AI-Model loaded');
+      if (godType === GodType.CAMAXTLI) {
+        this.camaxtli = response;
+        this.aiTensorflowService.compileDQNNetworks(this.camaxtli);
+        if (environment.log) console.log('DQN Camaxtli-Model loaded');
+      } else {
+        this.nanahuatzin = response;
+        this.aiTensorflowService.compileDQNNetworks(this.nanahuatzin);
+        if (environment.log) console.log('DQN Nanahuatzin-Model loaded');
+      }
     });
   }
+
+  getModel(godType: GodType): any {
+    if (godType === GodType.CAMAXTLI) return this.camaxtli
+    return this.nanahuatzin;
+  }
+
 }
