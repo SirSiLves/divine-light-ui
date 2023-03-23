@@ -120,7 +120,16 @@ export class AiDqnService {
   loadModel(model: File, weights: File): void {
     switch (AiDqnService.EXTENSION_SETTING) {
       case 1: {
-        // TODO
+        this.aiDqn1Service.loadModel(model, weights);
+      }
+    }
+  }
+
+  downloadDQNModel(): void {
+    switch (AiDqnService.EXTENSION_SETTING) {
+      case 1: {
+        this.aiDqn1Service.downloadModel();
+        break;
       }
     }
   }

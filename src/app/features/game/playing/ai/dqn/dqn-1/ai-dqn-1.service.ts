@@ -6,6 +6,7 @@ import { AiDqnTrainService } from '../state/ai-dqn-train.service';
 import { AiTensorflowService } from '../ai-tensorflow.service';
 import { MessageService } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
+import { environment } from '../../../../../../../environments/environment';
 
 
 @Injectable({
@@ -56,5 +57,18 @@ export class AiDqn1Service {
 
   private prepare(episodes: number, epsilon: number): void {
     this.aiDqnTrainService.init(episodes, epsilon);
+  }
+
+  downloadModel(): void {
+    this.model.save('downloads://' + AiDqn1Service.DQN_SETTINGS.model); // https://www.tensorflow.org/js/guide/save_load
+  }
+
+  loadModel(modelFile: File, weightsFile: File): void {
+    this.aiTensorflowService.loadModel(modelFile, weightsFile).then(response => {
+      this.model = response;
+      this.aiTensorflowService.compileDQNNetworks(this.model);
+
+      if (environment.log) console.log('AI-Model loaded');
+    });
   }
 }

@@ -37,6 +37,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { GameRoutingModule } from './game-routing.module';
 import { InputTextModule } from 'primeng/inputtext';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { DqnComponent } from './settings/dqn/dqn.component';
 
 
 @NgModule({
@@ -57,6 +58,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
     SimulationComponent,
     DrawComponent,
     PollComponent,
+    DqnComponent,
   ],
   exports: [
     ResultComponent,

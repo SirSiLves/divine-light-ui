@@ -56,4 +56,8 @@ export class AiTensorflowService {
       loss: tf.losses.meanSquaredError
     });
   }
+
+  loadModel(model: File, weights: File): Promise<any> {
+    return tf.loadLayersModel(tf.io.browserFiles([model, weights]));
+  }
 }
