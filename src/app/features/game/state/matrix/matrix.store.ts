@@ -18,7 +18,6 @@ export class MatrixStore extends EntityStore<MatrixState> {
 
   public static readonly WIDTH_NUMBER = 7;
   public static readonly HEIGHT_NUMBER = 6;
-  public static readonly BOARD_SIZE: '7x6';
 
   public static readonly MAX_ACTION_INDEX = 12;
   public static readonly IMPOSSIBLE_INDEXES = [

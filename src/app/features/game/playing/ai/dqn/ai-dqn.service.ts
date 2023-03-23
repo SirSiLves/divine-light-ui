@@ -19,7 +19,7 @@ export class AiDqnService {
   // 3 - dqn with network per player and replay memory
   // 4 - dqn with network per player, replay memory and target dqn
   // 5 - dqn with network per player, replay memory, target dqn and double dqn
-  private readonly EXTENSION_SETTING: 1 | 2 | 3 | 4 | 5 = 1;
+  public static readonly EXTENSION_SETTING: 1 | 2 | 3 | 4 | 5 = 1;
 
   public static readonly ALL_DQN_SETTINGS = {
     // q-learning hyperparameters
@@ -48,7 +48,7 @@ export class AiDqnService {
   }
 
   getMove(matrix: number[][], isPlaying: GodType): Move {
-    switch (this.EXTENSION_SETTING) {
+    switch (AiDqnService.EXTENSION_SETTING) {
       case 1:
         return this.getMove1(matrix, isPlaying);
       case 2:
@@ -65,7 +65,7 @@ export class AiDqnService {
   }
 
   train(episodes: number, epsilon: number, isTraining: GodType): void {
-    switch (this.EXTENSION_SETTING) {
+    switch (AiDqnService.EXTENSION_SETTING) {
       case 1:
         this.aiDqn1Service.train(episodes, epsilon, isTraining);
         break;
@@ -108,6 +108,23 @@ export class AiDqnService {
   getMove5(matrix: number[][], isPlaying: GodType): Move {
     return this.aiDqn5Service.getMove(matrix, isPlaying);
   }
+
+  initializeModel() {
+    switch (AiDqnService.EXTENSION_SETTING) {
+      case 1: {
+        this.aiDqn1Service.initializeModel();
+      }
+    }
+  }
+
+  loadModel(model: File, weights: File): void {
+    switch (AiDqnService.EXTENSION_SETTING) {
+      case 1: {
+        // TODO
+      }
+    }
+  }
+
 
 }
 

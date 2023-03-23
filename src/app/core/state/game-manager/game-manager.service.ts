@@ -9,6 +9,14 @@ import { PlayerQuery } from '../../../features/game/state/player/player.query';
 import { GodType } from '../../../features/game/state/player/player.model';
 import { MatrixQuery } from '../../../features/game/state/matrix/matrix.query';
 import { GameManagerSettings } from './game-manager-settings.model';
+import { AiDqnService } from '../../../features/game/playing/ai/dqn/ai-dqn.service';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { combineLatest } from 'rxjs';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { HttpClient } from '@angular/common/http';
+import { AiDqn1Service } from '../../../features/game/playing/ai/dqn/dqn-1/ai-dqn-1.service';
+import { MessageService } from 'primeng/api';
+import { TranslateService } from '@ngx-translate/core';
 
 
 @Injectable({providedIn: 'root'})
@@ -27,6 +35,9 @@ export class GameManagerService {
     }
   };
 
+  private isOneModelLoading = false;
+  private isPlayerModelsLoading = false;
+
   constructor(
     private gameManagerStore: GameManagerStore,
     private matrixService: MatrixService,
@@ -35,6 +46,12 @@ export class GameManagerService {
     private playerService: PlayerService,
     private gameManagerQuery: GameManagerQuery,
     private playerQuery: PlayerQuery,
+    private angularFirestore: AngularFirestore,
+    private angularFireStorage: AngularFireStorage,
+    private httpClient: HttpClient,
+    private messageService: MessageService,
+    private translateService: TranslateService,
+    private aiDqnService: AiDqnService
   ) {
   }
 
@@ -145,15 +162,90 @@ export class GameManagerService {
   }
 
   save(): void {
-    this.gameManagerStore.setLoading(true);
+    this.setLoading(true);
   }
 
   loadData(): void {
-    this.gameManagerStore.setLoading(true);
+    this.setLoading(true);
+    this.loadModel();
   }
 
   public setLoading(loading: boolean): void {
     this.gameManagerStore.setLoading(loading);
+  }
+
+  private stopLoading(): void {
+    if (!this.isOneModelLoading && !this.isPlayerModelsLoading) {
+      this.setLoading(false);
+    }
+  }
+
+  private loadModel(): void {
+    switch (AiDqnService.EXTENSION_SETTING) {
+      case 1: {
+        this.loadOneModel(AiDqn1Service.DQN_SETTINGS.model);
+        break;
+      }
+    }
+  }
+
+  private loadOneModel(model: string): void {
+    this.isOneModelLoading = true;
+
+    combineLatest([
+      this.angularFireStorage.ref(model + '.json').getDownloadURL(),
+      this.angularFireStorage.ref(model + '.bin').getDownloadURL()
+    ]).subscribe({
+      next: ([urlModel, urlWeights]) => {
+
+        combineLatest([
+          this.httpClient.get(urlModel, {responseType: 'blob'}),
+          this.httpClient.get(urlWeights, {responseType: 'blob'})
+        ]).subscribe({
+          next: ([blobModel, blobWeights]) => {
+            if (blobModel && blobWeights) {
+              const modelFile = new File([blobModel], model + '.json');
+              const weightsFile = new File([blobWeights], model + '.bin');
+
+              this.aiDqnService.loadModel(modelFile, weightsFile);
+              this.isOneModelLoading = false;
+              this.stopLoading();
+            }
+          },
+          error: err => {
+            this.messageService.add({
+              severity: 'error',
+              detail: this.translateService.instant('core.settings.dqn.error')
+            });
+
+            this.aiDqnService.initializeModel();
+
+            this.isOneModelLoading = false;
+            console.error(err);
+          }
+        })
+      },
+      error: err => {
+        this.messageService.add({
+          severity: 'error',
+          detail: this.translateService.instant('core.settings.dqn.error')
+        });
+
+        this.aiDqnService.initializeModel();
+
+        this.isOneModelLoading = false;
+        this.stopLoading();
+        console.error(err);
+      }
+    });
+  }
+
+  private loadPlayerModels(): void {
+    // TODO
+    this.isPlayerModelsLoading = true;
+
+    this.isPlayerModelsLoading = false;
+    this.stopLoading();
   }
 
 
