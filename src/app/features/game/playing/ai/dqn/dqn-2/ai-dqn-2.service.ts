@@ -13,6 +13,7 @@ import { AiDqnService } from '../ai-dqn.service';
 import { environment } from '../../../../../../../environments/environment';
 import { AISarsd } from '../state/ai-dqn-train.model';
 import { guid } from '@datorama/akita';
+import { ActionService } from '../../../../state/action/action.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,14 +23,14 @@ export class AiDqn2Service {
   public static readonly DQN_SETTINGS = {
     files: {
       camaxtli: {
-        model: 'divine-light-camaxtli-dqn2-model_7x6',
-        progress: 'divine-light-camaxtli-dqn2-progressl_7x6',
-        loss: 'divine-light-camaxtli-dqn2-loss_7x6'
+        model: 'divine-light-dqn2-model-camaxtli_7x6',
+        progress: 'divine-light-dqn2-progressl-camaxtli_7x6',
+        loss: 'divine-light-dqn2-loss-camaxtli_7x6'
       },
       nanahuatzin: {
-        model: 'divine-light-nanahuatzin-dqn2-model_7x6',
-        progress: 'divine-light-camaxtli-dqn2-progress_7x6',
-        loss: 'divine-light-nanahuatzin-dqn2-loss_7x6'
+        model: 'divine-light-dqn2-model-nanahuatzin_7x6',
+        progress: 'divine-light-dqn2-progress-nanahuatzin_7x6',
+        loss: 'divine-light-dqn2-loss-nanahuatzin_7x6'
       },
     },
   };
@@ -71,17 +72,16 @@ export class AiDqn2Service {
     }
   }
 
-  // TODO
   getMove(matrix: number[][], isPlaying: GodType): Move {
-    const moves: Move[] = AiService.getPossiblesMoves(matrix, isPlaying);
-    return moves[this.generateRandomNumber(0, moves.length - 1)];
-  }
+    // dqn has been trained not with swapped positions
+    const isSwappedPosition = MatrixQuery.isSwappedMatrixPosition(matrix);
+    const normalizedMatrix = isSwappedPosition ? MatrixService.swapMatrix(matrix) : matrix;
 
-  // FIXME - remove
-  generateRandomNumber = (min: number, max: number) => {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    const qMaxAction: MoveIndex = this.aiDqnTrainService.getBestAction(
+      isPlaying === GodType.CAMAXTLI ? this.camaxtli : this.nanahuatzin, normalizedMatrix, isPlaying
+    );
+
+    return isSwappedPosition ? ActionService.swapMove(qMaxAction.move)! : qMaxAction.move;
   }
 
   train(totalEpisodes: number, startEpsilon: number, isTraining: GodType): void {

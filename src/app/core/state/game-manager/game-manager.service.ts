@@ -201,7 +201,7 @@ export class GameManagerService {
 
     combineLatest([
       this.angularFireStorage.ref(model + '.json').getDownloadURL(),
-      this.angularFireStorage.ref(model + '.bin').getDownloadURL()
+      this.angularFireStorage.ref(model + '.weights.bin').getDownloadURL()
     ]).subscribe({
       next: ([urlModel, urlWeights]) => {
 
@@ -212,7 +212,7 @@ export class GameManagerService {
           next: ([blobModel, blobWeights]) => {
             if (blobModel && blobWeights) {
               const modelFile = new File([blobModel], model + '.json');
-              const weightsFile = new File([blobWeights], model + '.bin');
+              const weightsFile = new File([blobWeights], model + '.weights.bin');
 
               this.aiDqnService.loadModel(GodType.CAMAXTLI, modelFile, weightsFile);
               this.isDQNCamaxtliModelLoading = false;
@@ -252,7 +252,7 @@ export class GameManagerService {
 
     combineLatest([
       this.angularFireStorage.ref(model + '.json').getDownloadURL(),
-      this.angularFireStorage.ref(model + '.bin').getDownloadURL()
+      this.angularFireStorage.ref(model + '.weights.bin').getDownloadURL()
     ]).subscribe({
       next: ([urlModel, urlWeights]) => {
 
@@ -263,7 +263,7 @@ export class GameManagerService {
           next: ([blobModel, blobWeights]) => {
             if (blobModel && blobWeights) {
               const modelFile = new File([blobModel], model + '.json');
-              const weightsFile = new File([blobWeights], model + '.bin');
+              const weightsFile = new File([blobWeights], model + '.weights.bin');
 
               this.aiDqnService.loadModel(GodType.NANAHUATZIN, modelFile, weightsFile);
               this.isDQNNanahuatzinModelLoading = false;
