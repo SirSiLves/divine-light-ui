@@ -137,11 +137,25 @@ export class AiDqnService {
         )); // https://www.tensorflow.org/js/guide/save_load
         break;
       }
+      case 2: {
+        const model = this.aiDqn2Service.getModel(godType);
+        model.save('downloads://' + (
+          godType === GodType.CAMAXTLI ? AiDqn2Service.DQN_SETTINGS.files.camaxtli.model : AiDqn2Service.DQN_SETTINGS.files.nanahuatzin.model
+        )); // https://www.tensorflow.org/js/guide/save_load
+        break;
+      }
     }
   }
 
   downloadDQNLoss(isTraining: GodType): void {
-    this.aiDqn1Service.downloadLoss(isTraining);
+    switch (AiDqnService.EXTENSION_SETTING) {
+      case 1:
+        this.aiDqn1Service.downloadLoss(isTraining);
+        break;
+      case 2:
+        this.aiDqn2Service.downloadLoss(isTraining);
+        break;
+    }
   }
 }
 

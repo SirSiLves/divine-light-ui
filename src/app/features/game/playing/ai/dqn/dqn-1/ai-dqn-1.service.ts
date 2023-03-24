@@ -23,18 +23,16 @@ export class AiDqn1Service {
   public static readonly DQN_SETTINGS = {
     files: {
       camaxtli: {
-        model: 'divine-light-dqn1-model_7x6',
-        loss: 'divine-light-dqn1-loss_7x6'
+        model: 'divine-light-camaxtli-dqn1-model_7x6',
+        loss: 'divine-light-camaxtli-dqn1-loss_7x6'
       },
       nanahuatzin: {
-        model: 'divine-light-dqn1-model_7x6',
-        loss: 'divine-light-dqn1-loss_7x6'
+        model: 'divine-light-nanahuatzin-dqn1-model_7x6',
+        loss: 'divine-light-nanahuatzin-dqn1-loss_7x6'
       },
     },
-    epsilon: 0.3
   };
 
-  // TODO make one model for both......
   // model
   private camaxtli: any;
   private nanahuatzin: any;
@@ -86,7 +84,7 @@ export class AiDqn1Service {
   }
 
   train(totalEpisodes: number, startEpsilon: number, isTraining: GodType): void {
-    this.aiDqnTrainService.init(totalEpisodes, AiDqn1Service.DQN_SETTINGS.epsilon);
+    this.aiDqnTrainService.init(totalEpisodes, startEpsilon);
 
     // give ui some time to deactivate buttons
     setTimeout(() => {
@@ -158,8 +156,8 @@ export class AiDqn1Service {
   }
 
   private chooseAction(state: number[][], isTraining: GodType): MoveIndex {
-    if (isTraining === GodType.CAMAXTLI) return this.aiDqnTrainService.chooseAction(this.camaxtli, state, isTraining);
-    return this.aiDqnTrainService.chooseAction(this.nanahuatzin, state, isTraining);
+    if (isTraining === GodType.CAMAXTLI) return this.aiDqnTrainService.getBestAction(this.camaxtli, state, isTraining);
+    return this.aiDqnTrainService.getBestAction(this.nanahuatzin, state, isTraining);
   }
 
   private async fit(isTraining: GodType, entries: AiSarsd[]): Promise<void> {

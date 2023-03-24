@@ -32,7 +32,7 @@ export class AiDqn2Service {
     },
   };
 
-  // model
+  // dqn model
   private camaxtli: any;
   private nanahuatzin: any;
 

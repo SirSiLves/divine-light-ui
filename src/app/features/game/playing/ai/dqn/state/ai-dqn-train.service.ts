@@ -106,6 +106,12 @@ export class AiDqnTrainService {
     }
   }
 
+  getBestAction(model: any, state: number[][], isTraining: GodType): MoveIndex {
+    const availableMoveIndexList: MoveIndex[] = AiService.shuffle(AiService.getPossibleMoveIndexList(state, isTraining));
+    const qValues: number[] = this.aiTensorflowService.predictBitmap(model, state);
+    return this.getQMaxAction(availableMoveIndexList, qValues);
+  }
+
   private getQMaxAction(availableMoveIndexList: MoveIndex[], qValues: number[]): MoveIndex {
     let qIndex: number = 0;
     let maxQValue: number = qValues[availableMoveIndexList[qIndex].index];

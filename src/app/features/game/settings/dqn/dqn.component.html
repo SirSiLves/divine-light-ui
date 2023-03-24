@@ -24,17 +24,19 @@
     </div>
   </div>
 
-  <div class="col-5">
-    Start {{'core.settings.dqn.epsilon' | translate}}
-  </div>
-  <div class="col-7">
-    <div>
-      <p-inputNumber [disabled]="(isTraining$ | async) === true"
-                     [min]="0.1"
-                     [max]="1"
-                     [(ngModel)]="startEpsilon" locale="de-CH"></p-inputNumber>
+  <ng-container *ngIf="extension !== 1">
+    <div class="col-5">
+      Start {{'core.settings.dqn.epsilon' | translate}}
     </div>
-  </div>
+    <div class="col-7">
+      <div>
+        <p-inputNumber [disabled]="(isTraining$ | async) === true"
+                       [min]="0.1"
+                       [max]="1"
+                       [(ngModel)]="startEpsilon" locale="de-CH"></p-inputNumber>
+      </div>
+    </div>
+  </ng-container>
 
   <div class="col-5">
     {{'core.settings.dqn.currentEpisode' | translate}}
@@ -43,12 +45,14 @@
     {{episode$ | async | number}}
   </div>
 
-  <div class="col-5">
-    {{'core.settings.dqn.currentEpsilon' | translate}}
-  </div>
-  <div class="col-7">
-    {{epsilon$ | async | number}}
-  </div>
+  <ng-container *ngIf="extension !== 1">
+    <div class="col-5">
+      {{'core.settings.dqn.currentEpsilon' | translate}}
+    </div>
+    <div class="col-7">
+      {{epsilon$ | async | number}}
+    </div>
+  </ng-container>
 
   <div class="col-5">
     {{'core.settings.dqn.wins' | translate}}
