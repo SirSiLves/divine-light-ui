@@ -303,7 +303,6 @@ export class AiDqnTrainService {
   }
 
   calculateProgress(reward: number): void {
-
     this.tempRewardHistory.push(reward);
     let sum = 0;
 
