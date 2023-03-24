@@ -31,5 +31,5 @@ export interface ColorMapping {
 }
 
 export enum BotTypes {
-  NONE, RANDOM, MINIMAX, MCTS, DQN, CUSTOM
+  NONE, RANDOM, MINIMAX, DQN
 }

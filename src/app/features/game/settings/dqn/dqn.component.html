@@ -86,7 +86,7 @@
     {{'core.settings.dqn.rewardProgress' | translate}}
   </div>
   <div class="col-7">
-    TODO REWARDS <!-- {{reward$ | async | number}}-->
+    {{rewardAverage$ | async | number}}
   </div>
 
 
@@ -114,10 +114,20 @@
         <button pButton pRipple type="button"
                 [label]="'core.settings.dqn.camaxtli.downloadModel' | translate"
                 (click)="downloadDQNModel()"
+                [pTooltip]="'core.settings.dqn.download' | translate"
+                tooltipPosition="bottom"
                 class="p-button-info mr-1"></button>
         <button pButton pRipple type="button"
                 [label]="'core.settings.dqn.camaxtli.downloadLoss' | translate"
                 (click)="downloadDQNLoss()"
+                tooltipPosition="bottom"
+                [pTooltip]="'core.settings.dqn.download' | translate"
+                class="p-button-info mr-1 ml-1"></button>
+        <button pButton pRipple type="button"
+                [label]="'core.settings.dqn.camaxtli.downloadProgress' | translate"
+                (click)="downloadDQNProgress()"
+                [pTooltip]="'core.settings.dqn.download' | translate"
+                tooltipPosition="bottom"
                 class="p-button-info ml-1"></button>
       </div>
     </ng-container>
@@ -126,10 +136,20 @@
         <button pButton pRipple type="button"
                 [label]="'core.settings.dqn.nanahuatzin.downloadModel' | translate"
                 (click)="downloadDQNModel()"
+                [pTooltip]="'core.settings.dqn.download' | translate"
+                tooltipPosition="bottom"
                 class="p-button-info mr-1"></button>
         <button pButton pRipple type="button"
                 [label]="'core.settings.dqn.nanahuatzin.downloadLoss' | translate"
                 (click)="downloadDQNLoss()"
+                [pTooltip]="'core.settings.dqn.download' | translate"
+                tooltipPosition="bottom"
+                class="p-button-info mr-1 ml-1"></button>
+        <button pButton pRipple type="button"
+                [label]="'core.settings.dqn.nanahuatzin.downloadProgress' | translate"
+                (click)="downloadDQNProgress()"
+                [pTooltip]="'core.settings.dqn.download' | translate"
+                tooltipPosition="bottom"
                 class="p-button-info ml-1"></button>
       </div>
     </ng-template>

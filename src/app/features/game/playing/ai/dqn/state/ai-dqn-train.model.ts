@@ -1,6 +1,6 @@
 import { MoveIndex } from '../../../../state/action/move.model';
 
-export interface AiSarsd {
+export interface AISarsd {
   id: string;
   state: number[][];
   action: MoveIndex;
@@ -10,7 +10,11 @@ export interface AiSarsd {
   new: boolean;
 }
 
-export interface AiHistoryLoss {
+export interface AIHistoryLoss {
   loss: number,
   steps: number
+}
+export interface AIHistoryRewards {
+  reward: number,
+  episode: number
 }

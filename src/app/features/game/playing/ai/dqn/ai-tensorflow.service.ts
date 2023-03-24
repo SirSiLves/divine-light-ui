@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as tf from '@tensorflow/tfjs';
 import { AiDqnService } from './ai-dqn.service';
-import { GodType } from '../../../state/player/player.model';
+
 
 @Injectable({
   providedIn: 'root'

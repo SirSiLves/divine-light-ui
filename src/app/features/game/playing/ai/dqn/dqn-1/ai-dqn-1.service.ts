@@ -11,7 +11,7 @@ import { MatrixQuery } from '../../../../state/matrix/matrix.query';
 import { AiDqnService } from '../ai-dqn.service';
 import { MatrixService } from '../../../../state/matrix/matrix.service';
 import { AiDqnTrainQuery } from '../state/ai-dqn-train.query';
-import { AiSarsd } from '../state/ai-dqn-train.model';
+import { AIHistoryRewards, AISarsd } from '../state/ai-dqn-train.model';
 import { guid } from '@datorama/akita';
 
 
@@ -24,10 +24,12 @@ export class AiDqn1Service {
     files: {
       camaxtli: {
         model: 'divine-light-camaxtli-dqn1-model_7x6',
+        progress: 'divine-light-camaxtli-dqn1-progressl_7x6',
         loss: 'divine-light-camaxtli-dqn1-loss_7x6'
       },
       nanahuatzin: {
         model: 'divine-light-nanahuatzin-dqn1-model_7x6',
+        progress: 'divine-light-camaxtli-dqn1-progress_7x6',
         loss: 'divine-light-nanahuatzin-dqn1-loss_7x6'
       },
     },
@@ -36,6 +38,9 @@ export class AiDqn1Service {
   // model
   private camaxtli: any;
   private nanahuatzin: any;
+
+  // progress
+  private tempRewardHistory: AIHistoryRewards[] = [];
 
   constructor(
     private aiDqnTrainService: AiDqnTrainService,
@@ -144,14 +149,14 @@ export class AiDqn1Service {
     const {reward, nextState, winner, draw} = this.aiDqnTrainService.executeActionWithReward(
       state, isTraining, moveIndex.move, rounds
     );
-
-    // 3. train network with sars
-    const sars: AiSarsd[] = [{
+    const sars: AISarsd[] = [{
       id: guid(), state, action: moveIndex, reward, nextState, done: winner !== undefined || draw, new: true
     }];
+
+    // 3. train network with sars
     this.fit(isTraining, sars).then(() => {
       // 4. go further until batch size is reached
-      this.nextMove(isTraining, nextState, winner, rounds, draw);
+      this.nextMove(isTraining, nextState, winner, rounds, draw, reward);
     });
   }
 
@@ -160,7 +165,7 @@ export class AiDqn1Service {
     return this.aiDqnTrainService.getBestAction(this.nanahuatzin, state, isTraining);
   }
 
-  private async fit(isTraining: GodType, entries: AiSarsd[]): Promise<void> {
+  private async fit(isTraining: GodType, entries: AISarsd[]): Promise<void> {
     let stateList: number[][][][] = []; // samples, layers, 2d-matrix
     let nextStateList: number[][][][] = [];
 
@@ -196,10 +201,14 @@ export class AiDqn1Service {
     this.aiDqnTrainService.addHistoryLoss(trainHistory.history.loss[0], entries.length);
   }
 
-  private nextMove(isTraining: GodType, nextState: number[][], winner: GodType | undefined, rounds: number, draw: boolean): void {
+  private nextMove(
+    isTraining: GodType, nextState: number[][], winner: GodType | undefined, rounds: number, draw: boolean, reward: number
+  ): void {
     if (winner !== undefined || draw) {
+      this.aiDqnTrainService.calculateProgress(reward);
       this.nextEpisode(winner, isTraining, draw);
     } else {
+      this.aiDqnTrainService.addProgress(reward);
       this.run(nextState, isTraining, rounds + 1);
     }
   }
@@ -215,6 +224,12 @@ export class AiDqn1Service {
   downloadLoss(isTraining: GodType): void {
     this.aiDqnTrainService.downloadLoss(isTraining === GodType.CAMAXTLI ?
       AiDqn1Service.DQN_SETTINGS.files.camaxtli.loss : AiDqn1Service.DQN_SETTINGS.files.nanahuatzin.loss
+    );
+  }
+
+  downloadProgress(isTraining: GodType): void {
+    this.aiDqnTrainService.downloadProgress(isTraining === GodType.CAMAXTLI ?
+      AiDqn1Service.DQN_SETTINGS.files.camaxtli.progress : AiDqn1Service.DQN_SETTINGS.files.nanahuatzin.progress
     );
   }
 }

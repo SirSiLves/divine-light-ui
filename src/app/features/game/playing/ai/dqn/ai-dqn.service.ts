@@ -15,10 +15,10 @@ import { MatrixStore } from '../../../state/matrix/matrix.store';
 export class AiDqnService {
 
   // 1 - DQN
-  // 2 - DQN with Decay Epsilon-Greedy
-  // 3 - DQN with Decay Epsilon-Greedy and Experience Replay
-  // 4 - DQN with Decay Epsilon-Greedy, Experience Replay and Target DQN
-  // 5 - DQN with Decay Epsilon-Greedy, Experience Replay, Target DQN and Double DQN
+  // 2 - DQN with Epsilon-Greedy
+  // 3 - DQN with Epsilon-Greedy and Experience Replay
+  // 4 - DQN with Epsilon-Greedy, Experience Replay and Target DQN
+  // 5 - DQN with Epsilon-Greedy, Experience Replay, Target DQN and Double DQN
   public static readonly EXTENSION_SETTING: 1 | 2 | 3 | 4 | 5 = 1;
 
   public static readonly ALL_DQN_SETTINGS = {
@@ -27,7 +27,7 @@ export class AiDqnService {
     gamma: 0.99, // y-discount factor between 0 and 1 - gammas should correspond to the size of observation space: you should use larger gammas (ie closer to 1) for big state spaces, and smaller gammas for smaller spaces.
     episodes: 1000,
     epsilon: 1,
-    epsilonDecay: 0.00001, // go slightly for more exploitation instead of exploration
+    epsilonDecay: 0.0001, // go slightly for more exploitation instead of exploration
     epochs: 1, // the validation loss going to increase that means overfitting than reduce epochs
     batchSize: 32, // sample size
     // network
@@ -154,6 +154,17 @@ export class AiDqnService {
         break;
       case 2:
         this.aiDqn2Service.downloadLoss(isTraining);
+        break;
+    }
+  }
+
+  downloadProgress(isTraining: GodType): void {
+    switch (AiDqnService.EXTENSION_SETTING) {
+      case 1:
+        this.aiDqn1Service.downloadProgress(isTraining);
+        break;
+      case 2:
+        this.aiDqn2Service.downloadProgress(isTraining);
         break;
     }
   }

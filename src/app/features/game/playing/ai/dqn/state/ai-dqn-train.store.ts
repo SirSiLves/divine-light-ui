@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
 import { BehaviorSubject } from 'rxjs';
-import { AiHistoryLoss } from './ai-dqn-train.model';
+import { AIHistoryLoss, AIHistoryRewards } from './ai-dqn-train.model';
 
 export interface AiDqnTrainState {
   episode: number;
@@ -10,6 +10,7 @@ export interface AiDqnTrainState {
   draws: number;
   defeats: number;
   winRate: number;
+  rewardAverage: number;
   epsilon: number;
   startEpsilon: number;
   sync: number;
@@ -24,7 +25,8 @@ export function createInitialState(): AiDqnTrainState {
 @StoreConfig({ name: 'ai-dqn-train' })
 export class AiDqnTrainStore extends Store<AiDqnTrainState> {
 
-  lossHistory$ = new BehaviorSubject<AiHistoryLoss[]>([]);
+  lossHistory$ = new BehaviorSubject<AIHistoryLoss[]>([]);
+  averageRewardHistory$ = new BehaviorSubject<AIHistoryRewards[]>([]);
 
   constructor() {
     super(createInitialState());

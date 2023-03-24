@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { map, Subject, tap } from 'rxjs';
+import { map, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AiDqnTrainQuery } from '../../playing/ai/dqn/state/ai-dqn-train.query';
 import { GameManagerService } from '../../../../core/state/game-manager/game-manager.service';
@@ -24,6 +24,7 @@ export class DqnComponent {
   defeats$ = this.train$.pipe(map(data => data.defeats));
   epsilon$ = this.train$.pipe(map(data => data.epsilon));
   winRate$ = this.train$.pipe(map(data => data.winRate * 100));
+  rewardAverage$ = this.train$.pipe(map(data => data.rewardAverage));
 
   extension = AiDqnService.EXTENSION_SETTING;
 
@@ -65,5 +66,9 @@ export class DqnComponent {
 
   downloadDQNLoss() {
     this.aiDqnService.downloadDQNLoss(this.isTraining);
+  }
+
+  downloadDQNProgress() {
+    this.aiDqnService.downloadProgress(this.isTraining);
   }
 }

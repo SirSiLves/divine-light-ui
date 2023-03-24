@@ -10,11 +10,13 @@ import { AiTensorflowService } from '../ai-tensorflow.service';
 import { DrawValidatorService } from '../../../../validator/draw-validator.service';
 import { Rewards } from '../../rewards';
 import { AiDqnService } from '../ai-dqn.service';
-import { AiHistoryLoss } from './ai-dqn-train.model';
-import { formatNumber } from '@angular/common';
+
 
 @Injectable({providedIn: 'root'})
 export class AiDqnTrainService {
+
+  // progress
+  private tempRewardHistory: number[] = [];
 
   constructor(
     private aiDqnTrainStore: AiDqnTrainStore,
@@ -296,5 +298,45 @@ export class AiDqnTrainService {
     a.remove();
   }
 
+  addProgress(reward: number): void {
+    this.tempRewardHistory.push(reward);
+  }
 
+  calculateProgress(reward: number): void {
+
+    this.tempRewardHistory.push(reward);
+    let sum = 0;
+
+    this.tempRewardHistory.forEach(reward => sum += reward);
+    const average = sum / this.tempRewardHistory.length;
+
+    const averageRewardHistory = this.aiDqnTrainStore.averageRewardHistory$.getValue();
+    const trainState = this.aiDqnTrainStore.getValue();
+
+    averageRewardHistory.push({reward: average, episode: trainState.episode});
+    this.aiDqnTrainStore.averageRewardHistory$.next(averageRewardHistory);
+
+    // update last average
+    this.aiDqnTrainStore.update({
+      ...trainState,
+      rewardAverage: average
+    });
+
+    this.tempRewardHistory = [];
+  }
+
+
+  downloadProgress(fileName: string) {
+    let blob = new Blob([JSON.stringify(this.aiDqnTrainStore.averageRewardHistory$.getValue())], {type: 'application/json'});
+
+    let url = window.URL.createObjectURL(blob);
+    let a = document.createElement('a');
+    document.body.appendChild(a);
+    a.setAttribute('style', 'display: none');
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    a.remove();
+  }
 }

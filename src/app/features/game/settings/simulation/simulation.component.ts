@@ -20,9 +20,7 @@ export class SimulationComponent implements OnInit, OnDestroy {
   camaxtliAlgorithmOptions = [
     {label: 'RANDOM', value: BotTypes.RANDOM},
     {label: 'MINIMAX', value: BotTypes.MINIMAX},
-    {label: 'MCTS', value: BotTypes.MCTS},
     {label: 'DQN', value: BotTypes.DQN},
-    {label: 'CUSTOM', value: BotTypes.CUSTOM},
   ];
   camaxtliAlgorithm: BotTypes = this.camaxtliAlgorithmOptions[0].value;
   camaxtliScore: number = 0;
@@ -30,9 +28,7 @@ export class SimulationComponent implements OnInit, OnDestroy {
   nanahuatzinAlgorithmOptions = [
     {label: 'RANDOM', value: BotTypes.RANDOM},
     {label: 'MINIMAX', value: BotTypes.MINIMAX},
-    {label: 'MCTS', value: BotTypes.MCTS},
     {label: 'DQN', value: BotTypes.DQN},
-    {label: 'CUSTOM', value: BotTypes.CUSTOM},
   ];
   nanahuatzinAlgorithm: BotTypes = this.nanahuatzinAlgorithmOptions[0].value;
   nanahuatzinScore: number = 0;
