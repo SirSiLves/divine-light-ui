@@ -24,7 +24,7 @@ export class AiDqn2Service {
     files: {
       camaxtli: {
         model: 'divine-light-dqn2-model-camaxtli_7x6',
-        progress: 'divine-light-dqn2-progressl-camaxtli_7x6',
+        progress: 'divine-light-dqn2-progress-camaxtli_7x6',
         loss: 'divine-light-dqn2-loss-camaxtli_7x6'
       },
       nanahuatzin: {
