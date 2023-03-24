@@ -23,12 +23,12 @@ export class AiDqn1Service {
   public static readonly DQN_SETTINGS = {
     files: {
       camaxtli: {
-        model: 'divine-light-neutral-dqn1-model_7x6',
-        loss: 'divine-light-neutral-dqn1-loss_7x6'
+        model: 'divine-light-dqn1-model_7x6',
+        loss: 'divine-light-dqn1-loss_7x6'
       },
       nanahuatzin: {
-        model: 'divine-light-neutral-dqn1-model_7x6',
-        loss: 'divine-light-neutral-dqn1-loss_7x6'
+        model: 'divine-light-dqn1-model_7x6',
+        loss: 'divine-light-dqn1-loss_7x6'
       },
     },
     epsilon: 0.3

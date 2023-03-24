@@ -258,6 +258,18 @@ export class AiDqnTrainService {
     });
   }
 
+  decreaseEpsilon(): void {
+    const trainState = this.aiDqnTrainStore.getValue();
+    const newEpsilon = Math.max(
+      trainState.epsilon - AiDqnService.ALL_DQN_SETTINGS.epsilonDecay, 0.1
+    );
+
+    this.aiDqnTrainStore.update({
+      ...trainState,
+      epsilon: newEpsilon
+    });
+  }
+
   addHistoryLoss(loss: number, length: number): void {
     const historyLosses = this.aiDqnTrainStore.lossHistory$.getValue();
     historyLosses.push({loss: Number(loss.toFixed(2)), steps: length});
@@ -277,4 +289,6 @@ export class AiDqnTrainService {
     window.URL.revokeObjectURL(url);
     a.remove();
   }
+
+
 }
