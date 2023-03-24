@@ -10,7 +10,6 @@ import { environment } from '../../../../../../../environments/environment';
 import { MatrixQuery } from '../../../../state/matrix/matrix.query';
 import { AiDqnService } from '../ai-dqn.service';
 import { MatrixService } from '../../../../state/matrix/matrix.service';
-import { DrawValidatorService } from '../../../../validator/draw-validator.service';
 import { AiDqnTrainQuery } from '../state/ai-dqn-train.query';
 import { AiSarsd } from '../state/ai-dqn-train.model';
 import { guid } from '@datorama/akita';
@@ -23,12 +22,19 @@ export class AiDqn1Service {
 
   public static readonly DQN_SETTINGS = {
     files: {
-      camaxtli: 'divine-light-camaxtli-dqn1-model_7x6',
-      nanahuatzin: 'divine-light-nanahuatzin-dqn1-model_7x6'
+      camaxtli: {
+        model: 'divine-light-neutral-dqn1-model_7x6',
+        loss: 'divine-light-neutral-dqn1-loss_7x6'
+      },
+      nanahuatzin: {
+        model: 'divine-light-neutral-dqn1-model_7x6',
+        loss: 'divine-light-neutral-dqn1-loss_7x6'
+      },
     },
     epsilon: 0.3
   };
 
+  // TODO make one model for both......
   // model
   private camaxtli: any;
   private nanahuatzin: any;
@@ -39,8 +45,7 @@ export class AiDqn1Service {
     private aiTensorflowService: AiTensorflowService,
     private messageService: MessageService,
     private translateService: TranslateService,
-    private matrixQuery: MatrixQuery,
-    private drawValidatorService: DrawValidatorService
+    private matrixQuery: MatrixQuery
   ) {
   }
 
@@ -67,11 +72,13 @@ export class AiDqn1Service {
     }
   }
 
+  // TODO
   getMove(matrix: number[][], isPlaying: GodType): Move {
     const moves: Move[] = AiService.getPossiblesMoves(matrix, isPlaying);
     return moves[this.generateRandomNumber(0, moves.length - 1)];
   }
 
+  // FIXME - remove
   generateRandomNumber = (min: number, max: number) => {
     min = Math.ceil(min);
     max = Math.floor(max);
@@ -79,7 +86,15 @@ export class AiDqn1Service {
   }
 
   train(totalEpisodes: number, startEpsilon: number, isTraining: GodType): void {
-    this.aiDqnTrainService.init(totalEpisodes, startEpsilon);
+    this.aiDqnTrainService.init(totalEpisodes, AiDqn1Service.DQN_SETTINGS.epsilon);
+
+    // give ui some time to deactivate buttons
+    setTimeout(() => {
+      this.prepare(isTraining);
+    });
+  }
+
+  private prepare(isTraining: GodType): void {
     this.aiDqnTrainService.prepare();
 
     const defaultMatrix: number[][] = this.matrixQuery.getDefaultMatrix();
@@ -137,16 +152,14 @@ export class AiDqn1Service {
       id: guid(), state, action: moveIndex, reward, nextState, done: winner !== undefined || draw, new: true
     }];
     this.fit(isTraining, sars).then(() => {
-      console.log('fit complete');
+      // 4. go further until batch size is reached
+      this.nextMove(isTraining, nextState, winner, rounds, draw);
     });
   }
 
   private chooseAction(state: number[][], isTraining: GodType): MoveIndex {
-    if (isTraining === GodType.CAMAXTLI) return this.aiDqnTrainService.chooseAction(
-      this.camaxtli, state, isTraining, AiDqn1Service.DQN_SETTINGS.epsilon
-    );
-
-    return this.aiDqnTrainService.chooseAction(this.nanahuatzin, state, isTraining, AiDqn1Service.DQN_SETTINGS.epsilon);
+    if (isTraining === GodType.CAMAXTLI) return this.aiDqnTrainService.chooseAction(this.camaxtli, state, isTraining);
+    return this.aiDqnTrainService.chooseAction(this.nanahuatzin, state, isTraining);
   }
 
   private async fit(isTraining: GodType, entries: AiSarsd[]): Promise<void> {
@@ -180,12 +193,30 @@ export class AiDqn1Service {
     }
 
     const trainHistory = await this.aiTensorflowService.fitQValuesWithDatasetBitmap(
-      isTraining === GodType.CAMAXTLI ? this.camaxtli : this.nanahuatzin, stateList, qValuesFromStates, isTraining
+      isTraining === GodType.CAMAXTLI ? this.camaxtli : this.nanahuatzin, stateList, qValuesFromStates
     );
-    console.log(trainHistory.history.loss[0], trainHistory);
+    this.aiDqnTrainService.addHistoryLoss(trainHistory.history.loss[0], entries.length);
+  }
 
-    // this.historyLoss.push({loss: trainHistory.history.loss[0], steps: miniBatchSamples.length});
+  private nextMove(isTraining: GodType, nextState: number[][], winner: GodType | undefined, rounds: number, draw: boolean): void {
+    if (winner !== undefined || draw) {
+      this.nextEpisode(winner, isTraining, draw);
+    } else {
+      this.run(nextState, isTraining, rounds + 1);
+    }
+  }
 
+  private nextEpisode(winner: GodType | undefined, isTraining: GodType, draw: boolean): void {
+    this.aiDqnTrainService.increaseEpisode();
+    this.aiDqnTrainService.setScore(winner, draw, isTraining);
+    this.aiTensorflowService.cleanUp();
 
+    this.prepare(isTraining);
+  }
+
+  downloadLoss(isTraining: GodType): void {
+    this.aiDqnTrainService.downloadLoss(isTraining === GodType.CAMAXTLI ?
+      AiDqn1Service.DQN_SETTINGS.files.camaxtli.loss : AiDqn1Service.DQN_SETTINGS.files.nanahuatzin.loss
+    );
   }
 }

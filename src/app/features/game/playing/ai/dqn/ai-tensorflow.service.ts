@@ -161,13 +161,13 @@ export class AiTensorflowService {
     return pieceBoard;
   }
 
-  public fitQValuesWithDatasetBitmap(model: any, stateListSamples: number[][][][], actionNewQValuesSamples: number[][], isTraining: GodType): Promise<any> {
+  public fitQValuesWithDatasetBitmap(model: any, stateListSamples: number[][][][], actionNewQValuesSamples: number[][]): Promise<any> {
     const reshapedStateTensor = tf.transpose(tf.tensor4d(stateListSamples), [0, 2, 3, 1]);
     const tensorTargetActionQValues = tf.tensor2d(actionNewQValuesSamples);
 
     return model.fit(reshapedStateTensor, tensorTargetActionQValues, {
       epochs: AiDqnService.ALL_DQN_SETTINGS.epochs,
-      batchSize: AiDqnService.ALL_DQN_SETTINGS.batchSize
+      batchSize: stateListSamples.length
     });
   }
 

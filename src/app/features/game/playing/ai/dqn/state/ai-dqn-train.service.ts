@@ -10,6 +10,8 @@ import { AiTensorflowService } from '../ai-tensorflow.service';
 import { DrawValidatorService } from '../../../../validator/draw-validator.service';
 import { Rewards } from '../../rewards';
 import { AiDqnService } from '../ai-dqn.service';
+import { AiHistoryLoss } from './ai-dqn-train.model';
+import { formatNumber } from '@angular/common';
 
 @Injectable({providedIn: 'root'})
 export class AiDqnTrainService {
@@ -24,10 +26,14 @@ export class AiDqnTrainService {
   }
 
   init(totalEpisodes: number, startEpsilon: number): void {
-    const trainState = this.aiDqnTrainStore.getValue();
     this.aiDqnTrainStore.update(
       {
-        ...trainState,
+        epsilon: startEpsilon,
+        episode: 0,
+        wins: 0,
+        draws: 0,
+        defeats: 0,
+        winRate: 0,
         totalEpisodes,
         startEpsilon
       }
@@ -83,8 +89,9 @@ export class AiDqnTrainService {
     this.aiDqnTrainStore.setLoading(false);
   }
 
-  chooseAction(model: any, state: number[][], isTraining: GodType, epsilon: number): MoveIndex {
+  chooseAction(model: any, state: number[][], isTraining: GodType): MoveIndex {
     // exploitation vs exploration, if random is smaller than epsilon go for exploration
+    const epsilon = this.aiDqnTrainStore.getValue().epsilon;
     const explore = this.aiRandomService.generateRandomNumber(0, 10) / 10; // between 0 & 1
     const availableMoveIndexList: MoveIndex[] = AiService.shuffle(AiService.getPossibleMoveIndexList(state, isTraining));
 
@@ -213,5 +220,61 @@ export class AiDqnTrainService {
   }
 
 
+  setScore(winner: GodType | undefined, draw: boolean, isTraining: GodType): void {
+    const trainState = this.aiDqnTrainStore.getValue();
 
+    if (winner !== undefined) {
+      if (winner == isTraining) {
+        this.aiDqnTrainStore.update({
+          ...trainState,
+          wins: trainState.wins + 1,
+          winRate: (trainState.wins + 1) / trainState.episode
+        });
+      } else {
+        this.aiDqnTrainStore.update({
+          ...trainState,
+          defeats: trainState.defeats + 1,
+          winRate: trainState.wins / trainState.episode
+        });
+      }
+    } else if (draw) {
+      this.aiDqnTrainStore.update({
+        ...trainState,
+        draws: trainState.draws + 1,
+        winRate: trainState.wins / trainState.episode
+      });
+    } else {
+      throw new Error("End of episode must be with a winner or a draw");
+    }
+
+
+  }
+
+  increaseEpisode(): void {
+    const trainState = this.aiDqnTrainStore.getValue();
+    this.aiDqnTrainStore.update({
+      ...trainState,
+      episode: trainState.episode + 1
+    });
+  }
+
+  addHistoryLoss(loss: number, length: number): void {
+    const historyLosses = this.aiDqnTrainStore.lossHistory$.getValue();
+    historyLosses.push({loss: Number(loss.toFixed(2)), steps: length});
+    this.aiDqnTrainStore.lossHistory$.next(historyLosses);
+  }
+
+  downloadLoss(fileName: string): void {
+    let blob = new Blob([JSON.stringify(this.aiDqnTrainStore.lossHistory$.getValue())], {type: 'application/json'});
+
+    let url = window.URL.createObjectURL(blob);
+    let a = document.createElement('a');
+    document.body.appendChild(a);
+    a.setAttribute('style', 'display: none');
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    a.remove();
+  }
 }

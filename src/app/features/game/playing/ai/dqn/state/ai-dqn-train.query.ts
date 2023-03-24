@@ -6,6 +6,7 @@ import { AiDqnTrainStore, AiDqnTrainState } from './ai-dqn-train.store';
 export class AiDqnTrainQuery extends Query<AiDqnTrainState> {
 
   isLoading$ = this.selectLoading();
+  lossHistory$ = this.store.lossHistory$.asObservable();
 
   constructor(protected override store: AiDqnTrainStore) {
     super(store);

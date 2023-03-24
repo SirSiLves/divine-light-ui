@@ -183,8 +183,8 @@ export class GameManagerService {
   private loadDQNModels(): void {
     switch (AiDqnService.EXTENSION_SETTING) {
       case 1: {
-        this.getCamaxtliModelFromCloud(AiDqn1Service.DQN_SETTINGS.files.camaxtli);
-        this.getNanahuatzinModelFromCloud(AiDqn1Service.DQN_SETTINGS.files.nanahuatzin);
+        this.getCamaxtliModelFromCloud(AiDqn1Service.DQN_SETTINGS.files.camaxtli.model);
+        this.getNanahuatzinModelFromCloud(AiDqn1Service.DQN_SETTINGS.files.nanahuatzin.model);
         break;
       }
     }

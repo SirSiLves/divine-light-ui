@@ -9,3 +9,8 @@ export interface AiSarsd {
   done: boolean;
   new: boolean;
 }
+
+export interface AiHistoryLoss {
+  loss: number,
+  steps: number
+}

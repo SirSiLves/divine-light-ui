@@ -27,7 +27,6 @@ export class AiDqnService {
     gamma: 0.99, // y-discount factor between 0 and 1 - gammas should correspond to the size of observation space: you should use larger gammas (ie closer to 1) for big state spaces, and smaller gammas for smaller spaces.
     episodes: 1000,
     epsilon: 1,
-    epsilonDecrease: true, // go slightly for more exploitation instead of exploration
     epsilonDecay: 0.00001, // go slightly for more exploitation instead of exploration
     epochs: 1, // the validation loss going to increase that means overfitting than reduce epochs
     batchSize: 32, // sample size
@@ -134,7 +133,7 @@ export class AiDqnService {
       case 1: {
         const model = this.aiDqn1Service.getModel(godType);
         model.save('downloads://' + (
-          godType === GodType.CAMAXTLI ? AiDqn1Service.DQN_SETTINGS.files.camaxtli : AiDqn1Service.DQN_SETTINGS.files.nanahuatzin
+          godType === GodType.CAMAXTLI ? AiDqn1Service.DQN_SETTINGS.files.camaxtli.model : AiDqn1Service.DQN_SETTINGS.files.nanahuatzin.model
         )); // https://www.tensorflow.org/js/guide/save_load
         break;
       }
@@ -142,7 +141,7 @@ export class AiDqnService {
   }
 
   downloadDQNLoss(isTraining: GodType): void {
-    // TODO
+    this.aiDqn1Service.downloadLoss(isTraining);
   }
 }
 
