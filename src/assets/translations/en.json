@@ -38,7 +38,7 @@
 	"core.settings.dqn.episodes": "Number of training episodes",
 	"core.settings.dqn.epsilon": "Epsilon (exploration/exploitation)",
 	"core.settings.dqn.extension.1": "without extensions",
-	"core.settings.dqn.extension.2": "with Decay Epsilon-Greedy",
+	"core.settings.dqn.extension.2": "with Epsilon-Greedy",
 	"core.settings.dqn.extension.3": "with Decay Epsilon-Greedy and Experience Replay",
 	"core.settings.dqn.extension.4": "with Decay Epsilon-Greedy, Experience Replay and Target DQN",
 	"core.settings.dqn.extension.5": "with Decay Epsilon-Greedy, Experience Replay, Target DQN and Double DQN",
