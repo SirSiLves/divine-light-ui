@@ -2,12 +2,14 @@ import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
 
 export interface AiDqnTrainState {
-  episodes: number;
+  episode: number;
+  totalEpisodes: number;
   wins: number;
   draws: number;
   defeats: number;
   winRate: number;
   epsilon: number;
+  startEpsilon: number;
   sync: number;
 }
 

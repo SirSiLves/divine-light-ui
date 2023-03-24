@@ -18,7 +18,7 @@ export class DqnComponent {
   isTraining$ = this.aiDqnTrainQuery.isLoading$;
 
   private train$ = this.aiDqnTrainQuery.select();
-  episodes$ = this.train$.pipe(map(data => data.episodes));
+  episodes$ = this.train$.pipe(map(data => data.totalEpisodes));
   wins$ = this.train$.pipe(map(data => data.wins));
   draws$ = this.train$.pipe(map(data => data.draws));
   defeats$ = this.train$.pipe(map(data => data.defeats));

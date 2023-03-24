@@ -1,12 +1,19 @@
 import { Injectable } from '@angular/core';
 import { GodType } from '../../../../state/player/player.model';
-import { Move } from '../../../../state/action/move.model';
+import { Move, MoveIndex } from '../../../../state/action/move.model';
 import { AiService } from '../../ai.service';
 import { AiDqnTrainService } from '../state/ai-dqn-train.service';
 import { AiTensorflowService } from '../ai-tensorflow.service';
 import { MessageService } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { environment } from '../../../../../../../environments/environment';
+import { MatrixQuery } from '../../../../state/matrix/matrix.query';
+import { AiDqnService } from '../ai-dqn.service';
+import { MatrixService } from '../../../../state/matrix/matrix.service';
+import { DrawValidatorService } from '../../../../validator/draw-validator.service';
+import { AiDqnTrainQuery } from '../state/ai-dqn-train.query';
+import { AiSarsd } from '../state/ai-dqn-train.model';
+import { guid } from '@datorama/akita';
 
 
 @Injectable({
@@ -28,9 +35,12 @@ export class AiDqn1Service {
 
   constructor(
     private aiDqnTrainService: AiDqnTrainService,
+    private aiDqnTrainQuery: AiDqnTrainQuery,
     private aiTensorflowService: AiTensorflowService,
     private messageService: MessageService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private matrixQuery: MatrixQuery,
+    private drawValidatorService: DrawValidatorService
   ) {
   }
 
@@ -68,12 +78,24 @@ export class AiDqn1Service {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  train(episodes: number, epsilon: number, isTraining: GodType): void {
-    this.prepare(episodes, epsilon);
-  }
+  train(totalEpisodes: number, startEpsilon: number, isTraining: GodType): void {
+    this.aiDqnTrainService.init(totalEpisodes, startEpsilon);
+    this.aiDqnTrainService.prepare();
 
-  private prepare(episodes: number, epsilon: number): void {
-    this.aiDqnTrainService.init(episodes, epsilon);
+    const defaultMatrix: number[][] = this.matrixQuery.getDefaultMatrix();
+    if (isTraining === GodType.CAMAXTLI) {
+      let copiedState = MatrixService.copy(defaultMatrix);
+      this.run(copiedState, GodType.CAMAXTLI, 0);
+    }
+    // opponent needs to move first
+    else {
+      const opponentMove = this.aiDqnTrainService.getOpponentMove(
+        defaultMatrix, GodType.CAMAXTLI, AiDqnService.ALL_DQN_SETTINGS.opponent as any, GodType.NANAHUATZIN
+      );
+      let {nextState} = AiService.executeMoveWithReward(defaultMatrix, opponentMove, GodType.CAMAXTLI);
+      let copiedState = MatrixService.copy(nextState);
+      this.run(copiedState, GodType.NANAHUATZIN, 0);
+    }
   }
 
   loadModel(godType: GodType, modelFile: File, weightsFile: File): void {
@@ -95,4 +117,75 @@ export class AiDqn1Service {
     return this.nanahuatzin;
   }
 
+  private run(state: number[][], isTraining: GodType, rounds: number): void {
+    const trainState = this.aiDqnTrainQuery.getValue();
+    if (trainState.episode >= trainState.totalEpisodes) {
+      this.aiDqnTrainService.stop();
+      return;
+    }
+
+    // 1. take the possible action with the highest q-value or a random move
+    const moveIndex: MoveIndex = this.chooseAction(state, isTraining);
+
+    // 2. execute action && get reward from executed action
+    const {reward, nextState, winner, draw} = this.aiDqnTrainService.executeActionWithReward(
+      state, isTraining, moveIndex.move, rounds
+    );
+
+    // 3. train network with sars
+    const sars: AiSarsd[] = [{
+      id: guid(), state, action: moveIndex, reward, nextState, done: winner !== undefined || draw, new: true
+    }];
+    this.fit(isTraining, sars).then(() => {
+      console.log('fit complete');
+    });
+  }
+
+  private chooseAction(state: number[][], isTraining: GodType): MoveIndex {
+    if (isTraining === GodType.CAMAXTLI) return this.aiDqnTrainService.chooseAction(
+      this.camaxtli, state, isTraining, AiDqn1Service.DQN_SETTINGS.epsilon
+    );
+
+    return this.aiDqnTrainService.chooseAction(this.nanahuatzin, state, isTraining, AiDqn1Service.DQN_SETTINGS.epsilon);
+  }
+
+  private async fit(isTraining: GodType, entries: AiSarsd[]): Promise<void> {
+    let stateList: number[][][][] = []; // samples, layers, 2d-matrix
+    let nextStateList: number[][][][] = [];
+
+    for (let i = 0; i < entries.length; i++) {
+      const entry = entries[i];
+
+      stateList.push(AiTensorflowService.getBitmap(entry.state));
+      nextStateList.push(AiTensorflowService.getBitmap(entry.nextState));
+    }
+
+    const qValuesFromStates: number[][] = isTraining === GodType.CAMAXTLI ?
+      this.aiTensorflowService.predictBitmapWithBatch(this.camaxtli, stateList) : this.aiTensorflowService.predictBitmapWithBatch(this.nanahuatzin, stateList);
+    const qValuesFromNextStates: number[][] = isTraining === GodType.CAMAXTLI ?
+      this.aiTensorflowService.predictBitmapWithBatch(this.camaxtli, stateList) : this.aiTensorflowService.predictBitmapWithBatch(this.nanahuatzin, nextStateList);
+
+    for (let j = 0; j < entries.length; j++) {
+      const entry = entries[j];
+      let targetQ = entry.reward;
+      if (!entry.done) {
+
+        // DQN
+        targetQ = (entry.reward + AiDqnService.ALL_DQN_SETTINGS.gamma * this.aiDqnTrainService.getQValueMaxFromStateWithPrediction(
+            entry.nextState, qValuesFromNextStates[j], isTraining)
+        );
+      }
+
+      qValuesFromStates[j][entry.action.index] = targetQ;
+    }
+
+    const trainHistory = await this.aiTensorflowService.fitQValuesWithDatasetBitmap(
+      isTraining === GodType.CAMAXTLI ? this.camaxtli : this.nanahuatzin, stateList, qValuesFromStates, isTraining
+    );
+    console.log(trainHistory.history.loss[0], trainHistory);
+
+    // this.historyLoss.push({loss: trainHistory.history.loss[0], steps: miniBatchSamples.length});
+
+
+  }
 }

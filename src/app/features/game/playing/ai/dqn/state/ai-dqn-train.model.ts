@@ -1,19 +1,11 @@
-export interface AiDqn1Model {
+import { MoveIndex } from '../../../../state/action/move.model';
 
-}
-
-export interface AiDqn2Model {
-
-}
-
-export interface AiDqn3Model {
-
-}
-
-export interface AiDqn4Model {
-
-}
-
-export interface AiDqn5Model {
-
+export interface AiSarsd {
+  id: string;
+  state: number[][];
+  action: MoveIndex;
+  reward: number;
+  nextState: number[][];
+  done: boolean;
+  new: boolean;
 }

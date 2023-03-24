@@ -14,11 +14,11 @@ import { MatrixStore } from '../../../state/matrix/matrix.store';
 })
 export class AiDqnService {
 
-  // 1 - dqn
-  // 2 - dqn with network per player
-  // 3 - dqn with network per player and replay memory
-  // 4 - dqn with network per player, replay memory and target dqn
-  // 5 - dqn with network per player, replay memory, target dqn and double dqn
+  // 1 - DQN
+  // 2 - DQN with Decay Epsilon-Greedy
+  // 3 - DQN with Decay Epsilon-Greedy and Experience Replay
+  // 4 - DQN with Decay Epsilon-Greedy, Experience Replay and Target DQN
+  // 5 - DQN with Decay Epsilon-Greedy, Experience Replay, Target DQN and Double DQN
   public static readonly EXTENSION_SETTING: 1 | 2 | 3 | 4 | 5 = 1;
 
   public static readonly ALL_DQN_SETTINGS = {
@@ -30,6 +30,7 @@ export class AiDqnService {
     epsilonDecrease: true, // go slightly for more exploitation instead of exploration
     epsilonDecay: 0.00001, // go slightly for more exploitation instead of exploration
     epochs: 1, // the validation loss going to increase that means overfitting than reduce epochs
+    batchSize: 32, // sample size
     // network
     neuronsHiddenBitmap: 651, // sqrt(H * W * C * POSSIBLE ACTIONS) -> POSSIBLE: 420 -> 7 * 6 * 24 * 420 -> 651 (7x6)
     neuronsHiddenBitmapGrouped: 461, // sqrt(H * W * C * POSSIBLE ACTIONS) -> POSSIBLE: 420 -> 7 * 6 * 12 * 420 -> 461 (7x6)
@@ -38,7 +39,7 @@ export class AiDqnService {
     NUM_BOARD_WIDTH: MatrixStore.WIDTH_NUMBER,
     NUM_BOARD_HEIGHT: MatrixStore.HEIGHT_NUMBER,
     NUM_MOVES: MatrixStore.TOTAL_POSSIBLE_ACTIONS,
-    opponent: 'random' // 'random' | 'minimax' | 'mcts' | 'custom'
+    opponent: 'random' // 'random' | 'minimax'
   };
 
   constructor(
@@ -67,22 +68,22 @@ export class AiDqnService {
     }
   }
 
-  train(episodes: number, epsilon: number, isTraining: GodType): void {
+  train(totalEpisodes: number, startEpsilon: number, isTraining: GodType): void {
     switch (AiDqnService.EXTENSION_SETTING) {
       case 1:
-        this.aiDqn1Service.train(episodes, epsilon, isTraining);
+        this.aiDqn1Service.train(totalEpisodes, startEpsilon, isTraining);
         break;
       case 2:
-        this.aiDqn2Service.train(episodes, epsilon, isTraining);
+        this.aiDqn2Service.train(totalEpisodes, startEpsilon, isTraining);
         break;
       case 3:
-        this.aiDqn3Service.train(episodes, epsilon, isTraining);
+        this.aiDqn3Service.train(totalEpisodes, startEpsilon, isTraining);
         break;
       case 4:
-        this.aiDqn4Service.train(episodes, epsilon, isTraining);
+        this.aiDqn4Service.train(totalEpisodes, startEpsilon, isTraining);
         break;
       case 5:
-        this.aiDqn5Service.train(episodes, epsilon, isTraining);
+        this.aiDqn5Service.train(totalEpisodes, startEpsilon, isTraining);
         break;
     }
   }
