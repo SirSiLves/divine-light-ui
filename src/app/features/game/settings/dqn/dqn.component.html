@@ -1,0 +1,159 @@
+<div class="grid">
+  <div class="col-5">
+    {{'core.settings.dqn.extension.title' | translate}}
+  </div>
+  <div class="col-7">
+    {{'core.settings.dqn.extension.' + extension | translate}}
+  </div>
+
+
+  <div class="col-5">
+    {{'core.settings.dqn.gods' | translate}}
+  </div>
+  <div class="col-7">
+    <p-dropdown [options]="godsOptions" [(ngModel)]="isTraining" [appendTo]="'body'"></p-dropdown>
+  </div>
+
+  <div class="col-5">
+    {{'core.settings.dqn.episodes' | translate}}
+  </div>
+  <div class="col-7">
+    <div>
+      <p-inputNumber [disabled]="(isTraining$ | async) === true"
+                     [(ngModel)]="totalEpisodes" locale="de-CH"></p-inputNumber>
+    </div>
+  </div>
+
+  <ng-container *ngIf="extension !== 1">
+    <div class="col-5">
+      Start {{'core.settings.dqn.epsilon' | translate}}
+    </div>
+    <div class="col-7">
+      <div>
+        <p-inputNumber [disabled]="(isTraining$ | async) === true"
+                       [min]="0.1"
+                       [max]="1"
+                       [(ngModel)]="startEpsilon" locale="de-CH"></p-inputNumber>
+      </div>
+    </div>
+  </ng-container>
+
+  <div class="col-5">
+    {{'core.settings.dqn.currentEpisode' | translate}}
+  </div>
+  <div class="col-7">
+    {{episode$ | async | number}}
+  </div>
+
+  <ng-container *ngIf="extension !== 1">
+    <div class="col-5">
+      {{'core.settings.dqn.currentEpsilon' | translate}}
+    </div>
+    <div class="col-7">
+      {{epsilon$ | async | number}}
+    </div>
+  </ng-container>
+
+  <div class="col-5">
+    {{'core.settings.dqn.wins' | translate}}
+  </div>
+  <div class="col-7">
+    {{wins$ | async | number}}
+  </div>
+
+  <div class="col-5">
+    {{'core.settings.dqn.loss' | translate}}
+  </div>
+  <div class="col-7">
+    {{defeats$ | async | number}}
+  </div>
+
+  <div class="col-5">
+    {{'core.settings.dqn.draws' | translate}}
+  </div>
+  <div class="col-7">
+    {{draws$ | async | number}}
+  </div>
+
+  <div class="col-5">
+    {{'core.settings.dqn.winRate' | translate}}
+  </div>
+  <div class="col-7">
+    {{winRate$ | async | number}} %
+  </div>
+
+  <div class="col-5">
+    {{'core.settings.dqn.rewardProgress' | translate}}
+  </div>
+  <div class="col-7">
+    {{rewardAverage$ | async | number}}
+  </div>
+
+
+  <div class="col-12 mt-2">
+    <div class="action">
+      <ng-container *ngIf="(isTraining$ | async); else start">
+        <button pButton type="button"
+                [label]="'core.settings.dqn.running' | translate"
+                [disabled]="true"
+                [class]="'p-button-danger'"></button>
+      </ng-container>
+      <ng-template #start>
+        <button pButton type="button"
+                [label]="'core.settings.dqn.start' | translate"
+                (click)="this.train()"
+                [class]="'p-button-info'"></button>
+      </ng-template>
+
+    </div>
+  </div>
+
+  <div class="col-12">
+    <ng-container *ngIf="isTraining === gods.CAMAXTLI; else nanahuatzin">
+      <div class="downloads">
+        <button pButton pRipple type="button"
+                [label]="'core.settings.dqn.camaxtli.downloadModel' | translate"
+                (click)="downloadDQNModel()"
+                [pTooltip]="'core.settings.dqn.download' | translate"
+                tooltipPosition="bottom"
+                class="p-button-info mr-1"></button>
+        <button pButton pRipple type="button"
+                [label]="'core.settings.dqn.camaxtli.downloadLoss' | translate"
+                (click)="downloadDQNLoss()"
+                tooltipPosition="bottom"
+                [pTooltip]="'core.settings.dqn.download' | translate"
+                class="p-button-info mr-1 ml-1"></button>
+        <button pButton pRipple type="button"
+                [label]="'core.settings.dqn.camaxtli.downloadProgress' | translate"
+                (click)="downloadDQNProgress()"
+                [pTooltip]="'core.settings.dqn.download' | translate"
+                tooltipPosition="bottom"
+                class="p-button-info ml-1"></button>
+      </div>
+    </ng-container>
+    <ng-template #nanahuatzin>
+      <div class="downloads">
+        <button pButton pRipple type="button"
+                [label]="'core.settings.dqn.nanahuatzin.downloadModel' | translate"
+                (click)="downloadDQNModel()"
+                [pTooltip]="'core.settings.dqn.download' | translate"
+                tooltipPosition="bottom"
+                class="p-button-info mr-1"></button>
+        <button pButton pRipple type="button"
+                [label]="'core.settings.dqn.nanahuatzin.downloadLoss' | translate"
+                (click)="downloadDQNLoss()"
+                [pTooltip]="'core.settings.dqn.download' | translate"
+                tooltipPosition="bottom"
+                class="p-button-info mr-1 ml-1"></button>
+        <button pButton pRipple type="button"
+                [label]="'core.settings.dqn.nanahuatzin.downloadProgress' | translate"
+                (click)="downloadDQNProgress()"
+                [pTooltip]="'core.settings.dqn.download' | translate"
+                tooltipPosition="bottom"
+                class="p-button-info ml-1"></button>
+      </div>
+    </ng-template>
+  </div>
+
+
+</div>

@@ -47,6 +47,8 @@ export class GameComponent implements OnInit, OnDestroy {
         }
       }
     });
+
+    this.gameManagerService.loadData();
   }
 
   ngOnDestroy(): void {
