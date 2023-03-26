@@ -82,6 +82,8 @@ export class DqnComponent {
   }
 
   loadExtension(): void {
+    if (this.extension === AiDqnService.EXTENSION_SETTING) return;
+
     AiDqnService.EXTENSION_SETTING = this.extension;
     this.gameManagerService.loadData();
   }
