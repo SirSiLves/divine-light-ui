@@ -84,8 +84,8 @@ export class AiDqn2Service {
     return isSwappedPosition ? ActionService.swapMove(qMaxAction.move)! : qMaxAction.move;
   }
 
-  train(totalEpisodes: number, startEpsilon: number, isTraining: GodType): void {
-    this.aiDqnTrainService.init(totalEpisodes, startEpsilon);
+  train(totalEpisodes: number, startEpsilon: number, isTraining: GodType, startSteps: number): void {
+    this.aiDqnTrainService.init(totalEpisodes, startEpsilon, startSteps);
 
     // give ui some time to deactivate buttons
     setTimeout(() => {

@@ -21,7 +21,7 @@ export class AiDqn5Service {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  train(episodes: number, epsilon: number, isTraining: GodType): void {
+  train(episodes: number, epsilon: number, isTraining: GodType, startSteps: number): void {
 
 
   }

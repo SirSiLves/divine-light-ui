@@ -19,15 +19,15 @@ export class AiDqnService {
   // 3 - DQN with Epsilon-Greedy and Experience Replay
   // 4 - DQN with Epsilon-Greedy, Experience Replay and Target DQN
   // 5 - DQN with Epsilon-Greedy, Experience Replay, Target DQN and Double DQN
-  public static readonly EXTENSION_SETTING: 1 | 2 | 3 | 4 | 5 = 2;
+  public static readonly EXTENSION_SETTING: 1 | 2 | 3 | 4 | 5 = 1;
 
   public static readonly ALL_DQN_SETTINGS = {
     // q-learning hyperparameters
     alpha: 0.0001, // a-learning rate between 0 and 1
     gamma: 0.99, // y-discount factor between 0 and 1 - gammas should correspond to the size of observation space: you should use larger gammas (ie closer to 1) for big state spaces, and smaller gammas for smaller spaces.
-    episodes: 2000,
+    episodes: 20000,
     epsilon: 1,
-    epsilonDecay: 0.001, // go slightly for more exploitation instead of exploration
+    epsilonDecay: 0.0001, // go slightly for more exploitation instead of exploration
     epochs: 1, // the validation loss going to increase that means overfitting than reduce epochs
     batchSize: 32, // sample size
     // network
@@ -67,22 +67,22 @@ export class AiDqnService {
     }
   }
 
-  train(totalEpisodes: number, startEpsilon: number, isTraining: GodType): void {
+  train(totalEpisodes: number, startEpsilon: number, isTraining: GodType, startSteps: number): void {
     switch (AiDqnService.EXTENSION_SETTING) {
       case 1:
-        this.aiDqn1Service.train(totalEpisodes, startEpsilon, isTraining);
+        this.aiDqn1Service.train(totalEpisodes, startEpsilon, isTraining, startSteps);
         break;
       case 2:
-        this.aiDqn2Service.train(totalEpisodes, startEpsilon, isTraining);
+        this.aiDqn2Service.train(totalEpisodes, startEpsilon, isTraining, startSteps);
         break;
       case 3:
-        this.aiDqn3Service.train(totalEpisodes, startEpsilon, isTraining);
+        this.aiDqn3Service.train(totalEpisodes, startEpsilon, isTraining, startSteps);
         break;
       case 4:
-        this.aiDqn4Service.train(totalEpisodes, startEpsilon, isTraining);
+        this.aiDqn4Service.train(totalEpisodes, startEpsilon, isTraining, startSteps);
         break;
       case 5:
-        this.aiDqn5Service.train(totalEpisodes, startEpsilon, isTraining);
+        this.aiDqn5Service.train(totalEpisodes, startEpsilon, isTraining, startSteps);
         break;
     }
   }

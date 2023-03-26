@@ -56,6 +56,7 @@
 	"core.settings.dqn.rewardProgress": "Average rewards",
 	"core.settings.dqn.running": "Training is running...",
 	"core.settings.dqn.start": "Start training",
+	"core.settings.dqn.steps": "Count start",
 	"core.settings.dqn.title": "Deep Q-Learning",
 	"core.settings.dqn.winRate": "Win rate",
 	"core.settings.dqn.wins": "Victories",

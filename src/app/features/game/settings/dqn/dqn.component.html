@@ -24,6 +24,16 @@
     </div>
   </div>
 
+  <div class="col-5">
+    {{'core.settings.dqn.steps' | translate}}
+  </div>
+  <div class="col-7">
+    <div>
+      <p-inputNumber [disabled]="(isTraining$ | async) === true"
+                     [(ngModel)]="startSteps" locale="de-CH"></p-inputNumber>
+    </div>
+  </div>
+
   <ng-container *ngIf="extension !== 1">
     <div class="col-5">
       Start {{'core.settings.dqn.epsilon' | translate}}
