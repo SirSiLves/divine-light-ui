@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
-import { map, Subject } from 'rxjs';
+import { map, Subject, take } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AiDqnTrainQuery } from '../../playing/ai/dqn/state/ai-dqn-train.query';
 import { GameManagerService } from '../../../../core/state/game-manager/game-manager.service';
 import { GodType } from '../../state/player/player.model';
 import { AiDqnService } from '../../playing/ai/dqn/ai-dqn.service';
+import { GameManagerQuery } from '../../../../core/state/game-manager/game-manager.query';
+import { AiDqn1Service } from '../../playing/ai/dqn/dqn-1/ai-dqn-1.service';
 
 @Component({
   selector: 'app-dqn',
@@ -16,6 +18,7 @@ export class DqnComponent {
   private onDestroy$ = new Subject<void>();
 
   isTraining$ = this.aiDqnTrainQuery.isLoading$;
+  settingsLoading = false;
 
   private train$ = this.aiDqnTrainQuery.select();
   episode$ = this.train$.pipe(map(data => data.episode));
@@ -42,13 +45,18 @@ export class DqnComponent {
   constructor(
     private aiDqnTrainQuery: AiDqnTrainQuery,
     private gameManagerService: GameManagerService,
-    private aiDqnService: AiDqnService
+    private aiDqnService: AiDqnService,
+    private gameManagerQuery: GameManagerQuery
   ) {
   }
 
   ngOnInit(): void {
     this.aiDqnTrainQuery.isLoading$.pipe(takeUntil(this.onDestroy$)).subscribe({
       next: isLoading => this.gameManagerService.setLoading(isLoading)
+    });
+
+    this.gameManagerQuery.isLoading$.pipe(takeUntil(this.onDestroy$)).subscribe({
+      next: isLoading => this.settingsLoading = isLoading
     });
   }
 
@@ -71,5 +79,10 @@ export class DqnComponent {
 
   downloadDQNProgress() {
     this.aiDqnService.downloadProgress(this.isTraining);
+  }
+
+  loadExtension(): void {
+    AiDqnService.EXTENSION_SETTING = this.extension;
+    this.gameManagerService.loadData();
   }
 }
