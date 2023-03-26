@@ -37,6 +37,7 @@ export class DqnComponent {
 
   totalEpisodes = AiDqnService.ALL_DQN_SETTINGS.episodes;
   startEpsilon = AiDqnService.ALL_DQN_SETTINGS.epsilon;
+  startSteps = 0;
 
   constructor(
     private aiDqnTrainQuery: AiDqnTrainQuery,
@@ -57,7 +58,7 @@ export class DqnComponent {
   }
 
   train(): void {
-    this.aiDqnService.train(this.totalEpisodes, this.startEpsilon, this.isTraining);
+    this.aiDqnService.train(this.totalEpisodes, this.startEpsilon, this.isTraining, this.startSteps);
   }
 
   downloadDQNModel(): void {

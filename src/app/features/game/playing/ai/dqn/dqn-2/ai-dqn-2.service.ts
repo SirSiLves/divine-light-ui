@@ -24,7 +24,7 @@ export class AiDqn2Service {
     files: {
       camaxtli: {
         model: 'divine-light-dqn2-model-camaxtli_7x6',
-        progress: 'divine-light-dqn2-progressl-camaxtli_7x6',
+        progress: 'divine-light-dqn2-progress-camaxtli_7x6',
         loss: 'divine-light-dqn2-loss-camaxtli_7x6'
       },
       nanahuatzin: {
@@ -84,8 +84,8 @@ export class AiDqn2Service {
     return isSwappedPosition ? ActionService.swapMove(qMaxAction.move)! : qMaxAction.move;
   }
 
-  train(totalEpisodes: number, startEpsilon: number, isTraining: GodType): void {
-    this.aiDqnTrainService.init(totalEpisodes, startEpsilon);
+  train(totalEpisodes: number, startEpsilon: number, isTraining: GodType, startSteps: number): void {
+    this.aiDqnTrainService.init(totalEpisodes, startEpsilon, startSteps);
 
     // give ui some time to deactivate buttons
     setTimeout(() => {

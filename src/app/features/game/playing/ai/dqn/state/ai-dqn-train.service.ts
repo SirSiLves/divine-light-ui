@@ -27,16 +27,16 @@ export class AiDqnTrainService {
   ) {
   }
 
-  init(totalEpisodes: number, startEpsilon: number): void {
+  init(totalEpisodes: number, startEpsilon: number, startSteps: number): void {
     this.aiDqnTrainStore.update(
       {
         epsilon: startEpsilon,
-        episode: 0,
+        episode: startSteps,
         wins: 0,
         draws: 0,
         defeats: 0,
         winRate: 0,
-        totalEpisodes,
+        totalEpisodes: totalEpisodes + startSteps,
         startEpsilon
       }
     );
@@ -303,7 +303,6 @@ export class AiDqnTrainService {
   }
 
   calculateProgress(reward: number): void {
-
     this.tempRewardHistory.push(reward);
     let sum = 0;
 
