@@ -5,6 +5,7 @@ import { AIHistoryLoss, AIHistoryRewards } from './ai-dqn-train.model';
 
 export interface AiDqnTrainState {
   episode: number;
+  startEpisodes: number;
   totalEpisodes: number;
   wins: number;
   draws: number;

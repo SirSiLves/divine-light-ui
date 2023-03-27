@@ -37,6 +37,7 @@ export class AiDqnTrainService {
         defeats: 0,
         winRate: 0,
         totalEpisodes: totalEpisodes + startSteps,
+        startEpisodes: startSteps,
         startEpsilon
       }
     );
@@ -236,20 +237,20 @@ export class AiDqnTrainService {
         this.aiDqnTrainStore.update({
           ...trainState,
           wins: trainState.wins + 1,
-          winRate: (trainState.wins + 1) / trainState.episode
+          winRate: (trainState.wins + 1) / (trainState.episode - trainState.startEpisodes)
         });
       } else {
         this.aiDqnTrainStore.update({
           ...trainState,
           defeats: trainState.defeats + 1,
-          winRate: trainState.wins / trainState.episode
+          winRate: trainState.wins / (trainState.episode - trainState.startEpisodes)
         });
       }
     } else if (draw) {
       this.aiDqnTrainStore.update({
         ...trainState,
         draws: trainState.draws + 1,
-        winRate: trainState.wins / trainState.episode
+        winRate: trainState.wins / (trainState.episode - trainState.startEpisodes)
       });
     } else {
       throw new Error("End of episode must be with a winner or a draw");
