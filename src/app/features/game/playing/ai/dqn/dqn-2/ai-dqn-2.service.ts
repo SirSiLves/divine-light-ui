@@ -219,15 +219,16 @@ export class AiDqn2Service {
   }
 
   downloadLoss(isTraining: GodType): void {
+    const count = this.aiDqnTrainQuery.getValue().totalEpisodes;
     this.aiDqnTrainService.downloadLoss(isTraining === GodType.CAMAXTLI ?
-      AiDqn2Service.DQN_SETTINGS.files.camaxtli.loss : AiDqn2Service.DQN_SETTINGS.files.nanahuatzin.loss
+      AiDqn2Service.DQN_SETTINGS.files.camaxtli.loss + '_' + count : AiDqn2Service.DQN_SETTINGS.files.nanahuatzin.loss + '_' + count
     );
   }
 
-
   downloadProgress(isTraining: GodType): void {
+    const count = this.aiDqnTrainQuery.getValue().totalEpisodes;
     this.aiDqnTrainService.downloadProgress(isTraining === GodType.CAMAXTLI ?
-      AiDqn2Service.DQN_SETTINGS.files.camaxtli.progress : AiDqn2Service.DQN_SETTINGS.files.nanahuatzin.progress
+      AiDqn2Service.DQN_SETTINGS.files.camaxtli.progress + '_' + count : AiDqn2Service.DQN_SETTINGS.files.nanahuatzin.progress + '_' + count
     );
   }
 }
