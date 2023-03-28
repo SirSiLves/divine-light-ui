@@ -50,7 +50,8 @@ export class SimulationComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.isSimulationOnGoing.pipe(takeUntil(this.onDestroy$)).subscribe(train => {
-      if (train) this.gameManagerService.setLoading(train);
+      if (train === true) this.gameManagerService.setLoading(train);
+      if (train === false) this.gameManagerService.setLoading(train);
     });
   }
 

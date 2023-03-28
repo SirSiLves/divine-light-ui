@@ -16,7 +16,7 @@ import { Rewards } from './rewards';
 import { MatrixStore } from '../../state/matrix/matrix.store';
 import { AiDqnService } from './dqn/ai-dqn.service';
 import { MatrixQuery } from '../../state/matrix/matrix.query';
-import { AiDqn1Service } from './dqn/dqn-1/ai-dqn-1.service';
+
 
 @Injectable({
   providedIn: 'root'
@@ -31,8 +31,7 @@ export class AiService {
     private playerQuery: PlayerQuery,
     private aiRandomService: AiRandomService,
     private aiMinimaxingService: AiMinimaxingService,
-    private aiDqnService: AiDqnService,
-    private aiDqn1Service: AiDqn1Service
+    private aiDqnService: AiDqnService
   ) {
   }
 

@@ -178,6 +178,7 @@ export class GameManagerService {
   private stopLoading(): void {
     if (!this.isDQNCamaxtliModelLoading && !this.isDQNNanahuatzinModelLoading) {
       this.setLoading(false);
+      this.playerService.searchAndTriggerAIMove();
     }
   }
 
