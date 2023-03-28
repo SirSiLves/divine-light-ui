@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GameManagerQuery } from '../../../core/state/game-manager/game-manager.query';
 import { GameManagerService } from '../../../core/state/game-manager/game-manager.service';
-import { of, Subject, switchMap } from 'rxjs';
+import { combineLatest, of, Subject, switchMap } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { GodType, Player, PlayerType } from '../state/player/player.model';
 import { PlayerService } from '../state/player/player.service';
@@ -9,7 +9,7 @@ import { PlayerQuery } from '../state/player/player.query';
 import { ActionQuery } from '../state/action/action.query';
 import { ActionService } from '../state/action/action.service';
 import { MatrixQuery } from '../state/matrix/matrix.query';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 import { AuthenticationService } from '../../../core/authentiction/authentication.service';
 import { MatrixStore } from '../state/matrix/matrix.store';
 import { environment } from '../../../../environments/environment';
@@ -149,15 +149,17 @@ export class SettingsComponent implements OnInit, OnDestroy {
   private initQueryListener(): void {
     this.activatedRoute.queryParams.pipe(takeUntil(this.onDestroy$)).subscribe({
       next: params => {
-        if (params['mode'] === undefined || params['rematch'] === undefined || params['autoSwitch'] === undefined
-          || params['camaxtli'] === undefined || params['nanahuatzin'] === undefined ||
-          (params['mode'] === 'bvb' && (params['botTypeP1'] === undefined || params['botTypeP2'] === undefined)) ||
-          (params['mode'] === 'p1vb' && (params['botTypeP1'] === undefined && params['botTypeP2'] === undefined || (params['botTypeP1'] && params['botTypeP2']))) ||
-          (params['mode'] === 'p1vp2' && (params['botTypeP1'] || params['botTypeP2']))
-        ) {
-          this.setQueryParams();
-        } else {
-          this.setSettings(params);
+        if (this.router.url.startsWith('/game')) {
+          if (params['mode'] === undefined || params['rematch'] === undefined || params['autoSwitch'] === undefined
+            || params['camaxtli'] === undefined || params['nanahuatzin'] === undefined ||
+            (params['mode'] === 'bvb' && (params['botTypeP1'] === undefined || params['botTypeP2'] === undefined)) ||
+            (params['mode'] === 'p1vb' && (params['botTypeP1'] === undefined && params['botTypeP2'] === undefined || (params['botTypeP1'] && params['botTypeP2']))) ||
+            (params['mode'] === 'p1vp2' && (params['botTypeP1'] || params['botTypeP2']))
+          ) {
+            this.setQueryParams();
+          } else {
+            this.setSettings(params);
+          }
         }
       }
     });
