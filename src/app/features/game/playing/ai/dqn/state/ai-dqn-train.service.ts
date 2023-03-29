@@ -42,6 +42,9 @@ export class AiDqnTrainService {
       }
     );
 
+    this.aiDqnTrainStore.averageRewardHistory$.next([]);
+    this.aiDqnTrainStore.lossHistory$.next([]);
+
     this.aiDqnTrainStore.setLoading(true);
   }
 
