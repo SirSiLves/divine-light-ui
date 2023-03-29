@@ -1,7 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { GameManagerQuery } from '../../../core/state/game-manager/game-manager.query';
 import { GameManagerService } from '../../../core/state/game-manager/game-manager.service';
-import { combineLatest, of, Subject, switchMap } from 'rxjs';
+import { of, Subject, switchMap } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { GodType, Player, PlayerType } from '../state/player/player.model';
 import { PlayerService } from '../state/player/player.service';
@@ -9,11 +9,13 @@ import { PlayerQuery } from '../state/player/player.query';
 import { ActionQuery } from '../state/action/action.query';
 import { ActionService } from '../state/action/action.service';
 import { MatrixQuery } from '../state/matrix/matrix.query';
-import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { AuthenticationService } from '../../../core/authentiction/authentication.service';
 import { MatrixStore } from '../state/matrix/matrix.store';
 import { environment } from '../../../../environments/environment';
 import { AiService } from '../playing/ai/ai.service';
+import { AiMinimaxingService } from '../playing/ai/minimaxing/ai-minimaxing.service';
+import { AiDqnService } from '../playing/ai/dqn/ai-dqn.service';
 
 
 @Component({
@@ -31,6 +33,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
   isReloading$ = this.gameManagerQuery.reloading$;
   isPoll$ = this.gameManagerQuery.polling$;
   isLoading = false;
+
+  save$: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   display: boolean = false;
   position: string = 'right';
@@ -63,6 +67,12 @@ export class SettingsComponent implements OnInit, OnDestroy {
   botTypeP2 = this.playerQuery.getPlayer2().botType;
   unsavedGBotTypeP2: 'random' | 'minimax' | 'dqn' | undefined = this.botTypeP2;
 
+  minimaxExtension = AiMinimaxingService.EXTENSION_SETTING;
+  unsavedMinimaxExtension = this.minimaxExtension;
+
+  dqnExtension = AiDqnService.EXTENSION_SETTING;
+  unsavedDqnExtension = this.dqnExtension;
+
   init = false;
 
   queryParams: {
@@ -82,6 +92,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     rematch: 'manual',
     autoSwitch: true
   };
+
 
   constructor(
     private playerService: PlayerService,
@@ -179,6 +190,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
       const setP2Algorithm = this.botTypeP2 !== this.unsavedGBotTypeP2;
       const rematchSettings = this.rematchSettings !== this.unsavedRematchSettings;
       const autoSwitchSetting = this.autoSwitch !== this.unsavedAutoSwitch;
+      const minimaxExtension = this.minimaxExtension !== this.unsavedMinimaxExtension;
+      const dqnExtension = this.dqnExtension !== this.unsavedDqnExtension;
 
       if (this.createNew) {
         this.gameManagerService.newGame();
@@ -191,6 +204,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
       if (setMode) this.prepareMode();
       if (setGod) this.prepareSetGod();
       if (rematchSettings) this.prepareRematch();
+      if (minimaxExtension) this.loadMinimaxExtension();
+      if (dqnExtension) this.loadDqnExtension();
 
       this.setQueryParams();
     }
@@ -294,7 +309,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
       this.godPlaying === this.unsavedGodPlaying &&
       this.botTypeP1 === this.unsavedGBotTypeP1 && this.botTypeP2 === this.unsavedGBotTypeP2 &&
       this.unsavedRematchSettings === this.rematchSettings &&
-      this.unsavedAutoSwitch === this.autoSwitch);
+      this.unsavedAutoSwitch === this.autoSwitch &&
+      this.unsavedMinimaxExtension === this.minimaxExtension && this.unsavedDqnExtension === this.dqnExtension);
   }
 
   private setP1Algorithm(): void {
@@ -410,6 +426,17 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   openPoll(): void {
     this.gameManagerQuery.polling$.next(true);
+  }
 
+  private loadMinimaxExtension(): void {
+    this.minimaxExtension = this.unsavedMinimaxExtension;
+    AiMinimaxingService.EXTENSION_SETTING = this.minimaxExtension;
+  }
+
+  private loadDqnExtension(): void {
+    this.dqnExtension = this.unsavedDqnExtension;
+
+    AiDqnService.EXTENSION_SETTING = this.dqnExtension;
+    this.gameManagerService.loadData();
   }
 }

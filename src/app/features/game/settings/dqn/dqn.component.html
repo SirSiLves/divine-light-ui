@@ -4,19 +4,19 @@
   </div>
   <div class="col-7">
     <div class="p-field-radiobutton">
-      <p-radioButton [value]="1" [(ngModel)]="extension" inputId="e1" (click)="loadExtension()"
+      <p-radioButton [value]="1" [(ngModel)]="extension" inputId="e1" (click)="setExtension()"
                      [disabled]="settingsLoading && extension !== 1"></p-radioButton>
       <label for="e1" class="ml-2">1</label>
-      <p-radioButton [value]="2" [(ngModel)]="extension" inputId="e2" class="ml-2" (click)="loadExtension()"
+      <p-radioButton [value]="2" [(ngModel)]="extension" inputId="e2" class="ml-2" (click)="setExtension()"
                      [disabled]="settingsLoading && extension !== 2"></p-radioButton>
       <label for="e2" class="ml-2">2</label>
-      <p-radioButton [value]="3" [(ngModel)]="extension" inputId="e3" class="ml-2" (click)="loadExtension()"
+      <p-radioButton [value]="3" [(ngModel)]="extension" inputId="e3" class="ml-2" (click)="setExtension()"
                      [disabled]="settingsLoading && extension !== 3"></p-radioButton>
       <label for="e3" class="ml-3">3</label>
-      <p-radioButton [value]="4" [(ngModel)]="extension" inputId="e4" class="ml-2" (click)="loadExtension()"
+      <p-radioButton [value]="4" [(ngModel)]="extension" inputId="e4" class="ml-2" (click)="setExtension()"
                      [disabled]="settingsLoading && extension !== 4"></p-radioButton>
       <label for="e4" class="ml-2">4</label>
-      <p-radioButton [value]="5" [(ngModel)]="extension" inputId="e5" class="ml-2" (click)="loadExtension()"
+      <p-radioButton [value]="5" [(ngModel)]="extension" inputId="e5" class="ml-2" (click)="setExtension()"
                      [disabled]="settingsLoading && extension !== 5"></p-radioButton>
       <label for="e5" class="ml-2">5</label>
     </div>

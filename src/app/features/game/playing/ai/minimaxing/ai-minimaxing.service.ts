@@ -23,7 +23,7 @@ export class AiMinimaxingService {
   // 3 - minimax with alpha beta pruning and iterative deepening
   // 4 - minimax with alpha beta pruning, iterative deepening and move generation
   // 5 - minimax with alpha beta pruning, iterative deepening, move generation and evaluation function
-  public static readonly EXTENSION_SETTING: 1 | 2 | 3 | 4 | 5 = 1;
+  public static EXTENSION_SETTING: 1 | 2 | 3 | 4 | 5 = 1;
 
   private readonly DEPTH_SEARCH = 2;
   private readonly MAX_DEPTH_SEARCH = 100;

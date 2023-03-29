@@ -38,6 +38,7 @@ import { GameRoutingModule } from './game-routing.module';
 import { InputTextModule } from 'primeng/inputtext';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { DqnComponent } from './settings/dqn/dqn.component';
+import { MinimaxComponent } from './settings/minimax/minimax.component';
 
 
 @NgModule({
@@ -59,6 +60,7 @@ import { DqnComponent } from './settings/dqn/dqn.component';
     DrawComponent,
     PollComponent,
     DqnComponent,
+    MinimaxComponent,
   ],
   exports: [
     ResultComponent,

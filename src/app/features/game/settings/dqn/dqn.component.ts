@@ -1,12 +1,12 @@
-import { Component } from '@angular/core';
-import { map, Subject, take } from 'rxjs';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { map, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AiDqnTrainQuery } from '../../playing/ai/dqn/state/ai-dqn-train.query';
 import { GameManagerService } from '../../../../core/state/game-manager/game-manager.service';
 import { GodType } from '../../state/player/player.model';
 import { AiDqnService } from '../../playing/ai/dqn/ai-dqn.service';
 import { GameManagerQuery } from '../../../../core/state/game-manager/game-manager.query';
-import { AiDqn1Service } from '../../playing/ai/dqn/dqn-1/ai-dqn-1.service';
+
 
 @Component({
   selector: 'app-dqn',
@@ -16,6 +16,9 @@ import { AiDqn1Service } from '../../playing/ai/dqn/dqn-1/ai-dqn-1.service';
 export class DqnComponent {
 
   private onDestroy$ = new Subject<void>();
+
+  @Input() extension!: 1 | 2 | 3 | 4 | 5
+  @Output() extensionChange$ = new EventEmitter<1 | 2 | 3 | 4 | 5>();
 
   isTraining$ = this.aiDqnTrainQuery.isLoading$;
   settingsLoading = false;
@@ -28,8 +31,6 @@ export class DqnComponent {
   epsilon$ = this.train$.pipe(map(data => data.epsilon));
   winRate$ = this.train$.pipe(map(data => data.winRate * 100));
   rewardAverage$ = this.train$.pipe(map(data => data.rewardAverage));
-
-  extension = AiDqnService.EXTENSION_SETTING;
 
   godsOptions = [
     {label: 'Camaxtli', value: GodType.CAMAXTLI},
@@ -81,10 +82,8 @@ export class DqnComponent {
     this.aiDqnService.downloadProgress(this.isTraining);
   }
 
-  loadExtension(): void {
+  setExtension(): void {
     if (this.extension === AiDqnService.EXTENSION_SETTING) return;
-
-    AiDqnService.EXTENSION_SETTING = this.extension;
-    this.gameManagerService.loadData();
+    this.extensionChange$.next(this.extension);
   }
 }

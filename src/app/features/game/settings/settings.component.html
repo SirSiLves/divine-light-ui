@@ -1,5 +1,3 @@
-
-
 <ng-container *ngIf="isPoll$ | async; else setting">
   <button pButton pRipple
           type="button"
@@ -144,7 +142,19 @@
         <div class="container">
           <div class="grid">
             <div class="col-12">
-              <app-dqn *ngIf="display"></app-dqn>
+              <app-dqn *ngIf="display" [extension]="dqnExtension"
+                       (extensionChange$)="unsavedDqnExtension = $event"></app-dqn>
+            </div>
+          </div>
+        </div>
+      </p-tabPanel>
+
+      <p-tabPanel header="{{'core.settings.minimax.title' | translate}}" [disabled]="(isLoading$ | async) === true">
+        <div class="container">
+          <div class="grid">
+            <div class="col-12">
+              <app-minimax *ngIf="display" [extension]="minimaxExtension"
+                           (extensionChange$)="unsavedMinimaxExtension = $event"></app-minimax>
             </div>
           </div>
         </div>
