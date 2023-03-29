@@ -19,7 +19,7 @@ export class AiDqnService {
   // 3 - DQN with Epsilon-Greedy and Experience Replay
   // 4 - DQN with Epsilon-Greedy, Experience Replay and Target DQN
   // 5 - DQN with Epsilon-Greedy, Experience Replay, Target DQN and Double DQN
-  public static EXTENSION_SETTING: 1 | 2 | 3 | 4 | 5 = 3;
+  public static EXTENSION_SETTING: 1 | 2 | 3 | 4 | 5 = 1;
 
   public static readonly ALL_DQN_SETTINGS = {
     // q-learning hyperparameters
