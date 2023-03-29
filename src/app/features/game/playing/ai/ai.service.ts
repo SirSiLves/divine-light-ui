@@ -16,6 +16,11 @@ import { Rewards } from './rewards';
 import { MatrixStore } from '../../state/matrix/matrix.store';
 import { AiDqnService } from './dqn/ai-dqn.service';
 import { MatrixQuery } from '../../state/matrix/matrix.query';
+import { AiDqn1Service } from './dqn/dqn-1/ai-dqn-1.service';
+import { AiDqn2Service } from './dqn/dqn-2/ai-dqn-2.service';
+import { AiDqn3Service } from './dqn/dqn-3/ai-dqn-3.service';
+import { AiDqn4Service } from './dqn/dqn-4/ai-dqn-4.service';
+import { AiDqn5Service } from './dqn/dqn-5/ai-dqn-5.service';
 
 
 @Injectable({
@@ -31,7 +36,12 @@ export class AiService {
     private playerQuery: PlayerQuery,
     private aiRandomService: AiRandomService,
     private aiMinimaxingService: AiMinimaxingService,
-    private aiDqnService: AiDqnService
+    private aiDqnService: AiDqnService,
+    private aiDqn1Service: AiDqn1Service,
+    private aiDqn2Service: AiDqn2Service,
+    private aiDqn3Service: AiDqn3Service,
+    private aiDqn4Service: AiDqn4Service,
+    private aiDqn5Service: AiDqn5Service
   ) {
   }
 
@@ -41,6 +51,7 @@ export class AiService {
 
     switch (player.botType) {
       case 'random':
+        // return this.aiDqn2Service.getMove(matrix, player.godType);
         return this.aiRandomService.getMove(matrix, player.godType);
       case 'minimax':
         return this.aiMinimaxingService.getMove(matrix, player.godType);
@@ -57,10 +68,10 @@ export class AiService {
       case BotTypes.RANDOM:
         return this.aiRandomService.getMove(matrix, godType);
         // return this.aiMinimaxingService.getMove5(matrix, godType);
+        // return this.aiDqn2Service.getMove(matrix, godType);
       case BotTypes.MINIMAX:
         return this.aiMinimaxingService.getMove(matrix, godType);
       case BotTypes.DQN:
-        // return this.aiDqn1Service.getMove(matrix, godType);
         return this.aiDqnService.getMove(matrix, godType);
       default:
         return this.aiRandomService.getMove(matrix, godType);
