@@ -10,6 +10,7 @@ import { AiTensorflowService } from '../ai-tensorflow.service';
 import { DrawValidatorService } from '../../../../validator/draw-validator.service';
 import { Rewards } from '../../rewards';
 import { AiDqnService } from '../ai-dqn.service';
+import { AISarsd } from './ai-dqn-train.model';
 
 
 @Injectable({providedIn: 'root'})
@@ -341,5 +342,27 @@ export class AiDqnTrainService {
     a.click();
     window.URL.revokeObjectURL(url);
     a.remove();
+  }
+
+  getMiniBatchSamplesFromReplayMemory(replayMemory: AISarsd[]): AISarsd[] {
+    const samples = [];
+
+    // get new entries first and shuffle those
+    const newestEntries = AiService.shuffle(replayMemory.filter(entry => entry.new));
+
+    for (let i = 0; i < newestEntries.length; i++) {
+      const newEntry = newestEntries[i];
+      samples.push(newEntry);
+      replayMemory.find(entry => entry.id === newEntry.id)!.new = false;
+
+      if (samples.length < AiDqnService.ALL_DQN_SETTINGS.batchSize) break;
+    }
+
+    while (samples.length < AiDqnService.ALL_DQN_SETTINGS.batchSize) {
+      const randomNumber = this.aiRandomService.generateRandomNumber(0, replayMemory.length - 1);
+      samples.push(replayMemory[randomNumber]);
+    }
+
+    return samples;
   }
 }

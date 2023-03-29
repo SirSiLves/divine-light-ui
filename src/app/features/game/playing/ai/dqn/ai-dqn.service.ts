@@ -19,7 +19,7 @@ export class AiDqnService {
   // 3 - DQN with Epsilon-Greedy and Experience Replay
   // 4 - DQN with Epsilon-Greedy, Experience Replay and Target DQN
   // 5 - DQN with Epsilon-Greedy, Experience Replay, Target DQN and Double DQN
-  public static EXTENSION_SETTING: 1 | 2 | 3 | 4 | 5 = 1;
+  public static EXTENSION_SETTING: 1 | 2 | 3 | 4 | 5 = 3;
 
   public static readonly ALL_DQN_SETTINGS = {
     // q-learning hyperparameters
@@ -30,6 +30,8 @@ export class AiDqnService {
     epsilonDecay: 0.00001, // go slightly for more exploitation instead of exploration
     epochs: 1, // the validation loss going to increase that means overfitting than reduce epochs
     batchSize: 32, // sample size
+    replayStartSize: 10000, // minimum replay memory size
+    bufferSize: 100000, // replay memory
     // network
     neuronsHiddenBitmap: 651, // sqrt(H * W * C * POSSIBLE ACTIONS) -> POSSIBLE: 420 -> 7 * 6 * 24 * 420 -> 651 (7x6)
     neuronsHiddenBitmapGrouped: 461, // sqrt(H * W * C * POSSIBLE ACTIONS) -> POSSIBLE: 420 -> 7 * 6 * 12 * 420 -> 461 (7x6)
@@ -38,7 +40,7 @@ export class AiDqnService {
     NUM_BOARD_WIDTH: MatrixStore.WIDTH_NUMBER,
     NUM_BOARD_HEIGHT: MatrixStore.HEIGHT_NUMBER,
     NUM_MOVES: MatrixStore.TOTAL_POSSIBLE_ACTIONS,
-    opponent: 'random' // 'random' | 'minimax'
+    opponent: 'random', // 'random' | 'minimax'
   };
 
   constructor(
@@ -120,6 +122,11 @@ export class AiDqnService {
       }
       case 2: {
         this.aiDqn2Service.initializeModel(godType);
+        break;
+      }
+      case 3: {
+        this.aiDqn3Service.initializeModel(godType);
+        break;
       }
     }
   }
@@ -132,6 +139,10 @@ export class AiDqnService {
       }
       case 2: {
         this.aiDqn2Service.loadModel(godType, model, weights);
+        break;
+      }
+      case 3: {
+        this.aiDqn3Service.loadModel(godType, model, weights);
         break;
       }
     }
@@ -153,6 +164,13 @@ export class AiDqnService {
         )); // https://www.tensorflow.org/js/guide/save_load
         break;
       }
+      case 3: {
+        const model = this.aiDqn3Service.getModel(godType);
+        model.save('downloads://' + (
+          godType === GodType.CAMAXTLI ? AiDqn3Service.DQN_SETTINGS.files.camaxtli.model : AiDqn3Service.DQN_SETTINGS.files.nanahuatzin.model
+        )); // https://www.tensorflow.org/js/guide/save_load
+        break;
+      }
     }
   }
 
@@ -164,6 +182,9 @@ export class AiDqnService {
       case 2:
         this.aiDqn2Service.downloadLoss(isTraining);
         break;
+      case 3:
+        this.aiDqn3Service.downloadLoss(isTraining);
+        break;
     }
   }
 
@@ -174,6 +195,9 @@ export class AiDqnService {
         break;
       case 2:
         this.aiDqn2Service.downloadProgress(isTraining);
+        break;
+      case 3:
+        this.aiDqn3Service.downloadProgress(isTraining);
         break;
     }
   }

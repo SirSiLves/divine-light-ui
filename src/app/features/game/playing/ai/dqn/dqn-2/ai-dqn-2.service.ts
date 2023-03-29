@@ -175,7 +175,7 @@ export class AiDqn2Service {
     const qValuesFromStates: number[][] = isTraining === GodType.CAMAXTLI ?
       this.aiTensorflowService.predictBitmapWithBatch(this.camaxtli, stateList) : this.aiTensorflowService.predictBitmapWithBatch(this.nanahuatzin, stateList);
     const qValuesFromNextStates: number[][] = isTraining === GodType.CAMAXTLI ?
-      this.aiTensorflowService.predictBitmapWithBatch(this.camaxtli, stateList) : this.aiTensorflowService.predictBitmapWithBatch(this.nanahuatzin, nextStateList);
+      this.aiTensorflowService.predictBitmapWithBatch(this.camaxtli, nextStateList) : this.aiTensorflowService.predictBitmapWithBatch(this.nanahuatzin, nextStateList);
 
     for (let j = 0; j < entries.length; j++) {
       const entry = entries[j];
@@ -215,7 +215,9 @@ export class AiDqn2Service {
     this.aiDqnTrainService.setScore(winner, draw, isTraining);
     this.aiTensorflowService.cleanUp();
 
-    this.prepare(isTraining);
+    setTimeout(() => {
+      this.prepare(isTraining);
+    });
   }
 
   downloadLoss(isTraining: GodType): void {
