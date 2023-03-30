@@ -19,6 +19,7 @@ import { MessageService } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { AiDqn2Service } from '../../../features/game/playing/ai/dqn/dqn-2/ai-dqn-2.service';
 import { AiDqn3Service } from '../../../features/game/playing/ai/dqn/dqn-3/ai-dqn-3.service';
+import { AiDqn4Service } from '../../../features/game/playing/ai/dqn/dqn-4/ai-dqn-4.service';
 
 
 @Injectable({providedIn: 'root'})
@@ -198,6 +199,11 @@ export class GameManagerService {
       case 3: {
         this.getCamaxtliModelFromCloud(AiDqn3Service.DQN_SETTINGS.files.camaxtli.model);
         this.getNanahuatzinModelFromCloud(AiDqn3Service.DQN_SETTINGS.files.nanahuatzin.model);
+        break;
+      }
+      case 4: {
+        this.getCamaxtliModelFromCloud(AiDqn4Service.DQN_SETTINGS.files.camaxtli.model);
+        this.getNanahuatzinModelFromCloud(AiDqn4Service.DQN_SETTINGS.files.nanahuatzin.model);
         break;
       }
     }

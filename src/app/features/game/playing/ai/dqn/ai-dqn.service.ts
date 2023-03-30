@@ -32,6 +32,7 @@ export class AiDqnService {
     batchSize: 32, // sample size
     replayStartSize: 10000, // minimum replay memory size
     bufferSize: 100000, // replay memory
+    syncInterval: 10000, // after how many episodes trains should the network be synced
     // network
     neuronsHiddenBitmap: 651, // sqrt(H * W * C * POSSIBLE ACTIONS) -> POSSIBLE: 420 -> 7 * 6 * 24 * 420 -> 651 (7x6)
     neuronsHiddenBitmapGrouped: 461, // sqrt(H * W * C * POSSIBLE ACTIONS) -> POSSIBLE: 420 -> 7 * 6 * 12 * 420 -> 461 (7x6)
@@ -128,6 +129,10 @@ export class AiDqnService {
         this.aiDqn3Service.initializeModel(godType);
         break;
       }
+      case 4: {
+        this.aiDqn4Service.initializeModel(godType);
+        break;
+      }
     }
   }
 
@@ -143,6 +148,10 @@ export class AiDqnService {
       }
       case 3: {
         this.aiDqn3Service.loadModel(godType, model, weights);
+        break;
+      }
+      case 4: {
+        this.aiDqn4Service.loadModel(godType, model, weights);
         break;
       }
     }
@@ -171,6 +180,13 @@ export class AiDqnService {
         )); // https://www.tensorflow.org/js/guide/save_load
         break;
       }
+      case 4: {
+        const model = this.aiDqn4Service.getModel(godType);
+        model.save('downloads://' + (
+          godType === GodType.CAMAXTLI ? AiDqn4Service.DQN_SETTINGS.files.camaxtli.model : AiDqn4Service.DQN_SETTINGS.files.nanahuatzin.model
+        )); // https://www.tensorflow.org/js/guide/save_load
+        break;
+      }
     }
   }
 
@@ -185,6 +201,9 @@ export class AiDqnService {
       case 3:
         this.aiDqn3Service.downloadLoss(isTraining);
         break;
+      case 4:
+        this.aiDqn4Service.downloadLoss(isTraining);
+        break;
     }
   }
 
@@ -198,6 +217,9 @@ export class AiDqnService {
         break;
       case 3:
         this.aiDqn3Service.downloadProgress(isTraining);
+        break;
+      case 4:
+        this.aiDqn4Service.downloadProgress(isTraining);
         break;
     }
   }

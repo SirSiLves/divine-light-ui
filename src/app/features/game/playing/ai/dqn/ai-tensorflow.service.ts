@@ -171,4 +171,10 @@ export class AiTensorflowService {
     });
   }
 
+  syncNetworkWeights(onlineModel: any, targetModel: any): void {
+    for (let i = 0; i < onlineModel.layers.length; i++) {
+      targetModel.layers[i].setWeights(onlineModel.layers[i].getWeights());
+    }
+  }
+
 }
