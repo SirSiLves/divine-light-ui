@@ -32,7 +32,7 @@ export class AiDqnService {
     batchSize: 32, // sample size
     replayStartSize: 10000, // minimum replay memory size
     bufferSize: 100000, // replay memory
-    syncInterval: 10000, // after how many episodes trains should the network be synced
+    syncInterval: 10000, // after how many trained samples should the network be synced
     // network
     neuronsHiddenBitmap: 651, // sqrt(H * W * C * POSSIBLE ACTIONS) -> POSSIBLE: 420 -> 7 * 6 * 24 * 420 -> 651 (7x6)
     neuronsHiddenBitmapGrouped: 461, // sqrt(H * W * C * POSSIBLE ACTIONS) -> POSSIBLE: 420 -> 7 * 6 * 12 * 420 -> 461 (7x6)
