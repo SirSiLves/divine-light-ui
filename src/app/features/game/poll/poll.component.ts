@@ -174,10 +174,6 @@ export class PollComponent implements OnInit, OnDestroy {
     return this.formGroup.controls.question1 as FormControl;
   }
 
-  get question2(): FormControl {
-    return this.formGroup.controls.question2 as FormControl;
-  }
-
   get question3(): FormControl {
     return this.formGroup.controls.question3 as FormControl;
   }
@@ -188,10 +184,6 @@ export class PollComponent implements OnInit, OnDestroy {
 
   get question5(): FormControl {
     return this.formGroup.controls.question5 as FormControl;
-  }
-
-  get question6(): FormControl {
-    return this.formGroup.controls.question6 as FormControl;
   }
 
   get question7(): FormControl {
