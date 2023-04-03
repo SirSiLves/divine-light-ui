@@ -29,6 +29,8 @@ export class AiDqnTrainService {
   }
 
   init(totalEpisodes: number, startEpsilon: number, startSteps: number): void {
+    this.aiDqnTrainStore.setLoading(true);
+
     this.aiDqnTrainStore.update(
       {
         epsilon: startEpsilon,
@@ -45,8 +47,6 @@ export class AiDqnTrainService {
 
     this.aiDqnTrainStore.averageRewardHistory$.next([]);
     this.aiDqnTrainStore.lossHistory$.next([]);
-
-    this.aiDqnTrainStore.setLoading(true);
   }
 
   prepare(): void {
