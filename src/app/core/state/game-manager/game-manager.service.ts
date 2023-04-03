@@ -20,6 +20,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { AiDqn2Service } from '../../../features/game/playing/ai/dqn/dqn-2/ai-dqn-2.service';
 import { AiDqn3Service } from '../../../features/game/playing/ai/dqn/dqn-3/ai-dqn-3.service';
 import { AiDqn4Service } from '../../../features/game/playing/ai/dqn/dqn-4/ai-dqn-4.service';
+import { AiDqn5Service } from '../../../features/game/playing/ai/dqn/dqn-5/ai-dqn-5.service';
 
 
 @Injectable({providedIn: 'root'})
@@ -204,6 +205,11 @@ export class GameManagerService {
       case 4: {
         this.getCamaxtliModelFromCloud(AiDqn4Service.DQN_SETTINGS.files.camaxtli.model);
         this.getNanahuatzinModelFromCloud(AiDqn4Service.DQN_SETTINGS.files.nanahuatzin.model);
+        break;
+      }
+      case 5: {
+        this.getCamaxtliModelFromCloud(AiDqn5Service.DQN_SETTINGS.files.camaxtli.model);
+        this.getNanahuatzinModelFromCloud(AiDqn5Service.DQN_SETTINGS.files.nanahuatzin.model);
         break;
       }
     }
