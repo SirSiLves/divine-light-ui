@@ -58,12 +58,14 @@
       Start {{'core.settings.dqn.epsilon' | translate}}
     </div>
     <div class="col-7">
-      <div>
-        <p-inputNumber [disabled]="(isTraining$ | async) === true"
-                       [min]="0.1"
-                       [max]="1"
-                       [(ngModel)]="startEpsilon" locale="de-CH"></p-inputNumber>
-      </div>
+      <p-inputNumber [disabled]="(isTraining$ | async) === true"
+                     [min]="0.1"
+                     [max]="1"
+                     mode="decimal"
+                     class="mb-3"
+                     [(ngModel)]="startEpsilon"></p-inputNumber>
+      <p-slider [(ngModel)]="startEpsilon" [step]="0.1" [max]="1" [min]="0.1"
+                [disabled]="(isTraining$ | async) === true"></p-slider>
     </div>
   </ng-container>
 
