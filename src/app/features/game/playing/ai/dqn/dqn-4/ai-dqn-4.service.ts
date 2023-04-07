@@ -15,6 +15,7 @@ import { AiDqnService } from '../ai-dqn.service';
 import { environment } from '../../../../../../../environments/environment';
 import { guid } from '@datorama/akita';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -234,6 +235,8 @@ export class AiDqn4Service {
             entry.nextState, qValuesFromNextStates[j], isTraining)
         );
       }
+
+      this.aiDqnTrainService.validateQValue(targetQ);
 
       qValuesFromStates[j][entry.action.index] = targetQ;
     }

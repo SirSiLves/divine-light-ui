@@ -11,6 +11,7 @@ import { DrawValidatorService } from '../../../../validator/draw-validator.servi
 import { Rewards } from '../../rewards';
 import { AiDqnService } from '../ai-dqn.service';
 import { AISarsd } from './ai-dqn-train.model';
+import { MessageService } from 'primeng/api';
 
 
 @Injectable({providedIn: 'root'})
@@ -24,7 +25,8 @@ export class AiDqnTrainService {
     private aiMinimaxingService: AiMinimaxingService,
     private aiRandomService: AiRandomService,
     private aiTensorflowService: AiTensorflowService,
-    private drawValidatorService: DrawValidatorService
+    private drawValidatorService: DrawValidatorService,
+    private messageService: MessageService,
   ) {
   }
 
@@ -116,6 +118,7 @@ export class AiDqnTrainService {
   getBestAction(model: any, state: number[][], isTraining: GodType): MoveIndex {
     const availableMoveIndexList: MoveIndex[] = AiService.shuffle(AiService.getPossibleMoveIndexList(state, isTraining));
     const qValues: number[] = this.aiTensorflowService.predictBitmap(model, state);
+    console.log(qValues);
     return this.getQMaxAction(availableMoveIndexList, qValues);
   }
 
@@ -367,4 +370,14 @@ export class AiDqnTrainService {
   }
 
 
+  validateQValue(targetQ: number): void {
+    if (targetQ >= 20000) {
+      this.messageService.add({
+        severity: 'error',
+        detail: 'Target Q-Value to high: ' + targetQ
+      });
+
+      throw new Error('Target Q-Value to high: ' + targetQ);
+    }
+  }
 }
