@@ -374,7 +374,8 @@ export class AiDqnTrainService {
     if (targetQ >= 20000) {
       this.messageService.add({
         severity: 'error',
-        detail: 'Target Q-Value to high: ' + targetQ
+        detail: 'Target Q-Value to high: ' + targetQ,
+        life: Number.POSITIVE_INFINITY
       });
 
       throw new Error('Target Q-Value to high: ' + targetQ);
