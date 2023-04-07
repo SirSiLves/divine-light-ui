@@ -369,7 +369,7 @@ export class AiDqnTrainService {
   }
 
   validateQValue(targetQ: number): number {
-    if (targetQ >= 100000 && environment.log) console.warn('Target Q-Value is really high ' + targetQ);
+    if (targetQ >= Rewards.WIN * 10 && environment.log) console.warn('Target Q-Value is really high ' + targetQ);
     return this.round(targetQ);
   }
 
