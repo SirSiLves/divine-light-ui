@@ -11,7 +11,7 @@ import { DrawValidatorService } from '../../../../validator/draw-validator.servi
 import { Rewards } from '../../rewards';
 import { AiDqnService } from '../ai-dqn.service';
 import { AISarsd } from './ai-dqn-train.model';
-import { MessageService } from 'primeng/api';
+import { environment } from '../../../../../../../environments/environment';
 
 
 @Injectable({providedIn: 'root'})
@@ -26,7 +26,6 @@ export class AiDqnTrainService {
     private aiRandomService: AiRandomService,
     private aiTensorflowService: AiTensorflowService,
     private drawValidatorService: DrawValidatorService,
-    private messageService: MessageService,
   ) {
   }
 
@@ -370,16 +369,15 @@ export class AiDqnTrainService {
   }
 
 
-  validateQValue(targetQ: number): void {
-    if (targetQ >= 20000) {
-      this.messageService.add({
-        severity: 'error',
-        detail: 'Target Q-Value to high: ' + targetQ,
-        life: Number.POSITIVE_INFINITY
-      });
+  validateQValue(targetQ: number): number {
+    if (Math.abs(targetQ) >= 20000) {
+      if (environment.log) console.warn('Target Q-Value to low or to high: ' + targetQ);
 
-      throw new Error('Target Q-Value to high: ' + targetQ);
+      if (targetQ > Rewards.WIN) return targetQ - Rewards.WIN;
+      else if (targetQ < Rewards.LOSE) return targetQ + Rewards.WIN;
     }
+
+    return targetQ;
   }
 
   round(number: number): number {

@@ -242,7 +242,7 @@ export class AiDqn5Service {
         targetQ = entry.reward + AiDqnService.ALL_DQN_SETTINGS.gamma * x;
       }
 
-      this.aiDqnTrainService.validateQValue(targetQ);
+      targetQ = this.aiDqnTrainService.validateQValue(targetQ);
 
       qValuesFromStates[j][entry.action.index] = targetQ;
     }

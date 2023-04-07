@@ -19,12 +19,12 @@ export class AiDqnService {
   // 3 - DQN with Epsilon-Greedy and Experience Replay
   // 4 - DQN with Epsilon-Greedy, Experience Replay and Target DQN
   // 5 - DQN with Epsilon-Greedy, Experience Replay, Target DQN and Double DQN
-  public static EXTENSION_SETTING: 1 | 2 | 3 | 4 | 5 = 5;
+  public static EXTENSION_SETTING: 1 | 2 | 3 | 4 | 5 = 4;
 
   public static readonly ALL_DQN_SETTINGS = {
     // q-learning hyperparameters
     alpha: 0.0001, // a-learning rate between 0 and 1
-    gamma: 0.9, // y-discount factor between 0 and 1 - gammas should correspond to the size of observation space: you should use larger gammas (ie closer to 1) for big state spaces, and smaller gammas for smaller spaces.
+    gamma: 0.99, // y-discount factor between 0 and 1 - gammas should correspond to the size of observation space: you should use larger gammas (ie closer to 1) for big state spaces, and smaller gammas for smaller spaces.
     episodes: 100000,
     epsilon: 1,
     epsilonDecay: 0.00001, // go slightly for more exploitation instead of exploration

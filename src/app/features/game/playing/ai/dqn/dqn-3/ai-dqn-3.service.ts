@@ -207,7 +207,7 @@ export class AiDqn3Service {
         );
       }
 
-      this.aiDqnTrainService.validateQValue(targetQ);
+      targetQ = this.aiDqnTrainService.validateQValue(targetQ);
 
       qValuesFromStates[j][entry.action.index] = targetQ;
     }

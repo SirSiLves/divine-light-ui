@@ -236,11 +236,7 @@ export class AiDqn4Service {
         );
       }
 
-      if (targetQ >= 20000) {
-        console.warn(targetQ, entry.reward, this.aiDqnTrainService.getQValueMaxFromStateWithPrediction(entry.nextState, qValuesFromNextStates[j], isTraining), qValuesFromNextStates);
-      }
-
-      this.aiDqnTrainService.validateQValue(targetQ);
+      targetQ = this.aiDqnTrainService.validateQValue(targetQ);
 
       qValuesFromStates[j][entry.action.index] = targetQ;
     }
