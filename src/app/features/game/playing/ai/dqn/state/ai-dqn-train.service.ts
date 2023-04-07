@@ -368,16 +368,9 @@ export class AiDqnTrainService {
     return samples;
   }
 
-
   validateQValue(targetQ: number): number {
-    if (Math.abs(targetQ) >= 20000) {
-      if (environment.log) console.warn('Target Q-Value to low or to high: ' + targetQ);
-
-      if (targetQ > Rewards.WIN) return targetQ - Rewards.WIN;
-      else if (targetQ < Rewards.LOSE) return targetQ + Rewards.WIN;
-    }
-
-    return targetQ;
+    if (targetQ >= 100000 && environment.log) console.warn('Target Q-Value is really high ' + targetQ);
+    return this.round(targetQ);
   }
 
   round(number: number): number {
