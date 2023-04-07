@@ -164,7 +164,7 @@ export class AiDqnTrainService {
       console.log(moveIndex);
     }
 
-    return prediction[moveIndex.index];
+    return this.round(prediction[moveIndex.index]);
   }
 
   executeActionWithReward(state: number[][], isTraining: GodType, move: Move, rounds: number): {
@@ -380,5 +380,9 @@ export class AiDqnTrainService {
 
       throw new Error('Target Q-Value to high: ' + targetQ);
     }
+  }
+
+  round(number: number): number {
+    return +(Math.round(Number(number + "e+2")) + "e-2");
   }
 }

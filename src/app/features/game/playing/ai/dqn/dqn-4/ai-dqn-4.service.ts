@@ -234,10 +234,10 @@ export class AiDqn4Service {
         targetQ = (entry.reward + AiDqnService.ALL_DQN_SETTINGS.gamma * this.aiDqnTrainService.getQValueMaxFromStateWithPrediction(
             entry.nextState, qValuesFromNextStates[j], isTraining)
         );
+      }
 
-        // if (targetQ > 10000) {
-        //   console.warn(targetQ, entry.reward, this.aiDqnTrainService.getQValueMaxFromStateWithPrediction(entry.nextState, qValuesFromNextStates[j], isTraining));
-        // }
+      if (targetQ >= 20000) {
+        console.warn(targetQ, entry.reward, this.aiDqnTrainService.getQValueMaxFromStateWithPrediction(entry.nextState, qValuesFromNextStates[j], isTraining), qValuesFromNextStates);
       }
 
       this.aiDqnTrainService.validateQValue(targetQ);
