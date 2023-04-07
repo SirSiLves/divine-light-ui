@@ -24,7 +24,7 @@ export class AiDqnService {
   public static readonly ALL_DQN_SETTINGS = {
     // q-learning hyperparameters
     alpha: 0.0001, // a-learning rate between 0 and 1
-    gamma: 0.9, // y-discount factor between 0 and 1 - gammas should correspond to the size of observation space: you should use larger gammas (ie closer to 1) for big state spaces, and smaller gammas for smaller spaces.
+    gamma: 0.99, // y-discount factor between 0 and 1 - gammas should correspond to the size of observation space: you should use larger gammas (ie closer to 1) for big state spaces, and smaller gammas for smaller spaces.
     episodes: 100000,
     epsilon: 1,
     epsilonDecay: 0.00001, // go slightly for more exploitation instead of exploration
@@ -32,7 +32,7 @@ export class AiDqnService {
     batchSize: 32, // sample size
     replayStartSize: 10000, // minimum replay memory size
     bufferSize: 100000, // replay memory
-    syncInterval: 10000, // after how many trained samples should the network be synced
+    syncInterval: 100000, // after how many trained samples should the network be synced
     // network
     neuronsHiddenBitmap: 651, // sqrt(H * W * C * POSSIBLE ACTIONS) -> POSSIBLE: 420 -> 7 * 6 * 24 * 420 -> 651 (7x6)
     neuronsHiddenBitmapGrouped: 461, // sqrt(H * W * C * POSSIBLE ACTIONS) -> POSSIBLE: 420 -> 7 * 6 * 12 * 420 -> 461 (7x6)
