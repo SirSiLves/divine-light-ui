@@ -87,7 +87,7 @@ export class AiDqnTrainService {
 
       }
       case 'minimax': {
-        return this.aiMinimaxingService.getMove(state, isPlaying);
+        return this.aiMinimaxingService.getMove2(state, isPlaying);
       }
     }
   }
