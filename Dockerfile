@@ -1,6 +1,6 @@
 
 ### STAGE 1: Build ###
-FROM node:16-alpine AS build
+FROM node:18-alpine AS build
 WORKDIR /usr/src/app
 COPY package.json package-lock.json ./
 RUN npm install
@@ -8,7 +8,7 @@ COPY . .
 RUN npm run build --prod
 
 ### STAGE 2: Run ###
-FROM nginx:1.16-alpine
+FROM nginx:1.18-alpine
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY --from=build /usr/src/app/dist/divine-light-ui /usr/share/nginx/html
 
