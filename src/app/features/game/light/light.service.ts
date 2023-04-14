@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { MatrixQuery } from '../state/matrix/matrix.query';
 import { LightValidatorService } from '../validator/light-validator.service';
 import { Destroy, Light } from './light.model';
@@ -18,7 +18,7 @@ export class LightService {
   readonly timeout = 300; // timeout before the light starts
 
   lightOff$ = new BehaviorSubject<boolean>(true);
-  lightOnEvent$ = new EventEmitter<Light | undefined>();
+  lightOn$ = new Subject<Light | undefined>();
   lightTime$ = new BehaviorSubject<number>(0);
 
   constructor(
@@ -80,7 +80,7 @@ export class LightService {
 
     // emit all lights
     setTimeout(() => {
-      lights.forEach(light => this.lightOnEvent$.emit(light));
+      lights.forEach(light => this.lightOn$.next(light));
     }, this.timeout);
 
     return destroy;

@@ -1,7 +1,7 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
 import { ActionStore, ActionState } from './action.store';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { Move, PrepareMove, Rotation, Walk } from './move.model';
 import { Destroy } from '../../light/light.model';
 
@@ -17,7 +17,7 @@ export class ActionQuery extends QueryEntity<ActionState> {
   possibleRotations$ = new BehaviorSubject<Rotation[] | undefined>(undefined);
   destroyed$ = new BehaviorSubject<Destroy | undefined>(undefined);
 
-  reset$ = new EventEmitter<boolean>();
+  reset$ = new Subject<boolean>();
 
   constructor(protected override store: ActionStore) {
     super(store);

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GameManagerQuery } from '../../../core/state/game-manager/game-manager.query';
 import { GameManagerService } from '../../../core/state/game-manager/game-manager.service';
 import { of, Subject, switchMap } from 'rxjs';
@@ -33,8 +33,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
   isReloading$ = this.gameManagerQuery.reloading$;
   isPoll$ = this.gameManagerQuery.polling$;
   isLoading = false;
-
-  save$: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   display: boolean = false;
   position: string = 'right';

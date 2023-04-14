@@ -44,7 +44,7 @@ export class LightComponent implements OnInit, OnDestroy {
     //   this.deadEffectTest = true;
     // }
 
-    this.lightService.lightOnEvent$.pipe(takeUntil(this.onDestroy$)).subscribe(light => {
+    this.lightService.lightOn$.pipe(takeUntil(this.onDestroy$)).subscribe(light => {
       if (light?.cellId === MatrixQuery.getCellID(this.coordinateX, this.coordinateY)) {
         setTimeout(() => {
           this.showLight(light);
