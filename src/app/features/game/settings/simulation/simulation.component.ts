@@ -7,6 +7,7 @@ import { BotTypes, GodType } from '../../state/player/player.model';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DrawValidatorService } from '../../validator/draw-validator.service';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-simulation',
@@ -120,7 +121,7 @@ export class SimulationComponent implements OnInit, OnDestroy {
       const draw = this.drawValidatorService.checkDrawFromStates(matrix);
 
       if (draw) {
-        console.log('DRAW, repetition of position or to much rounds', round);
+        if (environment.log) console.log('DRAW, repetition of position or to much rounds', round);
         this.camaxtliScore += 0.5;
         this.nanahuatzinScore += 0.5;
 
