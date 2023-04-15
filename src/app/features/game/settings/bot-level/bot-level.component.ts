@@ -12,25 +12,25 @@ export class BotLevelComponent implements OnInit, OnDestroy {
 
   private onDestroy$ = new Subject<void>();
 
-  @Input() set currentAlgorithm(currentAlgorithm: 'random' | 'minimax' | 'dqn' | undefined) {
+  @Input() set currentAlgorithm(currentAlgorithm: 'random' | 'minimax' | 'dqn' | 'unknown' | undefined) {
     console.log('aktueller algorithm: ' + currentAlgorithm);
 
     if (currentAlgorithm === undefined) {
       this.botAlgorithm.patchValue('random');
       this.algorithmChange$.next('random');
-    }
-    else {
+    } else {
       const algorithm = this.algorithm.find(m => m.value === currentAlgorithm);
       this.botAlgorithm.patchValue(algorithm);
     }
   }
 
-  @Output() algorithmChange$ = new EventEmitter<'random' | 'minimax' | 'dqn' | undefined>();
+  @Output() algorithmChange$ = new EventEmitter<'random' | 'minimax' | 'dqn' | 'unknown' | undefined>();
 
   algorithm = [
     {label: 'Random', value: 'random'},
     {label: 'Minimax', value: 'minimax'},
     {label: 'Deep Q-Learning', value: 'dqn'},
+    {label: 'Unknown', value: 'unknown'},
   ];
 
   formGroup: FormGroup = this.formBuilder.group({
@@ -39,7 +39,8 @@ export class BotLevelComponent implements OnInit, OnDestroy {
 
   constructor(
     private formBuilder: FormBuilder
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     this.botAlgorithm.valueChanges.pipe(takeUntil(this.onDestroy$)).subscribe(a => {

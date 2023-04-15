@@ -7,7 +7,7 @@ import { GodType } from '../../state/player/player.model';
 import { PieceType } from '../../board/piece/piece';
 import { PieceComponent } from '../../board/piece/piece.component';
 import { Action } from '../../state/action/action.model';
-import { MoveType } from '../../state/action/move.model';
+import { Move, MoveType } from '../../state/action/move.model';
 import { MoveValidatorService } from '../../validator/move-validator.service';
 import { MatrixStore } from '../../state/matrix/matrix.store';
 
@@ -267,6 +267,27 @@ export class PgnLoaderComponent implements OnInit, OnDestroy {
       if (action.move.type === MoveType.ROTATE && action.move.toPiece) {
         pgn = pgn + PgnLoaderComponent.getPiecePGNValueWithRotation('', action.move.toPiece);
       }
+    }
+
+    return pgn;
+  }
+
+  static getMoveToPGN(move: Move, godType: GodType): string {
+    let pgn = '';
+
+    pgn = pgn + PgnLoaderComponent.getPiecePGNValueWithRotation('', move.piece);
+
+    // current position
+    pgn = pgn + PgnLoaderComponent.getXAxisValue(move.position.x, godType) +
+      PgnLoaderComponent.getYAxisValue(move.position.y, godType);
+
+    if (move.type === MoveType.WALK && move.to) {
+      pgn = pgn + PgnLoaderComponent.getXAxisValue(move.to.x, godType) +
+        PgnLoaderComponent.getYAxisValue(move.to.y, godType);
+    }
+
+    if (move.type === MoveType.ROTATE && move.toPiece) {
+      pgn = pgn + PgnLoaderComponent.getPiecePGNValueWithRotation('', move.toPiece);
     }
 
     return pgn;

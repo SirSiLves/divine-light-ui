@@ -27,7 +27,7 @@ export class AiMinimaxingService {
 
   private readonly DEPTH_SEARCH = 2;
   private readonly MAX_DEPTH_SEARCH = 100;
-  private readonly MAX_TIME_DURATION = 500; // in ms
+  private readonly MAX_TIME_DURATION = 100; // in ms
 
 
   constructor(
@@ -85,7 +85,7 @@ export class AiMinimaxingService {
 
     let iterativeDeepening: { started: number[], completed: number[] } = {started: [], completed: []};
 
-    const nodes: ExecutedNode[] = this.generateChildNodesWithReward(matrix, isPlaying, 1);
+    const nodes: ExecutedNode[] = this.generateChildNodesWithReward(matrix, isPlaying, 1, true);
 
     while ((Date.now() - startTime) < this.MAX_TIME_DURATION && maxDepthPerIteration < this.MAX_DEPTH_SEARCH) {
       maxDepthPerIteration += 1;
@@ -112,7 +112,7 @@ export class AiMinimaxingService {
 
     let iterativeDeepening: { started: number[], completed: number[] } = {started: [], completed: []};
 
-    const nodes: ExecutedNode[] = this.generateChildNodesWithReward(matrix, isPlaying, 1);
+    const nodes: ExecutedNode[] = this.generateChildNodesWithReward(matrix, isPlaying, 1, true);
 
     while ((Date.now() - startTime) < this.MAX_TIME_DURATION && maxDepthPerIteration < this.MAX_DEPTH_SEARCH) {
       maxDepthPerIteration += 1;
@@ -140,7 +140,7 @@ export class AiMinimaxingService {
 
     let iterativeDeepening: { started: number[], completed: number[] } = {started: [], completed: []};
 
-    const nodes: ExecutedNode[] = this.generateChildNodesWithReward(matrix, isPlaying, 1);
+    const nodes: ExecutedNode[] = this.generateChildNodesWithReward(matrix, isPlaying, 1, true);
 
     while ((Date.now() - startTime) < this.MAX_TIME_DURATION && maxDepthPerIteration < this.MAX_DEPTH_SEARCH) {
       maxDepthPerIteration += 1;
@@ -153,11 +153,41 @@ export class AiMinimaxingService {
       );
     }
 
-    // console.log('MINIMAX 5: ', maxDepthPerIteration - 1);
+    console.log('MINIMAX 5: ', maxDepthPerIteration - 1);
 
     const moves = nodes.map(n => n.move);
     const index = this.getBestIndexFromEvaluation(matrix, iterativeDeepening.completed, moves, isPlaying, true, true);
     return moves[index];
+  }
+
+  // minimax with alpha beta pruning, iterative deepening, move generation and evaluation function
+  getRatedMovesForUnknown(matrix: number[][], isPlaying: GodType): { move: Move, rating: number }[] {
+    let startTime = Date.now();
+    let maxDepthPerIteration = 0;
+
+    let iterativeDeepening: { started: number[], completed: number[] } = {started: [], completed: []};
+
+    const nodes: ExecutedNode[] = this.generateChildNodesWithReward(matrix, isPlaying, 1, false);
+
+    while ((Date.now() - startTime) < this.MAX_TIME_DURATION && maxDepthPerIteration < this.MAX_DEPTH_SEARCH) {
+      maxDepthPerIteration += 1;
+      iterativeDeepening.completed = iterativeDeepening.started;
+
+      iterativeDeepening.started = nodes.map(node => this.minimax5(
+          node.state, node.nextState, node.reward, node.done, 1, maxDepthPerIteration, isPlaying, node.isPlaying,
+          Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, startTime
+        )
+      );
+    }
+
+    console.log('MINIMAX 5 RATING MOVES FOR UNKNOWN: ', maxDepthPerIteration - 1);
+
+    return nodes.map((node, index) => {
+      return {
+        move: node.move,
+        rating: iterativeDeepening.completed[index]
+      }
+    });
   }
 
   // plain minimax without any extensions
@@ -245,7 +275,7 @@ export class AiMinimaxingService {
     }
   }
 
-  private getBestIndexFromEvaluation(
+  getBestIndexFromEvaluation(
     matrix: number[][], evaluatedMoves: number[], moves: Move[], isPlaying: GodType, isMaximizing: boolean, evaluatePosition: boolean
   ): number {
     let bestIndex = 0;
@@ -287,8 +317,8 @@ export class AiMinimaxingService {
     }
   }
 
-  private generateChildNodesWithReward(matrix: number[][], isPlaying: GodType, depth: number): ExecutedNode[] {
-    const nodes = AiService.shuffle(AiService.getPossiblesMoves(matrix, isPlaying))
+  private generateChildNodesWithReward(matrix: number[][], isPlaying: GodType, depth: number, filter: boolean): ExecutedNode[] {
+    const nodes = AiService.getPossiblesMoves(matrix, isPlaying)
       .map(move => {
         // execute move and get reward
         const {reward, nextState, winner} = AiService.executeMoveWithReward(matrix, move, isPlaying);
@@ -332,6 +362,8 @@ export class AiMinimaxingService {
         };
       });
 
+    if (!filter) return AiService.shuffle(nodes);
+
     const filteredNodes = nodes.filter(n => n.reward > Rewards.DESTROY_OWN);
     if (filteredNodes.length === 0) {
       return AiService.shuffle(nodes);
@@ -359,7 +391,7 @@ export class AiMinimaxingService {
     const nextPlayer = isPlaying === GodType.CAMAXTLI ? GodType.NANAHUATZIN : GodType.CAMAXTLI;
 
     // get possible move and randomize it
-    const nodes: ExecutedNode[] = this.generateChildNodesWithReward(nextState, nextPlayer, depth);
+    const nodes: ExecutedNode[] = this.generateChildNodesWithReward(nextState, nextPlayer, depth, true);
 
     const isMaximizing = startPlayer === nextPlayer;
 

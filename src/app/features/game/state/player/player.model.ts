@@ -5,7 +5,7 @@ export interface Player {
   godType: GodType,
   playerType: PlayerType,
   bot: boolean,
-  botType: 'random' | 'minimax' | 'dqn' | undefined;
+  botType: 'random' | 'minimax' | 'dqn' | 'unknown' | undefined;
   wins: number
 }
 
@@ -31,5 +31,5 @@ export interface ColorMapping {
 }
 
 export enum BotTypes {
-  NONE, RANDOM, MINIMAX, DQN
+  NONE, RANDOM, MINIMAX, DQN, UNKNOWN
 }
