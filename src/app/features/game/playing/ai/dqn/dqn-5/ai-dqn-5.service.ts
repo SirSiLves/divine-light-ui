@@ -34,6 +34,8 @@ export class AiDqn5Service {
         loss: 'divine-light-dqn5-loss-nanahuatzin_7x6'
       },
     },
+    opponent: 'unknown', // 'random' | 'minimax' | 'unknown'
+    maxThinkingTime: 100
   };
 
   // dqn model
@@ -115,7 +117,7 @@ export class AiDqn5Service {
     // opponent needs to move first
     else {
       const opponentMove = this.aiDqnTrainService.getOpponentMove(
-        defaultMatrix, GodType.CAMAXTLI, AiDqnService.ALL_DQN_SETTINGS.opponent as any, GodType.NANAHUATZIN
+        defaultMatrix, GodType.CAMAXTLI, AiDqn5Service.DQN_SETTINGS.opponent as any, GodType.NANAHUATZIN, this.targetNanahuatzin
       );
       let {nextState} = AiService.executeMoveWithReward(defaultMatrix, opponentMove, GodType.CAMAXTLI);
       let copiedState = MatrixService.copy(nextState);
@@ -162,7 +164,8 @@ export class AiDqn5Service {
 
     // 2. execute action && get reward from executed action
     const {reward, nextState, winner, draw} = this.aiDqnTrainService.executeActionWithReward(
-      state, isTraining, moveIndex.move, rounds
+      state, isTraining, moveIndex.move, rounds, isTraining === GodType.CAMAXTLI ? this.targetCamaxtli: this.targetNanahuatzin,
+      AiDqn5Service.DQN_SETTINGS.opponent as any
     );
 
     // 3. collect entry into replay buffer

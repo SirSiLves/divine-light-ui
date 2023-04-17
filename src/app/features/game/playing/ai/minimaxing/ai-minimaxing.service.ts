@@ -27,7 +27,7 @@ export class AiMinimaxingService {
 
   private readonly DEPTH_SEARCH = 2;
   private readonly MAX_DEPTH_SEARCH = 100;
-  private readonly MAX_TIME_DURATION = 100; // in ms
+  public readonly MAX_TIME_DURATION = 1000; // in ms
 
 
   constructor(
@@ -153,7 +153,7 @@ export class AiMinimaxingService {
       );
     }
 
-    console.log('MINIMAX 5: ', maxDepthPerIteration - 1);
+    // console.log('MINIMAX 5: ', maxDepthPerIteration - 1);
 
     const moves = nodes.map(n => n.move);
     const index = this.getBestIndexFromEvaluation(matrix, iterativeDeepening.completed, moves, isPlaying, true, true);
@@ -161,7 +161,7 @@ export class AiMinimaxingService {
   }
 
   // minimax with alpha beta pruning, iterative deepening, move generation and evaluation function
-  getRatedMovesForUnknown(matrix: number[][], isPlaying: GodType): { move: Move, rating: number }[] {
+  getRatedMovesForUnknown(matrix: number[][], isPlaying: GodType, maxTimeDuration: number): { move: Move, rating: number }[] {
     let startTime = Date.now();
     let maxDepthPerIteration = 0;
 
@@ -169,7 +169,7 @@ export class AiMinimaxingService {
 
     const nodes: ExecutedNode[] = this.generateChildNodesWithReward(matrix, isPlaying, 1, false);
 
-    while ((Date.now() - startTime) < this.MAX_TIME_DURATION && maxDepthPerIteration < this.MAX_DEPTH_SEARCH) {
+    while ((Date.now() - startTime) < maxTimeDuration && maxDepthPerIteration < this.MAX_DEPTH_SEARCH) {
       maxDepthPerIteration += 1;
       iterativeDeepening.completed = iterativeDeepening.started;
 
@@ -180,7 +180,7 @@ export class AiMinimaxingService {
       );
     }
 
-    console.log('MINIMAX 5 RATING MOVES FOR UNKNOWN: ', maxDepthPerIteration - 1);
+    // console.log('MINIMAX 5 RATING MOVES FOR UNKNOWN: ', maxDepthPerIteration - 1);
 
     return nodes.map((node, index) => {
       return {

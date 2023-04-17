@@ -12,6 +12,8 @@ import { Rewards } from '../../rewards';
 import { AiDqnService } from '../ai-dqn.service';
 import { AISarsd } from './ai-dqn-train.model';
 import { environment } from '../../../../../../../environments/environment';
+import { AiUnknownService } from '../../unknown/ai-unknown.service';
+import { AiDqn5Service } from '../dqn-5/ai-dqn-5.service';
 
 
 @Injectable({providedIn: 'root'})
@@ -26,6 +28,7 @@ export class AiDqnTrainService {
     private aiRandomService: AiRandomService,
     private aiTensorflowService: AiTensorflowService,
     private drawValidatorService: DrawValidatorService,
+    private aiUnknownService: AiUnknownService
   ) {
   }
 
@@ -55,7 +58,9 @@ export class AiDqnTrainService {
     this.drawValidatorService.reset();
   }
 
-  getOpponentMove(state: number[][], isPlaying: GodType, botType: 'random' | 'minimax', isTraining: GodType): Move {
+  getOpponentMove(
+    state: number[][], isPlaying: GodType, botType: 'random' | 'minimax' | 'unknown', isTraining: GodType, model: any
+  ): Move {
     switch (botType) {
       case 'random': {
         const moves: Move[] = AiService.getPossiblesMoves(state, isPlaying);
@@ -88,6 +93,10 @@ export class AiDqnTrainService {
       }
       case 'minimax': {
         return this.aiMinimaxingService.getMove2(state, isPlaying);
+      }
+      case 'unknown': {
+        const bestDQNMove = this.getBestAction(model, state, isPlaying).move;
+        return this.aiUnknownService.getMove(state, isPlaying, bestDQNMove, AiDqn5Service.DQN_SETTINGS.maxThinkingTime);
       }
     }
   }
@@ -165,7 +174,9 @@ export class AiDqnTrainService {
     return this.round(prediction[moveIndex.index]);
   }
 
-  executeActionWithReward(state: number[][], isTraining: GodType, move: Move, rounds: number): {
+  executeActionWithReward(
+    state: number[][], isTraining: GodType, move: Move, rounds: number, model: any, opponent: 'random' | 'minimax' | 'unknown'
+  ): {
     reward: number, nextState: number[][], winner: GodType | undefined, draw: boolean
   } {
 
@@ -192,8 +203,9 @@ export class AiDqnTrainService {
     const opponentMove = this.getOpponentMove(
       executeMoveFromTrainer.nextState,
       isTraining === GodType.CAMAXTLI ? GodType.NANAHUATZIN : GodType.CAMAXTLI,
-      AiDqnService.ALL_DQN_SETTINGS.opponent as any,
-      isTraining
+      opponent as any,
+      isTraining,
+      model
     );
     const executeMoveFromOpponent = AiService.executeMoveWithReward(
       executeMoveFromTrainer.nextState,

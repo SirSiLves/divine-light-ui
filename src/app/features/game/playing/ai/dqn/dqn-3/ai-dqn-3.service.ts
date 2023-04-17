@@ -107,7 +107,7 @@ export class AiDqn3Service {
     // opponent needs to move first
     else {
       const opponentMove = this.aiDqnTrainService.getOpponentMove(
-        defaultMatrix, GodType.CAMAXTLI, AiDqnService.ALL_DQN_SETTINGS.opponent as any, GodType.NANAHUATZIN
+        defaultMatrix, GodType.CAMAXTLI, AiDqnService.ALL_DQN_SETTINGS.opponent as any, GodType.NANAHUATZIN, this.nanahuatzin
       );
       let {nextState} = AiService.executeMoveWithReward(defaultMatrix, opponentMove, GodType.CAMAXTLI);
       let copiedState = MatrixService.copy(nextState);
@@ -146,7 +146,8 @@ export class AiDqn3Service {
 
     // 2. execute action && get reward from executed action
     const {reward, nextState, winner, draw} = this.aiDqnTrainService.executeActionWithReward(
-      state, isTraining, moveIndex.move, rounds
+      state, isTraining, moveIndex.move, rounds, isTraining === GodType.CAMAXTLI ? this.camaxtli: this.nanahuatzin,
+      AiDqnService.ALL_DQN_SETTINGS.opponent as any
     );
 
     // 3. collect entry into replay buffer

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { GodType } from '../../../state/player/player.model';
 import { Move } from '../../../state/action/move.model';
 import { AiMinimaxingService } from '../minimaxing/ai-minimaxing.service';
-import { AiDqn5Service } from '../dqn/dqn-5/ai-dqn-5.service';
 import { Rewards } from '../rewards';
 import { PgnLoaderComponent } from '../../../settings/pgn-loader/pgn-loader.component';
 
@@ -11,15 +10,15 @@ import { PgnLoaderComponent } from '../../../settings/pgn-loader/pgn-loader.comp
 })
 export class AiUnknownService {
 
+  public static readonly MAX_TIME_DURATION = 1000; // in ms
+
   constructor(
     private aiMinimaxingService: AiMinimaxingService,
-    private aiDqn5Service: AiDqn5Service
   ) {
   }
 
-  getMove(matrix: number[][], isPlaying: GodType): Move {
-    const minimaxMoveRating: { move: Move, rating: number }[] = this.aiMinimaxingService.getRatedMovesForUnknown(matrix, isPlaying);
-    const bestDQNMove = this.aiDqn5Service.getMove(matrix, isPlaying);
+  getMove(matrix: number[][], isPlaying: GodType, bestDQNMove: Move, maxTimeDuration: number): Move {
+    const minimaxMoveRating: { move: Move, rating: number }[] = this.aiMinimaxingService.getRatedMovesForUnknown(matrix, isPlaying, maxTimeDuration);
 
     for (let i = 0; i < minimaxMoveRating.length; i++) {
       const moveRating = minimaxMoveRating[i];
