@@ -123,8 +123,8 @@ export class AiDqn4Service {
     }
   }
 
-  loadModel(godType: GodType, modelFile: File, weightsFile: File): void {
-    this.aiTensorflowService.loadModel(modelFile, weightsFile).then(response => {
+  async loadModel(godType: GodType, modelFile: File, weightsFile: File): Promise<void> {
+    await this.aiTensorflowService.loadModel(modelFile, weightsFile).then(response => {
       if (godType === GodType.CAMAXTLI) {
         this.onlineCamaxtli = response;
         this.targetCamaxtli = this.aiTensorflowService.createBitmapDQNModel();

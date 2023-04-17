@@ -140,27 +140,22 @@ export class AiDqnService {
     }
   }
 
-  loadModel(godType: GodType, model: File, weights: File): void {
+  async loadModel(godType: GodType, model: File, weights: File): Promise<void> {
     switch (AiDqnService.EXTENSION_SETTING) {
       case 1: {
-        this.aiDqn1Service.loadModel(godType, model, weights);
-        break;
+        return this.aiDqn1Service.loadModel(godType, model, weights);
       }
       case 2: {
-        this.aiDqn2Service.loadModel(godType, model, weights);
-        break;
+        return this.aiDqn2Service.loadModel(godType, model, weights);
       }
       case 3: {
-        this.aiDqn3Service.loadModel(godType, model, weights);
-        break;
+        return this.aiDqn3Service.loadModel(godType, model, weights);
       }
       case 4: {
-        this.aiDqn4Service.loadModel(godType, model, weights);
-        break;
+        return this.aiDqn4Service.loadModel(godType, model, weights);
       }
       case 5: {
-        this.aiDqn5Service.loadModel(godType, model, weights);
-        break;
+        return this.aiDqn5Service.loadModel(godType, model, weights);
       }
     }
   }

@@ -39,8 +39,8 @@ export class GameManagerService {
     }
   };
 
-  private isDQNCamaxtliModelLoading = false;
-  private isDQNNanahuatzinModelLoading = false;
+  private isDQNCamaxtliModelLoading = true;
+  private isDQNNanahuatzinModelLoading = true;
 
   constructor(
     private gameManagerStore: GameManagerStore,
@@ -228,12 +228,13 @@ export class GameManagerService {
           this.httpClient.get(urlModel, {responseType: 'blob'}),
           this.httpClient.get(urlWeights, {responseType: 'blob'})
         ]).subscribe({
-          next: ([blobModel, blobWeights]) => {
+          next: async ([blobModel, blobWeights]) => {
             if (blobModel && blobWeights) {
               const modelFile = new File([blobModel], model + '.json');
               const weightsFile = new File([blobWeights], model + '.weights.bin');
 
-              this.aiDqnService.loadModel(GodType.CAMAXTLI, modelFile, weightsFile);
+              await this.aiDqnService.loadModel(GodType.CAMAXTLI, modelFile, weightsFile);
+
               this.isDQNCamaxtliModelLoading = false;
               this.stopLoading();
             }
@@ -279,12 +280,13 @@ export class GameManagerService {
           this.httpClient.get(urlModel, {responseType: 'blob'}),
           this.httpClient.get(urlWeights, {responseType: 'blob'})
         ]).subscribe({
-          next: ([blobModel, blobWeights]) => {
+          next: async ([blobModel, blobWeights]) => {
             if (blobModel && blobWeights) {
               const modelFile = new File([blobModel], model + '.json');
               const weightsFile = new File([blobWeights], model + '.weights.bin');
 
-              this.aiDqnService.loadModel(GodType.NANAHUATZIN, modelFile, weightsFile);
+              await this.aiDqnService.loadModel(GodType.NANAHUATZIN, modelFile, weightsFile);
+
               this.isDQNNanahuatzinModelLoading = false;
               this.stopLoading();
             }
@@ -297,7 +299,7 @@ export class GameManagerService {
 
             this.aiDqnService.initializeModel(GodType.NANAHUATZIN);
 
-            this.isDQNNanahuatzinModelLoading = false;
+            // this.isDQNNanahuatzinModelLoading = false;
             console.error(err);
           }
         })
@@ -310,7 +312,7 @@ export class GameManagerService {
 
         this.aiDqnService.initializeModel(GodType.NANAHUATZIN);
 
-        this.isDQNNanahuatzinModelLoading = false;
+        // this.isDQNNanahuatzinModelLoading = false;
         this.stopLoading();
         console.error(err);
       }
