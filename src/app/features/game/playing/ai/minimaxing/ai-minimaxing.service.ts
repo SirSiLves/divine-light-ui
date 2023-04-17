@@ -160,7 +160,6 @@ export class AiMinimaxingService {
     return moves[index];
   }
 
-  // minimax with alpha beta pruning, iterative deepening, move generation and evaluation function
   getRatedMovesForUnknown(matrix: number[][], isPlaying: GodType, maxTimeDuration: number): { move: Move, rating: number }[] {
     let startTime = Date.now();
     let maxDepthPerIteration = 0;
@@ -186,6 +185,20 @@ export class AiMinimaxingService {
       return {
         move: node.move,
         rating: iterativeDeepening.completed[index]
+      }
+    });
+  }
+
+  getTrainingRatedMovesForUnknown(matrix: number[][], isPlaying: GodType, maxDepthSearch: number): { move: Move, rating: number }[] {
+    const moves: Move[] = AiService.shuffle(AiService.getPossiblesMoves(matrix, isPlaying));
+    const evaluatedMoves: number[] = moves.map(
+      move => this.minimax2(matrix, maxDepthSearch - 1, move, isPlaying, isPlaying, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY)
+    );
+
+    return moves.map((move, index) => {
+      return {
+        move: move,
+        rating: evaluatedMoves[index]
       }
     });
   }

@@ -35,7 +35,6 @@ export class AiDqn5Service {
       },
     },
     opponent: 'unknown', // 'random' | 'minimax' | 'unknown'
-    maxThinkingTime: 100
   };
 
   // dqn model

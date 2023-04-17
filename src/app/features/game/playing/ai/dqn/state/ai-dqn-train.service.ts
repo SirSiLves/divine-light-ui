@@ -13,7 +13,6 @@ import { AiDqnService } from '../ai-dqn.service';
 import { AISarsd } from './ai-dqn-train.model';
 import { environment } from '../../../../../../../environments/environment';
 import { AiUnknownService } from '../../unknown/ai-unknown.service';
-import { AiDqn5Service } from '../dqn-5/ai-dqn-5.service';
 
 
 @Injectable({providedIn: 'root'})
@@ -96,7 +95,7 @@ export class AiDqnTrainService {
       }
       case 'unknown': {
         const bestDQNMove = this.getBestAction(model, state, isPlaying).move;
-        return this.aiUnknownService.getMove(state, isPlaying, bestDQNMove, AiDqn5Service.DQN_SETTINGS.maxThinkingTime);
+        return this.aiUnknownService.getTrainingMove(state, isPlaying, bestDQNMove);
       }
     }
   }
