@@ -21,7 +21,9 @@ export class AiUnknownService {
 
 
   getMove(matrix: number[][], isPlaying: GodType, bestDQNMove: Move, maxTimeDuration: number): Move {
-    const minimaxMoveRating: { move: Move, rating: number }[] = this.aiMinimaxingService.getRatedMovesForUnknown(matrix, isPlaying, maxTimeDuration);
+    const minimaxMoveRating: { move: Move, rating: number }[] = this.aiMinimaxingService.getRatedMovesForUnknown(
+      matrix, isPlaying, maxTimeDuration
+    );
 
     for (let i = 0; i < minimaxMoveRating.length; i++) {
       const moveRating = minimaxMoveRating[i];

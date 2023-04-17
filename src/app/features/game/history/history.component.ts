@@ -16,14 +16,15 @@ export class HistoryComponent implements OnInit, OnDestroy {
 
   private onDestroy$ = new Subject<void>();
 
-  actions$: Observable<Pgn[]> = this.actionQuery.selectAll().pipe(map(actions => actions.map(action => {
-      this.active = undefined;
-      return {
-        id: action.id,
-        pgn: PgnLoaderComponent.getActionToPGN(action, this.playerQuery.colorMapping$.value.p1.godType)
-      }
-    })
-  ));
+  actions$: Observable<Pgn[]> = this.actionQuery.selectAll().pipe(
+    map(actions => actions.map(action => {
+        this.active = undefined;
+        return {
+          id: action.id,
+          pgn: PgnLoaderComponent.getActionToPGN(action, this.playerQuery.colorMapping$.value.p1.godType)
+        }
+      }).reverse()
+    ));
 
   active: Pgn | undefined;
 

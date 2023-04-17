@@ -1,7 +1,7 @@
 <div class="container">
   <div *ngIf="actions$ | async as actions" class="action-list">
     <div *ngIf="actions.length === 0" class="placeholder"></div>
-    <div *ngFor="let action of actions.reverse(); let i = index; let first = first;" class="action">
+    <div *ngFor="let action of actions; let i = index; let first = first;" class="action">
       <ng-container *ngIf="active?.id === action.id || !active && first ; else normal">
         <button pButton
                 pRipple
