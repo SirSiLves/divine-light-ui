@@ -213,8 +213,8 @@ export class AiMinimaxingService {
       maxDepthPerIteration += 1;
       iterativeDeepening.completed = iterativeDeepening.started;
 
-      iterativeDeepening.started = nodes.map(node => this.minimax4(
-          node.nextState, node.reward, node.done, 1, maxDepthPerIteration, isPlaying, node.isPlaying,
+      iterativeDeepening.started = nodes.map(node => this.minimax5(
+          node.state, node.nextState, node.reward, node.done, 1, maxDepthPerIteration, isPlaying, node.isPlaying,
           Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, startTime, maxTimeDuration
         )
       );

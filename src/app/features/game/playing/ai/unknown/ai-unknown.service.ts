@@ -22,7 +22,8 @@ export class AiUnknownService {
 
 
   getMove(matrix: number[][], isPlaying: GodType, bestDQNMove: Move): Move {
-    // s21w0k03/1r11r03/2A31a01A2/4R12/a02A33/2R0K0W0a1S0-c
+    // s21w0k03/1r11r03/2A31a01A2/4R12/a02A33/2R0K0W0a1S0-c (wrong move loses)
+    // s21a2k0r02/2a3r0a22/7/7/2R0R03/3K02S0-c (minimax-5 makes a fortress)
     const minimaxMoveRating: { move: Move, rating: number }[] = this.aiMinimaxingService.getRatedMovesForUnknown(
       matrix, isPlaying, AiUnknownService.MINIMAX_MAX_TIME_DURATION
     );
