@@ -16,7 +16,7 @@ export class FooterComponent implements OnInit, OnDestroy {
   private onDestroy$ = new Subject<void>();
 
   currentDate = new Date();
-  version = '1.0.0' // package.json
+  version = '0.0.1' // package.json
   language$ = this.languageQuery.language$;
   LanguageType = LanguageType;
 

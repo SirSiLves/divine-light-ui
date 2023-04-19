@@ -153,7 +153,7 @@ export class AiMinimaxingService {
       );
     }
 
-    console.log('MINIMAX 5: ', maxDepthPerIteration - 1);
+    // console.log('MINIMAX 5: ', maxDepthPerIteration - 1);
 
     const moves = nodes.map(n => n.move);
     const index = this.getBestIndexFromEvaluation(matrix, iterativeDeepening.completed, moves, isPlaying, true, true);
@@ -179,7 +179,7 @@ export class AiMinimaxingService {
       );
     }
 
-    console.log('MINIMAX RATING MOVES FOR UNKNOWN: ', maxDepthPerIteration - 1);
+    // console.log('MINIMAX RATING MOVES FOR UNKNOWN: ', maxDepthPerIteration - 1);
 
     return nodes.map((node, index) => {
       return {
