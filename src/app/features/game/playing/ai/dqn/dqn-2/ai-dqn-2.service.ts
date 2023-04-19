@@ -134,7 +134,7 @@ export class AiDqn2Service {
   private run(state: number[][], isTraining: GodType, rounds: number): void {
     const trainState = this.aiDqnTrainQuery.getValue();
     if (trainState.episode >= trainState.totalEpisodes) {
-      this.aiDqnTrainService.stop();
+      this.aiDqnTrainService.stop("DQN-2");
       return;
     }
 

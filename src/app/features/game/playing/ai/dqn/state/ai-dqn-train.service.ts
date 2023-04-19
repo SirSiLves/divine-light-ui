@@ -13,6 +13,7 @@ import { AiDqnService } from '../ai-dqn.service';
 import { AISarsd } from './ai-dqn-train.model';
 import { environment } from '../../../../../../../environments/environment';
 import { AiUnknownService } from '../../unknown/ai-unknown.service';
+import { NotificationService } from '../../../../../../core/notification/notification.service';
 
 
 @Injectable({providedIn: 'root'})
@@ -27,7 +28,8 @@ export class AiDqnTrainService {
     private aiRandomService: AiRandomService,
     private aiTensorflowService: AiTensorflowService,
     private drawValidatorService: DrawValidatorService,
-    private aiUnknownService: AiUnknownService
+    private aiUnknownService: AiUnknownService,
+    private notificationService: NotificationService
   ) {
   }
 
@@ -100,7 +102,8 @@ export class AiDqnTrainService {
     }
   }
 
-  stop(): void {
+  stop(version: string): void {
+    this.notificationService.send('Training completed for ' + version);
     this.aiTensorflowService.cleanUp();
     this.aiDqnTrainStore.setLoading(false);
   }

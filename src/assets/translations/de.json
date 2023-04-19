@@ -1,4 +1,5 @@
 {
+	"core.email.status": "E-Mail Versandstatus: ",
 	"core.error.firebase": "Bitte prüfe deine Internetverbindung",
 	"core.error.pgn": "PGN ist nicht gültig",
 	"core.error.title": "Fehler",
