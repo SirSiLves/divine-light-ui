@@ -62,7 +62,7 @@ export class AiService {
         return this.aiDqnService.getMove(matrix, player.godType);
       case 'unknown':
         const bestDQNMove = this.aiDqn5Service.getMove(matrix, player.godType);
-        return this.aiUnknownService.getMove(matrix, player.godType, bestDQNMove, AiUnknownService.MINIMAX_MAX_TIME_DURATION);
+        return this.aiUnknownService.getMove(matrix, player.godType, bestDQNMove);
       default:
         return this.aiRandomService.getMove(matrix, player.godType);
     }
@@ -81,7 +81,7 @@ export class AiService {
         return this.aiDqnService.getMove(matrix, godType);
       case BotTypes.UNKNOWN:
         const bestDQNMove = this.aiDqn5Service.getMove(matrix, godType);
-        return this.aiUnknownService.getMove(matrix, godType, bestDQNMove, AiUnknownService.MINIMAX_MAX_TIME_DURATION);
+        return this.aiUnknownService.getMove(matrix, godType, bestDQNMove);
       default:
         return this.aiRandomService.getMove(matrix, godType);
     }

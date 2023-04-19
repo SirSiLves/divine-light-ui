@@ -27,7 +27,7 @@ export class AiMinimaxingService {
 
   private readonly DEPTH_SEARCH = 2;
   private readonly MAX_DEPTH_SEARCH = 100;
-  public readonly MAX_TIME_DURATION = 100; // in ms
+  public readonly MAX_TIME_DURATION = 1000; // in ms
 
 
   constructor(
@@ -93,7 +93,7 @@ export class AiMinimaxingService {
 
       iterativeDeepening.started = nodes.map(node => this.minimax3(
           node.nextState, node.reward, node.done, 1, maxDepthPerIteration, isPlaying, node.isPlaying,
-          Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, startTime
+          Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, startTime, this.MAX_TIME_DURATION
         )
       );
     }
@@ -120,7 +120,7 @@ export class AiMinimaxingService {
 
       iterativeDeepening.started = nodes.map(node => this.minimax4(
           node.nextState, node.reward, node.done, 1, maxDepthPerIteration, isPlaying, node.isPlaying,
-          Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, startTime
+          Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, startTime, this.MAX_TIME_DURATION
         )
       );
     }
@@ -148,12 +148,12 @@ export class AiMinimaxingService {
 
       iterativeDeepening.started = nodes.map(node => this.minimax5(
           node.state, node.nextState, node.reward, node.done, 1, maxDepthPerIteration, isPlaying, node.isPlaying,
-          Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, startTime
+          Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, startTime, this.MAX_TIME_DURATION
         )
       );
     }
 
-    // console.log('MINIMAX 5: ', maxDepthPerIteration - 1);
+    console.log('MINIMAX 5: ', maxDepthPerIteration - 1);
 
     const moves = nodes.map(n => n.move);
     const index = this.getBestIndexFromEvaluation(matrix, iterativeDeepening.completed, moves, isPlaying, true, true);
@@ -174,12 +174,12 @@ export class AiMinimaxingService {
 
       iterativeDeepening.started = nodes.map(node => this.minimax5(
           node.state, node.nextState, node.reward, node.done, 1, maxDepthPerIteration, isPlaying, node.isPlaying,
-          Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, startTime
+          Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, startTime, maxTimeDuration
         )
       );
     }
 
-    // console.log('MINIMAX 5 RATING MOVES FOR UNKNOWN: ', maxDepthPerIteration - 1);
+    console.log('MINIMAX RATING MOVES FOR UNKNOWN: ', maxDepthPerIteration - 1);
 
     return nodes.map((node, index) => {
       return {
@@ -187,6 +187,18 @@ export class AiMinimaxingService {
         rating: iterativeDeepening.completed[index]
       }
     });
+
+    // const moves: Move[] = AiService.shuffle(AiService.getPossiblesMoves(matrix, isPlaying));
+    // const evaluatedMoves: number[] = moves.map(
+    //   move => this.minimax2(matrix, this.DEPTH_SEARCH - 1, move, isPlaying, isPlaying, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY)
+    // );
+    //
+    // return moves.map((move, index) => {
+    //   return {
+    //     move: move,
+    //     rating: evaluatedMoves[index]
+    //   }
+    // });
   }
 
   getTrainingRatedMovesForUnknown(matrix: number[][], isPlaying: GodType, maxTimeDuration: number): { move: Move, rating: number }[] {
@@ -203,7 +215,7 @@ export class AiMinimaxingService {
 
       iterativeDeepening.started = nodes.map(node => this.minimax4(
           node.nextState, node.reward, node.done, 1, maxDepthPerIteration, isPlaying, node.isPlaying,
-          Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, startTime
+          Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, startTime, maxTimeDuration
         )
       );
     }
@@ -402,10 +414,10 @@ export class AiMinimaxingService {
 
   // minimax with alpha beta pruning and iterative deepening
   private minimax3(nextState: number[][], reward: number, done: boolean, depth: number, maxDepth: number,
-                   startPlayer: GodType, isPlaying: GodType, alpha: number, beta: number, startTime: number): number {
+                   startPlayer: GodType, isPlaying: GodType, alpha: number, beta: number, startTime: number, maxTimeDuration: number): number {
 
     // terminal state return reward from the last move
-    if (done || depth >= maxDepth || (Date.now() - startTime) >= this.MAX_TIME_DURATION) {
+    if (done || depth >= maxDepth || (Date.now() - startTime) >= maxTimeDuration) {
       if (done) {
         if (isPlaying === startPlayer) return reward;
         return -1 * reward;
@@ -428,7 +440,7 @@ export class AiMinimaxingService {
       for (let i = 0; i < nodes.length; i++) {
         const child = nodes[i];
         let evaluation: number = this.minimax3(
-          child.nextState, child.reward, child.done, depth + 1, maxDepth, startPlayer, child.isPlaying, alpha, beta, startTime
+          child.nextState, child.reward, child.done, depth + 1, maxDepth, startPlayer, child.isPlaying, alpha, beta, startTime, maxTimeDuration
         );
 
         maxEvaluation = Math.max(maxEvaluation, evaluation);
@@ -442,7 +454,7 @@ export class AiMinimaxingService {
       for (let i = 0; i < nodes.length; i++) {
         const child = nodes[i];
         let evaluation: number = this.minimax3(
-          child.nextState, child.reward, child.done, depth + 1, maxDepth, startPlayer, child.isPlaying, alpha, beta, startTime
+          child.nextState, child.reward, child.done, depth + 1, maxDepth, startPlayer, child.isPlaying, alpha, beta, startTime, maxTimeDuration
         );
 
         minEvaluation = Math.min(minEvaluation, evaluation);
@@ -457,9 +469,9 @@ export class AiMinimaxingService {
 
   // minimax with alpha beta pruning, iterative deepening and move generation
   private minimax4(nextState: number[][], reward: number, done: boolean, depth: number, maxDepth: number,
-                   startPlayer: GodType, isPlaying: GodType, alpha: number, beta: number, startTime: number): number {
+                   startPlayer: GodType, isPlaying: GodType, alpha: number, beta: number, startTime: number, maxTimeDuration: number): number {
     // terminal state return reward from the last move
-    if (done || depth >= maxDepth || (Date.now() - startTime) >= this.MAX_TIME_DURATION) {
+    if (done || depth >= maxDepth || (Date.now() - startTime) >= maxTimeDuration) {
       if (done) {
         if (isPlaying === startPlayer) return reward;
         return -1 * reward;
@@ -489,7 +501,7 @@ export class AiMinimaxingService {
 
         for (let j = 0; j < possibleWalkFields.length; j++) {
           let evaluation: number = this.getEvaluation4(
-            possibleWalkFields[j], node, node.isPlaying, depth, maxDepth, startPlayer, alpha, beta, startTime
+            possibleWalkFields[j], node, node.isPlaying, depth, maxDepth, startPlayer, alpha, beta, startTime, maxTimeDuration
           );
 
           maxEvaluation = Math.max(maxEvaluation, evaluation);
@@ -507,7 +519,7 @@ export class AiMinimaxingService {
         const possibleRotations = AiService.shuffle(MoveValidatorService.getPossibleRotations(node.piece, node.position.x, node.position.y));
         for (let j = 0; j < possibleRotations.length; j++) {
           let evaluation: number = this.getEvaluation4(
-            possibleRotations[j], node, node.isPlaying, depth, maxDepth, startPlayer, alpha, beta, startTime
+            possibleRotations[j], node, node.isPlaying, depth, maxDepth, startPlayer, alpha, beta, startTime, maxTimeDuration
           );
 
           maxEvaluation = Math.max(maxEvaluation, evaluation);
@@ -532,7 +544,7 @@ export class AiMinimaxingService {
         const possibleWalkFields = MoveValidatorService.getPossibleFields(node.piece, node.position.x, node.position.y, node.state);
         for (let j = 0; j < possibleWalkFields.length; j++) {
           let evaluation: number = this.getEvaluation4(
-            possibleWalkFields[j], node, node.isPlaying, depth, maxDepth, startPlayer, alpha, beta, startTime
+            possibleWalkFields[j], node, node.isPlaying, depth, maxDepth, startPlayer, alpha, beta, startTime, maxTimeDuration
           );
 
           minEvaluation = Math.min(minEvaluation, evaluation);
@@ -550,7 +562,7 @@ export class AiMinimaxingService {
         const possibleRotations = MoveValidatorService.getPossibleRotations(node.piece, node.position.x, node.position.y);
         for (let j = 0; j < possibleRotations.length; j++) {
           let evaluation: number = this.getEvaluation4(
-            possibleRotations[j], node, node.isPlaying, depth, maxDepth, startPlayer, alpha, beta, startTime
+            possibleRotations[j], node, node.isPlaying, depth, maxDepth, startPlayer, alpha, beta, startTime, maxTimeDuration
           );
 
           minEvaluation = Math.min(minEvaluation, evaluation);
@@ -603,11 +615,11 @@ export class AiMinimaxingService {
   }
 
   private getEvaluation4(move: Move, node: PieceNode, isPlaying: GodType, depth: number, maxDepth: number,
-                         startPlayer: GodType, alpha: number, beta: number, startTime: number) {
+                         startPlayer: GodType, alpha: number, beta: number, startTime: number, maxTimeDuration: number) {
     this.executeMove(move, node, isPlaying);
 
     return this.minimax4(
-      node.nextState!, node.reward!, node.done!, depth + 1, maxDepth, startPlayer, node.isPlaying, alpha, beta, startTime
+      node.nextState!, node.reward!, node.done!, depth + 1, maxDepth, startPlayer, node.isPlaying, alpha, beta, startTime, maxTimeDuration
     );
   }
 
@@ -630,9 +642,9 @@ export class AiMinimaxingService {
 
   // minimax with alpha beta pruning, iterative deepening, move generation and evaluation function
   private minimax5(state: number[][], nextState: number[][], reward: number, done: boolean, depth: number, maxDepth: number,
-                   startPlayer: GodType, isPlaying: GodType, alpha: number, beta: number, startTime: number): number {
+                   startPlayer: GodType, isPlaying: GodType, alpha: number, beta: number, startTime: number, maxTimeDuration: number): number {
     // terminal state return reward from the last move
-    if (done || depth >= maxDepth || (Date.now() - startTime) >= this.MAX_TIME_DURATION) {
+    if (done || depth >= maxDepth || (Date.now() - startTime) >= maxTimeDuration) {
       if (done) {
         if (isPlaying === startPlayer) return reward;
         return -1 * reward;
@@ -663,7 +675,7 @@ export class AiMinimaxingService {
 
         for (let j = 0; j < possibleWalkFields.length; j++) {
           let evaluation: number = this.getEvaluation5(
-            possibleWalkFields[j], node, node.isPlaying, depth, maxDepth, startPlayer, alpha, beta, startTime
+            possibleWalkFields[j], node, node.isPlaying, depth, maxDepth, startPlayer, alpha, beta, startTime, maxTimeDuration
           );
 
           maxEvaluation = Math.max(maxEvaluation, evaluation);
@@ -681,7 +693,7 @@ export class AiMinimaxingService {
         const possibleRotations = AiService.shuffle(MoveValidatorService.getPossibleRotations(node.piece, node.position.x, node.position.y));
         for (let j = 0; j < possibleRotations.length; j++) {
           let evaluation: number = this.getEvaluation5(
-            possibleRotations[j], node, node.isPlaying, depth, maxDepth, startPlayer, alpha, beta, startTime
+            possibleRotations[j], node, node.isPlaying, depth, maxDepth, startPlayer, alpha, beta, startTime, maxTimeDuration
           );
 
           maxEvaluation = Math.max(maxEvaluation, evaluation);
@@ -706,7 +718,7 @@ export class AiMinimaxingService {
         const possibleWalkFields = MoveValidatorService.getPossibleFields(node.piece, node.position.x, node.position.y, node.state);
         for (let j = 0; j < possibleWalkFields.length; j++) {
           let evaluation: number = this.getEvaluation5(
-            possibleWalkFields[j], node, node.isPlaying, depth, maxDepth, startPlayer, alpha, beta, startTime
+            possibleWalkFields[j], node, node.isPlaying, depth, maxDepth, startPlayer, alpha, beta, startTime, maxTimeDuration
           );
 
           minEvaluation = Math.min(minEvaluation, evaluation);
@@ -724,7 +736,7 @@ export class AiMinimaxingService {
         const possibleRotations = MoveValidatorService.getPossibleRotations(node.piece, node.position.x, node.position.y);
         for (let j = 0; j < possibleRotations.length; j++) {
           let evaluation: number = this.getEvaluation5(
-            possibleRotations[j], node, node.isPlaying, depth, maxDepth, startPlayer, alpha, beta, startTime
+            possibleRotations[j], node, node.isPlaying, depth, maxDepth, startPlayer, alpha, beta, startTime, maxTimeDuration
           );
 
           minEvaluation = Math.min(minEvaluation, evaluation);
@@ -744,11 +756,11 @@ export class AiMinimaxingService {
   }
 
   private getEvaluation5(move: Move, node: PieceNode, isPlaying: GodType, depth: number, maxDepth: number,
-                         startPlayer: GodType, alpha: number, beta: number, startTime: number) {
+                         startPlayer: GodType, alpha: number, beta: number, startTime: number, maxTimeDuration: number) {
     this.executeMove(move, node, isPlaying);
 
     return this.minimax5(
-      node.state, node.nextState!, node.reward!, node.done!, depth + 1, maxDepth, startPlayer, node.isPlaying, alpha, beta, startTime
+      node.state, node.nextState!, node.reward!, node.done!, depth + 1, maxDepth, startPlayer, node.isPlaying, alpha, beta, startTime, maxTimeDuration
     );
   }
 
