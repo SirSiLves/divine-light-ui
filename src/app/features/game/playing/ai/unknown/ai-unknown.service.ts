@@ -11,6 +11,7 @@ import { PgnLoaderComponent } from '../../../settings/pgn-loader/pgn-loader.comp
 export class AiUnknownService {
 
   public static readonly MINIMAX_MAX_TIME_DURATION = 1000; // in ms
+  public static readonly MINIMAX_MAX_TRAINING_TIME_DURATION = 100; // in ms
   public static readonly MINIMAX_SEARCH_DEPTH = 2;
 
 
@@ -51,7 +52,7 @@ export class AiUnknownService {
 
   getTrainingMove(matrix: number[][], isPlaying: GodType, bestDQNMove: Move): Move {
     const minimaxMoveRating: { move: Move, rating: number }[] = this.aiMinimaxingService.getTrainingRatedMovesForUnknown(
-      matrix, isPlaying, AiUnknownService.MINIMAX_SEARCH_DEPTH
+      matrix, isPlaying, AiUnknownService.MINIMAX_MAX_TRAINING_TIME_DURATION
     );
 
     for (let i = 0; i < minimaxMoveRating.length; i++) {

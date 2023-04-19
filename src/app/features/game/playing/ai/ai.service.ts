@@ -53,8 +53,9 @@ export class AiService {
 
     switch (player.botType) {
       case 'random':
-        // return this.aiDqn2Service.getMove(matrix, player.godType);
         return this.aiRandomService.getMove(matrix, player.godType);
+        // return this.aiDqn2Service.getMove(matrix, player.godType);
+        // return this.aiMinimaxingService.getMove4(matrix, player.godType);
       case 'minimax':
         return this.aiMinimaxingService.getMove(matrix, player.godType);
       case 'dqn':
@@ -72,7 +73,7 @@ export class AiService {
     switch (botType) {
       case BotTypes.RANDOM:
         return this.aiRandomService.getMove(matrix, godType);
-      // return this.aiMinimaxingService.getMove5(matrix, godType);
+      // return this.aiMinimaxingService.getMove4(matrix, godType);
       // return this.aiDqn2Service.getMove(matrix, godType);
       case BotTypes.MINIMAX:
         return this.aiMinimaxingService.getMove(matrix, godType);
