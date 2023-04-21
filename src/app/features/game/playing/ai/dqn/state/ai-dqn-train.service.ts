@@ -93,7 +93,7 @@ export class AiDqnTrainService {
 
       }
       case 'minimax': {
-        return this.aiMinimaxingService.getMove2(state, isPlaying);
+        return this.aiMinimaxingService.getMove5(state, isPlaying);
       }
       case 'unknown': {
         const bestDQNMove = this.getBestAction(model, state, isPlaying).move;
