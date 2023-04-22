@@ -11,6 +11,7 @@ import { PieceType } from '../../../board/piece/piece';
 import { PieceComponent } from '../../../board/piece/piece.component';
 import { MatrixQuery } from '../../../state/matrix/matrix.query';
 import { MatrixService } from '../../../state/matrix/matrix.service';
+import { AiUnknownService } from '../unknown/ai-unknown.service';
 
 
 @Injectable({
@@ -188,7 +189,7 @@ export class AiMinimaxingService {
 
     // const moves: Move[] = AiService.shuffle(AiService.getPossiblesMoves(matrix, isPlaying));
     // const evaluatedMoves: number[] = moves.map(
-    //   move => this.minimax2(matrix, this.DEPTH_SEARCH - 1, move, isPlaying, isPlaying, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY)
+    //   move => this.minimax2(matrix, AiUnknownService.MINIMAX_SEARCH_DEPTH - 1, move, isPlaying, isPlaying, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY)
     // );
     //
     // return moves.map((move, index) => {
@@ -200,6 +201,18 @@ export class AiMinimaxingService {
   }
 
   getTrainingRatedMovesForUnknown(matrix: number[][], isPlaying: GodType, maxTimeDuration: number): { move: Move, rating: number }[] {
+    // const moves: Move[] = AiService.shuffle(AiService.getPossiblesMoves(matrix, isPlaying));
+    // const evaluatedMoves: number[] = moves.map(
+    //   move => this.minimax2(matrix, AiUnknownService.MINIMAX_SEARCH_DEPTH - 1, move, isPlaying, isPlaying, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY)
+    // );
+    //
+    // return moves.map((move, index) => {
+    //   return {
+    //     move: move,
+    //     rating: evaluatedMoves[index]
+    //   }
+    // });
+
     let startTime = Date.now();
     let maxDepthPerIteration = 0;
 

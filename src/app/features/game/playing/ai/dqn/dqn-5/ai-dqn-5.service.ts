@@ -34,7 +34,7 @@ export class AiDqn5Service {
         loss: 'divine-light-dqn5-loss-nanahuatzin_7x6'
       },
     },
-    opponent: 'minimax', // 'random' | 'minimax' | 'unknown'
+    opponent: 'unknown', // 'random' | 'minimax' | 'unknown'
   };
 
   // dqn model

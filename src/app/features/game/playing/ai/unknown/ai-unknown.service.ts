@@ -11,9 +11,8 @@ import { PgnLoaderComponent } from '../../../settings/pgn-loader/pgn-loader.comp
 export class AiUnknownService {
 
   public static readonly MINIMAX_MAX_TIME_DURATION = 1000; // in ms
-  public static readonly MINIMAX_MAX_TRAINING_TIME_DURATION = 100; // in ms
+  public static readonly MINIMAX_MAX_TRAINING_TIME_DURATION = 50; // in ms
   public static readonly MINIMAX_SEARCH_DEPTH = 2;
-
 
   constructor(
     private aiMinimaxingService: AiMinimaxingService,
@@ -23,7 +22,7 @@ export class AiUnknownService {
 
   getMove(matrix: number[][], isPlaying: GodType, bestDQNMove: Move): Move {
     // s21w0k03/1r11r03/2A31a01A2/4R12/a02A33/2R0K0W0a1S0-c (wrong move loses)
-    // s21a2k0r02/2a3r0a22/7/7/2R0R03/3K02S0-c (minimax-5 makes a fortress)
+    // s21a2k0r02/2a3r0a22/7/7/2R0R03/3K02S0-c (minimax-5 made a fortress)
     const minimaxMoveRating: { move: Move, rating: number }[] = this.aiMinimaxingService.getRatedMovesForUnknown(
       matrix, isPlaying, AiUnknownService.MINIMAX_MAX_TIME_DURATION
     );
