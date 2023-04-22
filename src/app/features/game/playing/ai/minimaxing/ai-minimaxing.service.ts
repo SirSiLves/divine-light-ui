@@ -11,7 +11,8 @@ import { PieceType } from '../../../board/piece/piece';
 import { PieceComponent } from '../../../board/piece/piece.component';
 import { MatrixQuery } from '../../../state/matrix/matrix.query';
 import { MatrixService } from '../../../state/matrix/matrix.service';
-import { AiUnknownService } from '../unknown/ai-unknown.service';
+import { AiRandomService } from '../random/ai-random.service';
+
 
 
 @Injectable({
@@ -792,7 +793,10 @@ export class AiMinimaxingService {
     const lightReward = AiService.adjustRewardWithInvolvedPieces(isPlaying, normalizedState, adjustReward);
     if (!isMaximizing) return adjustReward + -1 * lightReward; // revert result otherwise AI is training to block the light
 
-    return adjustReward + lightReward;
+    // generate random number to get more randomize positions
+    const randomNumber = AiRandomService.generateRandomNumber(0, 100);
+
+    return adjustReward + lightReward + randomNumber;
   }
 
 }
