@@ -4,6 +4,7 @@ import { Move } from '../../../state/action/move.model';
 import { AiMinimaxingService } from '../minimaxing/ai-minimaxing.service';
 import { Rewards } from '../rewards';
 import { PgnLoaderComponent } from '../../../settings/pgn-loader/pgn-loader.component';
+import { AiRandomService } from '../random/ai-random.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,7 @@ export class AiUnknownService {
 
   constructor(
     private aiMinimaxingService: AiMinimaxingService,
+    private aiRandomService: AiRandomService
   ) {
   }
 
@@ -56,28 +58,49 @@ export class AiUnknownService {
       matrix, isPlaying, AiUnknownService.MINIMAX_MAX_TRAINING_TIME_DURATION
     );
 
-    for (let i = 0; i < minimaxMoveRating.length; i++) {
-      const moveRating = minimaxMoveRating[i];
-      if (moveRating.rating === Rewards.WIN) return moveRating.move;
+    // alternate between RANDOM, MINIMAX & DQN
+    const alternate = AiRandomService.generateRandomNumber(0, 100);
 
-      if (moveRating.rating === Rewards.LOSE || moveRating.rating === Rewards.DRAW) {
-        const minimaxPGN = PgnLoaderComponent.getMoveToPGN(moveRating.move, isPlaying);
-        const dqnPGN = PgnLoaderComponent.getMoveToPGN(bestDQNMove, isPlaying);
+    // execute completely random move (sometimes opponent makes a blunder)
+    if (alternate < 1) {
+      return this.aiRandomService.getMove(matrix, isPlaying);
+    }
+    // execute minimax move
+    else if (alternate >= 1 && alternate < 50) {
 
-        // dqn move will result in a loose, take the best possible minimax action
-        if (minimaxPGN === dqnPGN) {
-          const moves = minimaxMoveRating.map(entry => entry.move);
-          const ratings = minimaxMoveRating.map(entry => entry.rating);
-          const index = this.aiMinimaxingService.getBestIndexFromEvaluation(
-            matrix, ratings, moves, isPlaying, true, true
-          );
+      const moves = minimaxMoveRating.map(entry => entry.move);
+      const ratings = minimaxMoveRating.map(entry => entry.rating);
+      const index = this.aiMinimaxingService.getBestIndexFromEvaluation(
+        matrix, ratings, moves, isPlaying, true, true
+      );
 
-          return moves[index];
+      return moves[index];
+    }
+    // check dqn move and execute dqn if it's a good move
+    else {
+      for (let i = 0; i < minimaxMoveRating.length; i++) {
+        const moveRating = minimaxMoveRating[i];
+        if (moveRating.rating === Rewards.WIN) return moveRating.move;
+
+        if (moveRating.rating === Rewards.LOSE || moveRating.rating === Rewards.DRAW) {
+          const minimaxPGN = PgnLoaderComponent.getMoveToPGN(moveRating.move, isPlaying);
+          const dqnPGN = PgnLoaderComponent.getMoveToPGN(bestDQNMove, isPlaying);
+
+          // dqn move will result in a loose, take the best possible minimax action
+          if (minimaxPGN === dqnPGN) {
+            const moves = minimaxMoveRating.map(entry => entry.move);
+            const ratings = minimaxMoveRating.map(entry => entry.rating);
+            const index = this.aiMinimaxingService.getBestIndexFromEvaluation(
+              matrix, ratings, moves, isPlaying, true, true
+            );
+
+            return moves[index];
+          }
         }
       }
-    }
 
-    return bestDQNMove;
+      return bestDQNMove;
+    }
   }
 
 }
