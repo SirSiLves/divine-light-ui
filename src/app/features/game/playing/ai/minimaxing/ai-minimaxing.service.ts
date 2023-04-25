@@ -14,7 +14,6 @@ import { MatrixService } from '../../../state/matrix/matrix.service';
 import { AiRandomService } from '../random/ai-random.service';
 
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -29,7 +28,9 @@ export class AiMinimaxingService {
 
   private readonly DEPTH_SEARCH = 2;
   private readonly MAX_DEPTH_SEARCH = 100;
-  public readonly MAX_TIME_DURATION = 1000; // in ms
+  public readonly MAX_TIME_DURATION = 2000; // in ms
+
+  private TEMP_COUNT = 0;
 
 
   constructor(
@@ -137,6 +138,8 @@ export class AiMinimaxingService {
 
   // minimax with alpha beta pruning, iterative deepening, move generation and evaluation function
   getMove5(matrix: number[][], isPlaying: GodType): Move {
+    const START = Date.now();
+
     let startTime = Date.now();
     let maxDepthPerIteration = 0;
 
@@ -154,6 +157,10 @@ export class AiMinimaxingService {
         )
       );
     }
+
+    console.log('MINIMAX 5: ', maxDepthPerIteration - 1);
+
+    console.log(new Date(Date.now() - START).toISOString())
 
     const moves = nodes.map(n => n.move);
     const index = this.getBestIndexFromEvaluation(matrix, iterativeDeepening.completed, moves, isPlaying, true, true);
@@ -427,7 +434,6 @@ export class AiMinimaxingService {
   // minimax with alpha beta pruning and iterative deepening
   private minimax3(nextState: number[][], reward: number, done: boolean, depth: number, maxDepth: number,
                    startPlayer: GodType, isPlaying: GodType, alpha: number, beta: number, startTime: number, maxTimeDuration: number): number {
-
     // terminal state return reward from the last move
     if (done || depth >= maxDepth || (Date.now() - startTime) >= maxTimeDuration) {
       if (done) {
@@ -655,6 +661,8 @@ export class AiMinimaxingService {
   // minimax with alpha beta pruning, iterative deepening, move generation and evaluation function
   private minimax5(state: number[][], nextState: number[][], reward: number, done: boolean, depth: number, maxDepth: number,
                    startPlayer: GodType, isPlaying: GodType, alpha: number, beta: number, startTime: number, maxTimeDuration: number): number {
+    this.TEMP_COUNT += 1;
+
     // terminal state return reward from the last move
     if (done || depth >= maxDepth || (Date.now() - startTime) >= maxTimeDuration) {
       if (done) {
