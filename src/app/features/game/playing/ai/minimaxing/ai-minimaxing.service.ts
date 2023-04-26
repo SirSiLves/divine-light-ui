@@ -26,11 +26,9 @@ export class AiMinimaxingService {
   // 5 - minimax with alpha beta pruning, iterative deepening, move generation and evaluation function
   public static EXTENSION_SETTING: 1 | 2 | 3 | 4 | 5 = 5;
 
-  private readonly DEPTH_SEARCH = 2;
+  private readonly DEPTH_SEARCH = 5;
   private readonly MAX_DEPTH_SEARCH = 100;
   public readonly MAX_TIME_DURATION = 2000; // in ms
-
-  private TEMP_COUNT = 0;
 
 
   constructor(
@@ -138,8 +136,6 @@ export class AiMinimaxingService {
 
   // minimax with alpha beta pruning, iterative deepening, move generation and evaluation function
   getMove5(matrix: number[][], isPlaying: GodType): Move {
-    const START = Date.now();
-
     let startTime = Date.now();
     let maxDepthPerIteration = 0;
 
@@ -158,9 +154,7 @@ export class AiMinimaxingService {
       );
     }
 
-    console.log('MINIMAX 5: ', maxDepthPerIteration - 1);
-
-    console.log(new Date(Date.now() - START).toISOString())
+    // console.log('MINIMAX 5: ', maxDepthPerIteration - 1);
 
     const moves = nodes.map(n => n.move);
     const index = this.getBestIndexFromEvaluation(matrix, iterativeDeepening.completed, moves, isPlaying, true, true);
@@ -661,8 +655,6 @@ export class AiMinimaxingService {
   // minimax with alpha beta pruning, iterative deepening, move generation and evaluation function
   private minimax5(state: number[][], nextState: number[][], reward: number, done: boolean, depth: number, maxDepth: number,
                    startPlayer: GodType, isPlaying: GodType, alpha: number, beta: number, startTime: number, maxTimeDuration: number): number {
-    this.TEMP_COUNT += 1;
-
     // terminal state return reward from the last move
     if (done || depth >= maxDepth || (Date.now() - startTime) >= maxTimeDuration) {
       if (done) {
