@@ -8,6 +8,7 @@ export class Rewards {
   static readonly DESTROY_ENEMY = 100;
   static readonly BLOCK = 0;
   static readonly POSITION = 1;
+  static readonly RANDOMIZE = 10;
   static readonly WALL = 5;
   static readonly ANGLER = 3;
 }

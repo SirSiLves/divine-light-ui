@@ -10,7 +10,8 @@ export interface ExecutedNode {
   winner: GodType | undefined; // probably winner after executed move
   nextState: number[][]; // state after move is executed,
   depth: number;
-  done: boolean
+  done: boolean;
+  evaluation?: number; // position evaluation
 }
 
 export interface PieceNode {
@@ -23,5 +24,6 @@ export interface PieceNode {
   reward?: number; // reward after executed move
   winner?: GodType | undefined; // probably winner after executed move
   nextState?: number[][]; // state after move is executed,
-  done?: boolean
+  done?: boolean;
+  evaluation?: number; // position evaluation
 }
