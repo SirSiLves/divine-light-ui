@@ -73,7 +73,7 @@ export class AiService {
     switch (botType) {
       case BotTypes.RANDOM:
         return this.aiRandomService.getMove(matrix, godType);
-      // return this.aiMinimaxingService.getMove4(matrix, godType);
+        // return this.aiMinimaxingService.getMove4(matrix, godType);
       // return this.aiDqn2Service.getMove(matrix, godType);
       case BotTypes.MINIMAX:
         return this.aiMinimaxingService.getMove(matrix, godType);
@@ -122,8 +122,14 @@ export class AiService {
   }
 
   static executeMoveWithReward(matrix: number[][], move: Move, isPlaying: GodType): {
-    reward: number, nextState: number[][], winner: GodType | undefined
+    reward: number, nextState: number[][], winner: GodType | undefined, lightCount: number
   } {
+    const nextState = this.executeMove(move, matrix, isPlaying);
+
+    return this.executeLightWithReward(nextState, isPlaying);
+  }
+
+  static executeMove(move: Move, matrix: number[][], isPlaying: GodType): number[][] {
     const nextState = MatrixService.copy(matrix);
 
     switch (move.type) {
@@ -138,14 +144,20 @@ export class AiService {
         throw new Error('Move type could not be found');
     }
 
+    return nextState;
+  }
+
+  static executeLightWithReward(nextState: number[][], isPlaying: GodType): {
+    reward: number, nextState: number[][], winner: GodType | undefined, lightCount: number
+  } {
     const lightResult: { lightCount: number, destroy: number | undefined, block: true | undefined } = this.executeLight(nextState, isPlaying);
     const winner: GodType | undefined = WinnerValidatorService.checkWinnerWithGod(nextState);
 
     if (winner !== undefined && winner === isPlaying) {
-      return {reward: Rewards.WIN, nextState, winner};
+      return {reward: Rewards.WIN, nextState, winner, lightCount: lightResult.lightCount};
     }
     if (winner !== undefined && winner !== isPlaying) {
-      return {reward: Rewards.LOSE, nextState, winner};
+      return {reward: Rewards.LOSE, nextState, winner, lightCount: lightResult.lightCount};
     }
 
     if (lightResult.destroy !== undefined) {
@@ -163,15 +175,16 @@ export class AiService {
       return {
         reward: nega ? Rewards.DESTROY_OWN + -1 * pieceReward : Rewards.DESTROY_ENEMY + pieceReward,
         nextState,
-        winner
+        winner,
+        lightCount: lightResult.lightCount
       };
     }
 
     if (lightResult.block !== undefined) {
-      return {reward: Rewards.BLOCK, nextState, winner};
+      return {reward: Rewards.BLOCK, nextState, winner, lightCount: lightResult.lightCount};
     }
 
-    return {reward: 0, nextState, winner};
+    return {reward: 0, nextState, winner, lightCount: lightResult.lightCount};
   }
 
   private static executeWalk(matrix: number[][], from: Field, to: Field): void {
@@ -198,6 +211,8 @@ export class AiService {
       lightCount += 1;
 
       if (piece !== 0) {
+        lightCount += 1; // it's better to have pieces involved
+
         const nextDirection: Direction = LightValidatorService.getDirection(piece, direction.type, nextPosition);
 
         if (nextDirection.destroy) {
@@ -382,32 +397,59 @@ export class AiService {
   }
 
 
-  public static evaluatePosition(state: number[][], nextState: number[][], isPlaying: GodType) {
-    const isSwappedPosition = MatrixQuery.isSwappedMatrixPosition(state);
-    const normalizedState = isSwappedPosition ? MatrixService.swapMatrix(state) : state;
-    const normalizedNextState = isSwappedPosition ? MatrixService.swapMatrix(nextState) : nextState;
+  public static evaluatePosition(matrix: number[][], isPlaying: GodType): number {
+    const isSwappedPosition = MatrixQuery.isSwappedMatrixPosition(matrix);
+    const normalizedState = isSwappedPosition ? MatrixService.swapMatrix(matrix) : matrix;
 
     let adjustReward = 0;
+    let sideRankPieces = 0;
 
-    // the king position
-    adjustReward = this.adjustRewardWithKingPosition(isPlaying, normalizedNextState, adjustReward);
+    for (let y = 0; y < matrix.length; y++) {
+      for (let x = 0; x < matrix[y].length; x++) {
+        const fieldValue = matrix[y][x];
 
-    // count pieces
-    adjustReward = this.adjustRewardWithCountPieces(isPlaying, normalizedNextState, adjustReward);
+        // is a piece on it
+        if (fieldValue > 0) {
+          const pieceType = PieceComponent.getType(fieldValue);
 
-    // pieces involved in light from both players - light should be checked piece before they are removed
-    adjustReward = this.adjustRewardWithInvolvedPieces(isPlaying, normalizedState, adjustReward);
+          // validate king position
+          if (pieceType === PieceType.KING) {
+            adjustReward += this.adjustRewardWithKingPosition({x, y}, isPlaying, normalizedState);
+          }
+          // analyse piece positions
+          else {
+            adjustReward += this.adjustRewardWithPieces(isPlaying, pieceType, fieldValue);
+          }
+
+          // piece position on a siderank
+          if (isPlaying === GodType.CAMAXTLI) {
+            if (x === matrix[y].length - 1) sideRankPieces++
+          }
+          if (isPlaying === GodType.NANAHUATZIN) {
+            if (x === 0) sideRankPieces++;
+          }
+        }
+      }
+    }
+
+    if (sideRankPieces === 1) adjustReward += Rewards.POSITION * 10;
 
     return adjustReward;
   }
 
-  public static adjustRewardWithKingPosition(isPlaying: GodType, normalizedMatrix: number[][], adjustReward: number): number {
-    // locate king position
-    const kingPosition: Field = this.getKingPosition(normalizedMatrix, isPlaying);
+  public static evaluateLight(state: number[][], isPlaying: GodType): number {
+    const isSwappedPosition = MatrixQuery.isSwappedMatrixPosition(state);
+    const normalizedNextState = isSwappedPosition ? MatrixService.swapMatrix(state) : state;
+
+    return this.adjustRewardWithInvolvedPieces(isPlaying, normalizedNextState, 0);
+  }
+
+  public static adjustRewardWithKingPosition(kingPosition: Field, isPlaying: GodType, matrix: number[][]): number {
+    let adjustReward = 0;
 
     // is king in the back rank
     if (isPlaying === GodType.CAMAXTLI) {
-      if (kingPosition.y === normalizedMatrix.length - 1) {
+      if (kingPosition.y === matrix.length - 1) {
         adjustReward += Rewards.POSITION * 10;
       }
     }
@@ -420,69 +462,69 @@ export class AiService {
     // pieces around king
     if (isPlaying === GodType.CAMAXTLI) {
       const leftUpField = MoveValidatorService.getLEFTUPField(kingPosition.x, kingPosition.y);
-      if (leftUpField && normalizedMatrix[leftUpField.y][leftUpField.x] < 100 && normalizedMatrix[leftUpField.y][leftUpField.x] !== 0) {
+      if (leftUpField && matrix[leftUpField.y][leftUpField.x] < 100 && matrix[leftUpField.y][leftUpField.x] !== 0) {
         adjustReward += Rewards.POSITION;
       }
       const upField = MoveValidatorService.getUPField(kingPosition.x, kingPosition.y);
-      if (upField && normalizedMatrix[upField.y][upField.x] < 100 && normalizedMatrix[upField.y][upField.x] !== 0) {
+      if (upField && matrix[upField.y][upField.x] < 100 && matrix[upField.y][upField.x] !== 0) {
         adjustReward += Rewards.POSITION;
       }
-      const upRightField = MoveValidatorService.getUPRIGHTField(kingPosition.x, kingPosition.y, normalizedMatrix);
-      if (upRightField && normalizedMatrix[upRightField.y][upRightField.x] < 100 && normalizedMatrix[upRightField.y][upRightField.x] !== 0) {
+      const upRightField = MoveValidatorService.getUPRIGHTField(kingPosition.x, kingPosition.y, matrix);
+      if (upRightField && matrix[upRightField.y][upRightField.x] < 100 && matrix[upRightField.y][upRightField.x] !== 0) {
         adjustReward += Rewards.POSITION;
       }
       const leftField = MoveValidatorService.getLEFTField(kingPosition.x, kingPosition.y);
-      if (leftField && normalizedMatrix[leftField.y][leftField.x] < 100 && normalizedMatrix[leftField.y][leftField.x] !== 0) {
+      if (leftField && matrix[leftField.y][leftField.x] < 100 && matrix[leftField.y][leftField.x] !== 0) {
         adjustReward += Rewards.POSITION;
       }
-      const rightField = MoveValidatorService.getRIGHTField(kingPosition.x, kingPosition.y, normalizedMatrix);
-      if (rightField && normalizedMatrix[rightField.y][rightField.x] < 100 && normalizedMatrix[rightField.y][rightField.x] !== 0) {
+      const rightField = MoveValidatorService.getRIGHTField(kingPosition.x, kingPosition.y, matrix);
+      if (rightField && matrix[rightField.y][rightField.x] < 100 && matrix[rightField.y][rightField.x] !== 0) {
         adjustReward += Rewards.POSITION;
       }
-      const downLeftField = MoveValidatorService.getDOWNLEFTField(kingPosition.x, kingPosition.y, normalizedMatrix);
-      if (downLeftField && normalizedMatrix[downLeftField.y][downLeftField.x] < 100 && normalizedMatrix[downLeftField.y][downLeftField.x] !== 0) {
+      const downLeftField = MoveValidatorService.getDOWNLEFTField(kingPosition.x, kingPosition.y, matrix);
+      if (downLeftField && matrix[downLeftField.y][downLeftField.x] < 100 && matrix[downLeftField.y][downLeftField.x] !== 0) {
         adjustReward += Rewards.POSITION;
       }
-      const downField = MoveValidatorService.getDOWNField(kingPosition.x, kingPosition.y, normalizedMatrix);
-      if (downField && normalizedMatrix[downField.y][downField.x] < 100 && normalizedMatrix[downField.y][downField.x] !== 0) {
+      const downField = MoveValidatorService.getDOWNField(kingPosition.x, kingPosition.y, matrix);
+      if (downField && matrix[downField.y][downField.x] < 100 && matrix[downField.y][downField.x] !== 0) {
         adjustReward += Rewards.POSITION;
       }
-      const rightDownField = MoveValidatorService.getRIGHTDOWNField(kingPosition.x, kingPosition.y, normalizedMatrix);
-      if (rightDownField && normalizedMatrix[rightDownField.y][rightDownField.x] < 100 && normalizedMatrix[rightDownField.y][rightDownField.x] !== 0) {
+      const rightDownField = MoveValidatorService.getRIGHTDOWNField(kingPosition.x, kingPosition.y, matrix);
+      if (rightDownField && matrix[rightDownField.y][rightDownField.x] < 100 && matrix[rightDownField.y][rightDownField.x] !== 0) {
         adjustReward += Rewards.POSITION;
       }
     }
     if (isPlaying === GodType.NANAHUATZIN) {
       const leftUpField = MoveValidatorService.getLEFTUPField(kingPosition.x, kingPosition.y);
-      if (leftUpField && normalizedMatrix[leftUpField.y][leftUpField.x] >= 100) {
+      if (leftUpField && matrix[leftUpField.y][leftUpField.x] >= 100) {
         adjustReward += Rewards.POSITION;
       }
       const upField = MoveValidatorService.getUPField(kingPosition.x, kingPosition.y);
-      if (upField && normalizedMatrix[upField.y][upField.x] >= 100) {
+      if (upField && matrix[upField.y][upField.x] >= 100) {
         adjustReward += Rewards.POSITION;
       }
-      const upRightField = MoveValidatorService.getUPRIGHTField(kingPosition.x, kingPosition.y, normalizedMatrix);
-      if (upRightField && normalizedMatrix[upRightField.y][upRightField.x] >= 100) {
+      const upRightField = MoveValidatorService.getUPRIGHTField(kingPosition.x, kingPosition.y, matrix);
+      if (upRightField && matrix[upRightField.y][upRightField.x] >= 100) {
         adjustReward += Rewards.POSITION;
       }
       const leftField = MoveValidatorService.getLEFTField(kingPosition.x, kingPosition.y);
-      if (leftField && normalizedMatrix[leftField.y][leftField.x] >= 100) {
+      if (leftField && matrix[leftField.y][leftField.x] >= 100) {
         adjustReward += Rewards.POSITION;
       }
-      const rightField = MoveValidatorService.getRIGHTField(kingPosition.x, kingPosition.y, normalizedMatrix);
-      if (rightField && normalizedMatrix[rightField.y][rightField.x] >= 100) {
+      const rightField = MoveValidatorService.getRIGHTField(kingPosition.x, kingPosition.y, matrix);
+      if (rightField && matrix[rightField.y][rightField.x] >= 100) {
         adjustReward += Rewards.POSITION;
       }
-      const downLeftField = MoveValidatorService.getDOWNLEFTField(kingPosition.x, kingPosition.y, normalizedMatrix);
-      if (downLeftField && normalizedMatrix[downLeftField.y][downLeftField.x] >= 100) {
+      const downLeftField = MoveValidatorService.getDOWNLEFTField(kingPosition.x, kingPosition.y, matrix);
+      if (downLeftField && matrix[downLeftField.y][downLeftField.x] >= 100) {
         adjustReward += Rewards.POSITION;
       }
-      const downField = MoveValidatorService.getDOWNField(kingPosition.x, kingPosition.y, normalizedMatrix);
-      if (downField && normalizedMatrix[downField.y][downField.x] >= 100) {
+      const downField = MoveValidatorService.getDOWNField(kingPosition.x, kingPosition.y, matrix);
+      if (downField && matrix[downField.y][downField.x] >= 100) {
         adjustReward += Rewards.POSITION;
       }
-      const rightDownField = MoveValidatorService.getRIGHTDOWNField(kingPosition.x, kingPosition.y, normalizedMatrix);
-      if (rightDownField && normalizedMatrix[rightDownField.y][rightDownField.x] >= 100) {
+      const rightDownField = MoveValidatorService.getRIGHTDOWNField(kingPosition.x, kingPosition.y, matrix);
+      if (rightDownField && matrix[rightDownField.y][rightDownField.x] >= 100) {
         adjustReward += Rewards.POSITION;
       }
     }
@@ -491,42 +533,26 @@ export class AiService {
   }
 
   public static adjustRewardWithInvolvedPieces(isPlaying: GodType, matrix: number[][], adjustReward: number): number {
-    const pieces: Map<string, Field> = new Map();
-    this.collectPiecesAndDistance(isPlaying, matrix, pieces, 0);
-    adjustReward += (pieces.size) * Rewards.POSITION;
+    const lightDistance = this.collectDistance(isPlaying, matrix);
+    adjustReward += Rewards.POSITION * lightDistance;
+
     return adjustReward;
   }
 
-  public static adjustRewardWithCountPieces(isPlaying: GodType, matrix: number[][], adjustReward: number): number {
-    if (isPlaying === GodType.CAMAXTLI) {
-      for (let y = 0; y < matrix.length; y++) {
-        for (let x = 0; x < matrix[y].length; x++) {
-          const piece = matrix[y][x];
-          if (piece !== 0) {
-            const pieceType = PieceComponent.getType(piece);
+  public static adjustRewardWithPieces(isPlaying: GodType, pieceType: PieceType, pieceValue: number): number {
+    let adjustReward = 0;
 
-            if (piece < 100) {
-              if (pieceType === PieceType.WALL) adjustReward += Rewards.WALL;
-              if (pieceType === PieceType.ANGLER) adjustReward += Rewards.ANGLER;
-            }
-          }
-        }
+    if (isPlaying === GodType.CAMAXTLI) {
+      if (pieceValue < 100) {
+        if (pieceType === PieceType.WALL) adjustReward += Rewards.WALL * 10;
+        if (pieceType === PieceType.ANGLER) adjustReward += Rewards.ANGLER * 10;
       }
     }
 
     if (isPlaying === GodType.NANAHUATZIN) {
-      for (let y = 0; y < matrix.length; y++) {
-        for (let x = 0; x < matrix[y].length; x++) {
-          const piece = matrix[y][x];
-          if (piece !== 0) {
-            const pieceType = PieceComponent.getType(piece);
-
-            if (piece >= 100) {
-              if (pieceType === PieceType.WALL) adjustReward += Rewards.WALL;
-              if (pieceType === PieceType.ANGLER) adjustReward += Rewards.ANGLER;
-            }
-          }
-        }
+      if (pieceValue >= 100) {
+        if (pieceType === PieceType.WALL) adjustReward += Rewards.WALL * 10;
+        if (pieceType === PieceType.ANGLER) adjustReward += Rewards.ANGLER * 10;
       }
     }
 
@@ -552,7 +578,9 @@ export class AiService {
 
     console.error("King should exist on board", matrix, isPlaying);
     throw Error("King should exists");
-  }  // shoot light from is playing if light is hitting a piece
+  }
+
+  // shoot light from is playing if light is hitting a piece
   // or a piece is around x square away from the light add it to possible peaces
   public static getAffectedMoves(matrix: number[][], isPlaying: GodType, lightRadius: number): Move[] {
     // cell id and field
@@ -608,6 +636,36 @@ export class AiService {
       }
 
       this.checkPiecesAround(pieces, matrix, nextPosition, lightRadius);
+      nextPosition = LightValidatorService.getNextPosition(direction.type, nextPosition);
+    }
+
+    return lightCount;
+  }
+
+  private static collectDistance(sun: GodType, matrix: number[][]): number {
+    let startPosition: Field = this.getStartPosition(sun, matrix);
+    let direction: Direction = LightValidatorService.getSUNDirection(matrix[startPosition.y][startPosition.x]);
+    let nextPosition: Field | undefined = LightValidatorService.getNextPosition(direction.type, startPosition);
+    let lightCount = 0;
+
+    while (nextPosition && LightValidatorService.nextPositionAvailable(nextPosition, matrix)) {
+      let piece = matrix[nextPosition.y][nextPosition.x];
+      lightCount += 1;
+
+      if (piece !== 0) {
+        lightCount += 1; // it's better to have pieces involved
+
+        const nextDirection: Direction = LightValidatorService.getDirection(piece, direction.type, nextPosition);
+
+        if (nextDirection.destroy) {
+          break; // don't go further
+        } else if (nextDirection.block) {
+          break; // don't go further
+        } else {
+          direction = nextDirection;
+        }
+      }
+
       nextPosition = LightValidatorService.getNextPosition(direction.type, nextPosition);
     }
 
