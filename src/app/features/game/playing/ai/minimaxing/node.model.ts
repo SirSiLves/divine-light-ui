@@ -11,7 +11,7 @@ export interface ExecutedNode {
   nextState: number[][]; // state after move is executed,
   depth: number;
   done: boolean;
-  evaluation?: number; // position evaluation
+  evaluation: number; // position evaluation
 }
 
 export interface PieceNode {

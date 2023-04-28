@@ -25,7 +25,7 @@ export class AiMinimaxingService {
   // 4 - minimax with alpha beta pruning, iterative deepening and move generation
   // 5 - minimax with alpha beta pruning, iterative deepening, move generation and evaluation function
   // 6 - custom - not relevant for MAS
-  public static EXTENSION_SETTING: 1 | 2 | 3 | 4 | 5 = 4;
+  public static EXTENSION_SETTING: 1 | 2 | 3 | 4 | 5 = 5;
 
   private readonly DEPTH_SEARCH = 2;
   private readonly MAX_DEPTH_SEARCH = 100;
@@ -141,15 +141,15 @@ export class AiMinimaxingService {
 
     let iterativeDeepening: { started: number[], completed: number[] } = {started: [], completed: []};
 
-    const nodes: ExecutedNode[] = this.generateChildNodesWithReward(matrix, isPlaying, 1, true);
+    const nodes: ExecutedNode[] = this.generateChildNodesWithRewardSorted(matrix, isPlaying, 1, true);
 
     while ((Date.now() - startTime) < this.MAX_TIME_DURATION && maxDepthPerIteration < this.MAX_DEPTH_SEARCH) {
       maxDepthPerIteration += 1;
       iterativeDeepening.completed = iterativeDeepening.started;
 
       iterativeDeepening.started = nodes.map(node => this.minimax5(
-          node.state, node.nextState, node.reward, node.done, 1, maxDepthPerIteration, isPlaying, node.isPlaying,
-          Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, startTime, this.MAX_TIME_DURATION
+          node.nextState, node.reward, node.done, 1, maxDepthPerIteration, isPlaying, node.isPlaying,
+          Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, startTime, this.MAX_TIME_DURATION, node.evaluation
         )
       );
     }
@@ -168,7 +168,7 @@ export class AiMinimaxingService {
 
     let iterativeDeepening: { started: number[], completed: number[] } = {started: [], completed: []};
 
-    const nodes: ExecutedNode[] = this.generateChildNodesWithRewardSorted(matrix, isPlaying, 1, true);
+    const nodes: ExecutedNode[] = this.generateChildNodesWithReward(matrix, isPlaying, 1, true);
 
     while ((Date.now() - startTime) < this.MAX_TIME_DURATION && maxDepthPerIteration < this.MAX_DEPTH_SEARCH) {
       maxDepthPerIteration += 1;
@@ -176,7 +176,7 @@ export class AiMinimaxingService {
 
       iterativeDeepening.started = nodes.map(node => this.minimax6(
           node.nextState, node.reward, node.done, 1, maxDepthPerIteration, isPlaying, node.isPlaying,
-          Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, startTime, this.MAX_TIME_DURATION, node.evaluation!
+          Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, startTime, this.MAX_TIME_DURATION, node.evaluation
         )
       );
     }
@@ -201,8 +201,8 @@ export class AiMinimaxingService {
       iterativeDeepening.completed = iterativeDeepening.started;
 
       iterativeDeepening.started = nodes.map(node => this.minimax5(
-          node.state, node.nextState, node.reward, node.done, 1, maxDepthPerIteration, isPlaying, node.isPlaying,
-          Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, startTime, maxTimeDuration
+          node.nextState, node.reward, node.done, 1, maxDepthPerIteration, isPlaying, node.isPlaying,
+          Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, startTime, maxTimeDuration, node.evaluation
         )
       );
     }
@@ -254,8 +254,8 @@ export class AiMinimaxingService {
       iterativeDeepening.completed = iterativeDeepening.started;
 
       iterativeDeepening.started = nodes.map(node => this.minimax5(
-          node.state, node.nextState, node.reward, node.done, 1, maxDepthPerIteration, isPlaying, node.isPlaying,
-          Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, startTime, maxTimeDuration
+          node.nextState, node.reward, node.done, 1, maxDepthPerIteration, isPlaying, node.isPlaying,
+          Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, startTime, maxTimeDuration, node.evaluation
         )
       );
     }
@@ -386,7 +386,7 @@ export class AiMinimaxingService {
     // pieces from both players involved in light
     const stateAfterMove = AiService.executeMove(move, matrix, isPlaying);
 
-    const {reward, nextState, winner} = AiService.executeLightWithReward(stateAfterMove, isPlaying);
+    const {reward, nextState, winner, lightCount} = AiService.executeLightWithReward(stateAfterMove, isPlaying);
 
     if (winner !== undefined) return isMaximizing ? reward : reward * -1;
 
@@ -394,7 +394,7 @@ export class AiMinimaxingService {
     if (draw) return isMaximizing ? Rewards.DRAW : Rewards.DRAW * -1;
     else if (evaluatePosition) {
       // pieces involved in light from both players - light should be checked piece before they are removed
-      let lightEvaluation = AiService.evaluateLight(stateAfterMove, isPlaying);
+      let lightEvaluation = lightCount;
       if (!isMaximizing) lightEvaluation = -1 * lightEvaluation; // revert result otherwise AI is training to block the light
 
       const adjustPosition = AiService.evaluatePosition(nextState, isPlaying);
@@ -423,7 +423,8 @@ export class AiMinimaxingService {
             winner,
             nextState,
             depth,
-            done: true
+            done: true,
+            evaluation: 0
           };
         }
 
@@ -437,7 +438,8 @@ export class AiMinimaxingService {
             winner,
             nextState,
             depth,
-            done: true
+            done: true,
+            evaluation: 0
           };
         }
 
@@ -449,7 +451,8 @@ export class AiMinimaxingService {
           winner,
           nextState,
           depth,
-          done: false
+          done: false,
+          evaluation: 0
         };
       });
 
@@ -467,7 +470,7 @@ export class AiMinimaxingService {
     const nodes = AiService.getPossiblesMoves(matrix, isPlaying)
       .map(move => {
         const stateAfterMove = AiService.executeMove(move, matrix, isPlaying);
-        const {reward, nextState, winner} = AiService.executeLightWithReward(stateAfterMove, isPlaying);
+        const {reward, nextState, winner, lightCount} = AiService.executeLightWithReward(stateAfterMove, isPlaying);
 
         if (winner !== undefined) {
           return {
@@ -478,7 +481,8 @@ export class AiMinimaxingService {
             winner,
             nextState,
             depth,
-            done: true
+            done: true,
+            evaluation: lightCount
           };
         }
 
@@ -492,16 +496,10 @@ export class AiMinimaxingService {
             winner,
             nextState,
             depth,
-            done: true
+            done: true,
+            evaluation: lightCount
           };
         }
-
-        // generate random number to get more randomize positions
-        const randomNumber = AiRandomService.generateRandomNumber(0, Rewards.RANDOMIZE);
-
-        const lightEvaluation = AiService.evaluateLight(stateAfterMove, isPlaying);
-
-        const adjustPosition = randomNumber + lightEvaluation + AiService.evaluatePosition(nextState, isPlaying);
 
         return {
           state: matrix,
@@ -512,7 +510,7 @@ export class AiMinimaxingService {
           nextState,
           depth,
           done: false,
-          evaluation: adjustPosition + randomNumber
+          evaluation: lightCount
         };
       });
 
@@ -527,7 +525,7 @@ export class AiMinimaxingService {
   }
 
   private sortNodes(nodes: ExecutedNode[]) {
-    return nodes.sort((a, b) => b.evaluation! - a.evaluation!);
+    return nodes.sort((a, b) => b.reward - a.reward);
   }
 
   // minimax with alpha beta pruning and iterative deepening
@@ -548,7 +546,7 @@ export class AiMinimaxingService {
     const nextPlayer = isPlaying === GodType.CAMAXTLI ? GodType.NANAHUATZIN : GodType.CAMAXTLI;
 
     // get possible move and randomize it
-    const nodes: ExecutedNode[] = this.generateChildNodesWithRewardSorted(nextState, nextPlayer, depth, true);
+    const nodes: ExecutedNode[] = this.generateChildNodesWithReward(nextState, nextPlayer, depth, true);
 
     const isMaximizing = startPlayer === nextPlayer;
 
@@ -762,10 +760,6 @@ export class AiMinimaxingService {
     }
 
     return pieces.sort((a, b) => {
-      if ((a.position.x === 0 && b.position.x !== 0) || (a.position.x === a.state.length - 1 && b.position.x === b.state.length - 1)) {
-        return -1;
-      }
-
       if (PieceComponent.getType(a.piece) === PieceType.REFLECTOR && PieceComponent.getType(b.piece) !== PieceType.REFLECTOR) {
         return -1;
       }
@@ -784,35 +778,16 @@ export class AiMinimaxingService {
 
   private getEvaluation4(move: Move, node: PieceNode, isPlaying: GodType, depth: number, maxDepth: number,
                          startPlayer: GodType, alpha: number, beta: number, startTime: number, maxTimeDuration: number) {
-    this.executeMove(move, node, isPlaying);
+    this.executeMoveWithReward(move, node, isPlaying);
 
     return this.minimax4(
       node.nextState!, node.reward!, node.done!, depth + 1, maxDepth, startPlayer, node.isPlaying, alpha, beta, startTime, maxTimeDuration
     );
   }
 
-  private executeMove(move: Move, node: PieceNode, isPlaying: GodType): void {
+  private executeMoveWithReward(move: Move, node: PieceNode, isPlaying: GodType): void {
     node.move = move;
-    const {reward, nextState, winner} = AiService.executeMoveWithReward(node.state, move, isPlaying);
-    node.reward = reward;
-    node.nextState = nextState;
-    node.winner = winner;
-    node.done = winner !== undefined;
-
-    if (!node.done) {
-      const draw = this.drawValidatorService.checkDrawWithoutSave(nextState);
-      if (draw) {
-        node.done = true;
-        node.reward = Rewards.DRAW
-      }
-    }
-  }
-
-  private executeMoveWithEvaluation(move: Move, node: PieceNode, isPlaying: GodType, startPlayer: GodType): void {
-    node.move = move;
-    const stateAfterMove = AiService.executeMove(node.move, node.state, node.isPlaying);
-
-    const {reward, nextState, winner} = AiService.executeLightWithReward(stateAfterMove, isPlaying);
+    const {reward, nextState, winner, lightCount} = AiService.executeMoveWithReward(node.state, move, isPlaying);
     node.reward = reward;
     node.nextState = nextState;
     node.winner = winner;
@@ -824,29 +799,22 @@ export class AiMinimaxingService {
         node.done = true;
         node.reward = Rewards.DRAW
       } else {
-
-        // generate random number to get more randomize positions
-        const randomNumber = AiRandomService.generateRandomNumber(0, Rewards.RANDOMIZE);
-
-        // pieces involved in light from both players - light should be checked piece before they are removed
-        let lightEvaluation = AiService.evaluateLight(stateAfterMove, isPlaying);
-        if (isPlaying !== startPlayer) lightEvaluation = -1 * lightEvaluation; // revert result otherwise AI is training to block the light
-
-        node.evaluation = randomNumber + lightEvaluation + AiService.evaluatePosition(node.nextState, isPlaying);
+        node.evaluation = lightCount;
       }
     }
   }
 
   // minimax with alpha beta pruning, iterative deepening, move generation and evaluation function
-  private minimax5(state: number[][], nextState: number[][], reward: number, done: boolean, depth: number, maxDepth: number,
-                   startPlayer: GodType, isPlaying: GodType, alpha: number, beta: number, startTime: number, maxTimeDuration: number): number {
+  private minimax5(nextState: number[][], reward: number, done: boolean, depth: number, maxDepth: number,
+                   startPlayer: GodType, isPlaying: GodType, alpha: number, beta: number, startTime: number, maxTimeDuration: number,
+                   lightEvaluation: number): number {
     // terminal state return reward from the last move
     if (done || depth >= maxDepth || (Date.now() - startTime) >= maxTimeDuration) {
       if (done) {
         if (isPlaying === startPlayer) return reward;
         return -1 * reward;
       } else {
-        const adjustPosition = this.getAdjustPosition(state, nextState, isPlaying, isPlaying === startPlayer);
+        const adjustPosition = this.getAdjustPosition(nextState, isPlaying, isPlaying === startPlayer, lightEvaluation);
         if (isPlaying === startPlayer) return reward + adjustPosition;
         return -1 * (reward + adjustPosition);
       }
@@ -860,7 +828,8 @@ export class AiMinimaxingService {
     let maxEvaluation = Number.NEGATIVE_INFINITY;
 
     // get possible pieces
-    const nodes: PieceNode[] = this.generateChildNode(nextState, nextPlayer, depth);
+    // const nodes: PieceNode[] = this.generateChildNode(nextState, nextPlayer, depth);
+    const nodes: PieceNode[] = this.generateChildNodeSorted(nextState, nextPlayer, depth);
     if (nodes.length === 0) return reward;
 
     if (isMaximizing) {
@@ -954,24 +923,23 @@ export class AiMinimaxingService {
 
   private getEvaluation5(move: Move, node: PieceNode, isPlaying: GodType, depth: number, maxDepth: number,
                          startPlayer: GodType, alpha: number, beta: number, startTime: number, maxTimeDuration: number) {
-    this.executeMove(move, node, isPlaying);
+    this.executeMoveWithReward(move, node, isPlaying);
 
     return this.minimax5(
-      node.state, node.nextState!, node.reward!, node.done!, depth + 1, maxDepth, startPlayer, node.isPlaying, alpha, beta, startTime, maxTimeDuration
+      node.nextState!, node.reward!, node.done!, depth + 1, maxDepth, startPlayer, node.isPlaying, alpha, beta, startTime, maxTimeDuration, node.evaluation!
     );
   }
 
   private minimax6(nextState: number[][], reward: number, done: boolean, depth: number, maxDepth: number,
                    startPlayer: GodType, isPlaying: GodType, alpha: number, beta: number, startTime: number, maxTimeDuration: number,
-                   evaluation: number): number {
+                   lightEvaluation: number): number {
     // terminal state return reward from the last move
     if (done || depth >= maxDepth || (Date.now() - startTime) >= maxTimeDuration) {
       if (done) {
         if (isPlaying === startPlayer) return reward;
         return -1 * reward;
       } else {
-        if (isPlaying === startPlayer) return reward + evaluation;
-        return -1 * (reward + evaluation);
+        return this.getPositionEvaluation(nextState, isPlaying, startPlayer, lightEvaluation, reward);
       }
     }
 
@@ -1075,35 +1043,41 @@ export class AiMinimaxingService {
     }
   }
 
+  private getPositionEvaluation(nextState: number[][], isPlaying: GodType, startPlayer: GodType, lightEvaluation: number, reward: number) {
+    // generate random number to get more randomize positions
+    const randomNumber = AiRandomService.generateRandomNumber(0, Rewards.RANDOMIZE);
+    // position evaluation
+    const positionEvaluation = AiService.evaluatePosition(nextState, isPlaying);
+
+    // pieces involved in light from both players - light should be checked piece before they are removed
+    if (isPlaying !== startPlayer) lightEvaluation = -1 * lightEvaluation; // invert result otherwise AI is training to block the light
+
+    lightEvaluation = randomNumber + lightEvaluation + positionEvaluation;
+
+    if (isPlaying === startPlayer) return reward + lightEvaluation;
+    return -1 * (reward + lightEvaluation);
+  }
+
   private getEvaluation6(move: Move, node: PieceNode, isPlaying: GodType, depth: number, maxDepth: number,
                          startPlayer: GodType, alpha: number, beta: number, startTime: number, maxTimeDuration: number) {
-    this.executeMoveWithEvaluation(move, node, isPlaying, startPlayer);
+    this.executeMoveWithReward(move, node, isPlaying);
 
     return this.minimax6(
       node.nextState!, node.reward!, node.done!, depth + 1, maxDepth, startPlayer, node.isPlaying, alpha, beta, startTime, maxTimeDuration, node.evaluation!
     );
   }
 
-  private getAdjustPosition(state: number[][], nextState: number[][], isPlaying: GodType, isMaximizing: boolean) {
-    const isSwappedPosition = MatrixQuery.isSwappedMatrixPosition(state);
-    const normalizedState = isSwappedPosition ? MatrixService.swapMatrix(state) : state;
+  private getAdjustPosition(nextState: number[][], isPlaying: GodType, isMaximizing: boolean, lightReward: number) {
+    const isSwappedPosition = MatrixQuery.isSwappedMatrixPosition(nextState);
     const normalizedNextState = isSwappedPosition ? MatrixService.swapMatrix(nextState) : nextState;
 
-    let adjustReward = 0;
-
-    // the king position
-    adjustReward = AiService.adjustRewardWithKingPosition(isPlaying, normalizedNextState, adjustReward);
-
-    // count pieces
-    adjustReward = AiService.adjustRewardWithCountPieces(isPlaying, normalizedNextState, adjustReward);
-
-    // pieces involved in light from both players - light should be checked piece before they are removed
-    const lightReward = AiService.adjustRewardWithInvolvedPieces(isPlaying, normalizedState, adjustReward);
-    if (!isMaximizing) return adjustReward + -1 * lightReward; // revert result otherwise AI is training to block the light
+    // evaluate curren position
+    let adjustReward = AiService.evaluatePosition(normalizedNextState, isPlaying);
 
     // generate random number to get more randomize positions
     const randomNumber = AiRandomService.generateRandomNumber(0, Rewards.RANDOMIZE);
 
+    if (!isMaximizing) return adjustReward + -1 * lightReward + randomNumber; // invert result from light otherwise AI is training to block the light
     return adjustReward + lightReward + randomNumber;
   }
 
