@@ -29,7 +29,7 @@ export class AiMinimaxingService {
 
   private readonly DEPTH_SEARCH = 2;
   private readonly MAX_DEPTH_SEARCH = 100;
-  public readonly MAX_TIME_DURATION = 50; // in ms
+  public readonly MAX_TIME_DURATION = 2000; // in ms
 
   constructor(
     private drawValidatorService: DrawValidatorService
