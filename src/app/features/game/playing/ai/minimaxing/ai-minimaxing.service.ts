@@ -247,7 +247,7 @@ export class AiMinimaxingService {
 
     let iterativeDeepening: { started: number[], completed: number[] } = {started: [], completed: []};
 
-    const nodes: ExecutedNode[] = this.generateChildNodesWithRewardSorted(matrix, isPlaying, 1, false);
+    const nodes: ExecutedNode[] = this.generateChildNodesWithReward(matrix, isPlaying, 1, false);
 
     while ((Date.now() - startTime) < maxTimeDuration && maxDepthPerIteration < this.MAX_DEPTH_SEARCH) {
       maxDepthPerIteration += 1;
@@ -1067,9 +1067,9 @@ export class AiMinimaxingService {
     );
   }
 
-  private getAdjustPosition(nextState: number[][], isPlaying: GodType, isMaximizing: boolean, lightReward: number) {
-    const isSwappedPosition = MatrixQuery.isSwappedMatrixPosition(nextState);
-    const normalizedNextState = isSwappedPosition ? MatrixService.swapMatrix(nextState) : nextState;
+  private getAdjustPosition(matrix: number[][], isPlaying: GodType, isMaximizing: boolean, lightReward: number) {
+    const isSwappedPosition = MatrixQuery.isSwappedMatrixPosition(matrix);
+    const normalizedNextState = isSwappedPosition ? MatrixService.swapMatrix(matrix) : matrix;
 
     // evaluate curren position
     let adjustReward = AiService.evaluatePosition(normalizedNextState, isPlaying);
