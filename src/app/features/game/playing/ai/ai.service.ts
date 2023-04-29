@@ -450,12 +450,12 @@ export class AiService {
     // is king in the back rank
     if (isPlaying === GodType.CAMAXTLI) {
       if (kingPosition.y === matrix.length - 1) {
-        adjustReward += Rewards.POSITION * 10;
+        adjustReward += Rewards.POSITION * 100;
       }
     }
     if (isPlaying === GodType.NANAHUATZIN) {
       if (kingPosition.y === 0) {
-        adjustReward += Rewards.POSITION * 10;
+        adjustReward += Rewards.POSITION * 100;
       }
     }
 
