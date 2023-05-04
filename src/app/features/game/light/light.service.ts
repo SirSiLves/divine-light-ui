@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { MatrixQuery } from '../state/matrix/matrix.query';
 import { LightValidatorService } from '../validator/light-validator.service';

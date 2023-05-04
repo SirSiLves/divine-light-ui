@@ -85,19 +85,16 @@ export class PlayerService {
       if (winnerWithPlayer) this.setWinner(winnerWithPlayer);
       else if (draw) this.setDraw();
       else {
-        if (this.playerQuery.isPlaying().godType === GodType.CAMAXTLI) {
-          this.playerQuery.isPlayingGod$.next(GodType.NANAHUATZIN);
-        } else {
-          this.playerQuery.isPlayingGod$.next(GodType.CAMAXTLI);
-        }
+        if (this.playerQuery.isPlaying().godType === GodType.CAMAXTLI) this.playerQuery.isPlayingGod$.next(GodType.NANAHUATZIN);
+        else this.playerQuery.isPlayingGod$.next(GodType.CAMAXTLI);
       }
 
-      this.actionQuery.isSwitching$.next(false);
-      if (!winnerWithPlayer && this.playerQuery.isPlaying().bot && !draw) {
-        this.triggerAIMove();
-      }
+      setTimeout(() => {
+        this.actionQuery.isSwitching$.next(false);
+        if (!winnerWithPlayer && this.playerQuery.isPlaying().bot && !draw) this.triggerAIMove();
+      }, 10); // give light to turn off some time
 
-    }, this.playerSwitchTimeout + 1000); // light timeout is defined
+    }, this.playerSwitchTimeout + 1000); // how long should the light be on
   }
 
   enableBOT(playerType: PlayerType): void {
@@ -181,22 +178,23 @@ export class PlayerService {
           this.aiService.aiTriggered = false;
         }
       }, 1000);
+    }
+    // execute ai move
+    else {
+      const matrix: number[][] = MatrixService.copy(this.matrixQuery.getLatestMatrixState());
+      const winner: Player | undefined = WinnerValidatorService.checkWinnerWithPlayer(matrix, this.playerQuery.getPlayer1(), this.playerQuery.getPlayer2());
 
-    } else {
+      const start = Date.now()
+      const nextAIMove: Move | undefined = winner === undefined ? this.aiService.getMoveCurrentPlayer(matrix) : undefined;
+
       setTimeout(() => {
-        const matrix: number[][] = MatrixService.copy(this.matrixQuery.getLatestMatrixState());
-        const winner: Player | undefined = WinnerValidatorService.checkWinnerWithPlayer(matrix, this.playerQuery.getPlayer1(), this.playerQuery.getPlayer2());
-
-        const nextAIMove: Move | undefined = winner === undefined ? this.aiService.getMoveCurrentPlayer(matrix) : undefined;
-
         if (nextAIMove) {
           this.actionQuery.lastMove$.next(nextAIMove);
           this.switchPlayer(nextAIMove);
         }
 
         this.aiService.aiTriggered = false;
-
-      }, this.aiService.timeout);
+      }, AiService.thinkingTime - (Date.now() - start)); // sleep until AI thinking time reached
     }
   }
 

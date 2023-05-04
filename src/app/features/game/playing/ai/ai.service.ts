@@ -30,7 +30,7 @@ import { AiUnknownService } from './unknown/ai-unknown.service';
 export class AiService {
 
   // decrease value on AI thinking time
-  readonly timeout = 1;
+  static thinkingTime = 2000;
   aiTriggered = false;
 
   constructor(
