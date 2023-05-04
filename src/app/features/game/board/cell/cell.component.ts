@@ -9,6 +9,7 @@ import { MatrixQuery } from '../../state/matrix/matrix.query';
 import { PlayerQuery } from '../../state/player/player.query';
 import { LightService } from '../../light/light.service';
 import { MatrixStore } from '../../state/matrix/matrix.store';
+import { GameManagerService } from '../../../../core/state/game-manager/game-manager.service';
 
 @Component({
   selector: 'app-cell',
@@ -41,19 +42,26 @@ export class CellComponent implements OnInit, OnDestroy {
 
   lightOff$ = this.lightService.lightOff$;
 
+  isLoading: boolean = false;
+
   constructor(
     private gameManagerQuery: GameManagerQuery,
     private actionService: ActionService,
     private actionQuery: ActionQuery,
     private matrixQuery: MatrixQuery,
     private lightService: LightService,
-    private playerQuery: PlayerQuery
+    private playerQuery: PlayerQuery,
+    private gameManagerService: GameManagerService
   ) {
   }
 
   ngOnInit(): void {
     this.initActionResults();
     this.initSafeZone();
+
+    this.gameManagerQuery.isLoading$.pipe(takeUntil(this.onDestroy$)).subscribe({
+      next: isLoading => this.isLoading = isLoading
+    });
   }
 
   ngOnDestroy(): void {
@@ -97,6 +105,7 @@ export class CellComponent implements OnInit, OnDestroy {
   }
 
   doMove(): void {
+    if (this.isLoading) return;
     this.actionService.doOrPrepareMove(this.coordinateX, this.coordinateY);
   }
 

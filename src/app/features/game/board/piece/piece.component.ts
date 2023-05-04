@@ -10,6 +10,7 @@ import { PlayerQuery } from '../../state/player/player.query';
 import { MatrixQuery } from '../../state/matrix/matrix.query';
 import { MoveValidatorService } from '../../validator/move-validator.service';
 import { Field } from '../../state/action/field.model';
+import { GameManagerQuery } from '../../../../core/state/game-manager/game-manager.query';
 
 
 @Component({
@@ -73,17 +74,23 @@ export class PieceComponent implements OnInit, OnDestroy {
   showCancel = false;
   showSave = false;
 
+  isLoading: boolean = false;
+
   constructor(
     private actionService: ActionService,
     private actionQuery: ActionQuery,
     private playerQuery: PlayerQuery,
-    private matrixQuery: MatrixQuery
+    private matrixQuery: MatrixQuery,
+    private gameManagerQuery: GameManagerQuery
   ) {
   }
 
   ngOnInit(): void {
     this.initMoveAnimation();
 
+    this.gameManagerQuery.isLoading$.pipe(takeUntil(this.onDestroy$)).subscribe({
+      next: isLoading => this.isLoading = isLoading
+    });
 
     // create piece if needed
     this.matrixQuery.matrixActive$.pipe(takeUntil(this.onDestroy$)).subscribe(matrix => {
@@ -235,7 +242,7 @@ export class PieceComponent implements OnInit, OnDestroy {
   }
 
   doOrPrepareMove(): void {
-    if (!this.piece) return;
+    if (!this.piece || this.isLoading) return;
 
     if (this.playerQuery.isPlaying().bot) return;
 
