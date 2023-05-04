@@ -2,7 +2,7 @@
   <ng-container *ngIf="player1$ | async as player1">
     <div class="player">
       <h4 class="m-0" [ngStyle]="{color: colorMapping?.p1?.color}">
-        {{player1.name}} - {{player1.nick}}
+        {{player1.name}}
         <ng-container *ngIf="player1.bot">(Computer)</ng-container>
       </h4>
       <h3 class="m-0">{{player1.wins}}</h3>
@@ -14,7 +14,7 @@
   <ng-container *ngIf="player2$ | async as player2">
     <div class="player">
       <h4 class="m-0" [ngStyle]="{color: colorMapping?.p2?.color}">
-        {{player2.name}} - {{player2.nick}}
+        {{player2.name}}
         <ng-container *ngIf="player2.bot">(Computer)</ng-container>
       </h4>
       <h3 class="m-0">{{player2.wins}}</h3>

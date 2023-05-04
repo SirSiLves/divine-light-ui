@@ -92,7 +92,7 @@ export class PlayerService {
       setTimeout(() => {
         this.actionQuery.isSwitching$.next(false);
         if (!winnerWithPlayer && this.playerQuery.isPlaying().bot && !draw) this.triggerAIMove();
-      }, 10); // give light to turn off some time
+      }, 100); // give light to turn off some time
 
     }, this.playerSwitchTimeout + 1000); // how long should the light be on
   }
