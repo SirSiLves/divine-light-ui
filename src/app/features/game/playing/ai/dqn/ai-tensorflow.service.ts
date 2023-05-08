@@ -141,8 +141,6 @@ export class AiTensorflowService {
     // layer #24 135
     layer.push(this.getSingleBoardLayer(matrix, 135));
 
-    console.log(layer)
-
     return layer;
   }
 
