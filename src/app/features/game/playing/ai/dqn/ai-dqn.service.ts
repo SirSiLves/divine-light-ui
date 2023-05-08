@@ -35,8 +35,6 @@ export class AiDqnService {
     syncInterval: 100000, // after how many trained samples should the network be synced
     // network
     neuronsHiddenBitmap: 651, // sqrt(H * W * C * POSSIBLE ACTIONS) -> POSSIBLE: 420 -> 7 * 6 * 24 * 420 -> 651 (7x6)
-    neuronsHiddenBitmapGrouped: 461, // sqrt(H * W * C * POSSIBLE ACTIONS) -> POSSIBLE: 420 -> 7 * 6 * 12 * 420 -> 461 (7x6)
-    neuronsHiddenAlgebraBinary: 376, // sqrt(H * W * POSSIBLE ACTIONS) -> POSSIBLE: 420 -> 7 * 6 * 420 * 8 -> 358 (7x6)
     // game specific
     NUM_BOARD_WIDTH: MatrixStore.WIDTH_NUMBER,
     NUM_BOARD_HEIGHT: MatrixStore.HEIGHT_NUMBER,
