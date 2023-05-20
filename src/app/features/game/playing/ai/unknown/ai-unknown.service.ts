@@ -66,7 +66,7 @@ export class AiUnknownService {
       return this.aiRandomService.getMove(matrix, isPlaying);
     }
     // execute minimax move
-    else if (alternate >= 1 && alternate < 50) {
+    else if (alternate >= 1 && alternate < 25) {
 
       const moves = minimaxMoveRating.map(entry => entry.move);
       const ratings = minimaxMoveRating.map(entry => entry.rating);
