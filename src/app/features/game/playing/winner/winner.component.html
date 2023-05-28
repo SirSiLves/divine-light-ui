@@ -15,11 +15,13 @@
     <h2 class="m-0">
       <ng-container *ngIf="winner.godType === PlayerType.CAMAXTLI; else nanahuatzin">
         <span class="player camaxtli">{{winner.name}}</span>
-        ({{winner.nick}}) {{'features.game.winner.won' | translate}}
+        <ng-container *ngIf="winner.bot"> (Computer)</ng-container>
+        {{'features.game.winner.won' | translate}}
       </ng-container>
       <ng-template #nanahuatzin>
         <span class="player nanahuatzin">{{winner.name}}</span>
-        ({{winner.nick}}) {{'features.game.winner.won' | translate}}
+        <ng-container *ngIf="winner.bot"> (Computer)</ng-container>
+        {{'features.game.winner.won' | translate}}
       </ng-template>
     </h2>
 

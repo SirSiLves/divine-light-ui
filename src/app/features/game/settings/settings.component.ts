@@ -86,7 +86,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     camaxtli: 'p1',
     nanahuatzin: 'p2',
     botTypeP1: undefined,
-    botTypeP2: 'random',
+    botTypeP2: 'dqn',
     rematch: 'manual',
     autoSwitch: true
   };
