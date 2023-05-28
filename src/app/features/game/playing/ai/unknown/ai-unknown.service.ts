@@ -12,7 +12,7 @@ import { AiRandomService } from '../random/ai-random.service';
 export class AiUnknownService {
 
   public static readonly MINIMAX_MAX_TIME_DURATION = 2000; // in ms
-  public static readonly MINIMAX_MAX_TRAINING_TIME_DURATION = 100; // in ms
+  public static readonly MINIMAX_MAX_TRAINING_TIME_DURATION = 50; // in ms
   public static readonly MINIMAX_SEARCH_DEPTH = 2;
 
   constructor(
@@ -66,7 +66,7 @@ export class AiUnknownService {
       return this.aiRandomService.getMove(matrix, isPlaying);
     }
     // execute minimax move
-    else if (alternate >= 1 && alternate < 25) {
+    else if (alternate >= 1 && alternate < 50) {
 
       const moves = minimaxMoveRating.map(entry => entry.move);
       const ratings = minimaxMoveRating.map(entry => entry.rating);
