@@ -46,15 +46,14 @@ export class PollComponent implements OnInit, OnDestroy {
     ));
 
   formGroup = this.formBuilder.group({
-    question1: [null, Validators.required],
-    question2: [null, Validators.required],
-    question3: [null, Validators.required],
-    question4: [null, Validators.required],
-    question5: [null, Validators.required],
-    question6: [null, Validators.required],
-    question7: [null, Validators.required],
-    question8: [null, Validators.required],
-    question9: [null, Validators.required]
+    question01: [null, Validators.required],
+    question02: [null, Validators.required],
+    question03: [null, Validators.required],
+    question04: [null, Validators.required],
+    question05: [null, Validators.required],
+    question06: [null, Validators.required],
+    question07: [null, Validators.required],
+    question08: [null, Validators.required],
   });
 
   isSaving = false;
@@ -117,7 +116,6 @@ export class PollComponent implements OnInit, OnDestroy {
   }
 
   close(): void {
-    // TODO validate if poll has been send
     this.gameManagerQuery.polling$.next(false);
   }
 
@@ -170,31 +168,35 @@ export class PollComponent implements OnInit, OnDestroy {
     });
   }
 
-  get question1(): FormControl {
-    return this.formGroup.controls.question1 as FormControl;
+  get question01(): FormControl {
+    return this.formGroup.controls.question01 as FormControl;
   }
 
-  get question3(): FormControl {
-    return this.formGroup.controls.question3 as FormControl;
+  get question02(): FormControl {
+    return this.formGroup.controls.question02 as FormControl;
   }
 
-  get question4(): FormControl {
-    return this.formGroup.controls.question4 as FormControl;
+  get question03(): FormControl {
+    return this.formGroup.controls.question03 as FormControl;
   }
 
-  get question5(): FormControl {
-    return this.formGroup.controls.question5 as FormControl;
+  get question04(): FormControl {
+    return this.formGroup.controls.question04 as FormControl;
   }
 
-  get question7(): FormControl {
-    return this.formGroup.controls.question7 as FormControl;
+  get question05(): FormControl {
+    return this.formGroup.controls.question05 as FormControl;
+  }
+  get question06(): FormControl {
+    return this.formGroup.controls.question06 as FormControl;
   }
 
-  get question8(): FormControl {
-    return this.formGroup.controls.question8 as FormControl;
+  get question07(): FormControl {
+    return this.formGroup.controls.question07 as FormControl;
   }
 
-  get question9(): FormControl {
-    return this.formGroup.controls.question9 as FormControl;
+  get question08(): FormControl {
+    return this.formGroup.controls.question08 as FormControl;
   }
+
 }
