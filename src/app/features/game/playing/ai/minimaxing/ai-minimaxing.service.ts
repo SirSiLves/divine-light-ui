@@ -188,7 +188,7 @@ export class AiMinimaxingService {
     return moves[index];
   }
 
-  getRatedMovesForUnknown(matrix: number[][], isPlaying: GodType, maxTimeDuration: number): { move: Move, rating: number }[] {
+  getRatedMovesForHybrid(matrix: number[][], isPlaying: GodType, maxTimeDuration: number): { move: Move, rating: number }[] {
     let startTime = Date.now();
     let maxDepthPerIteration = 0;
 
@@ -207,7 +207,7 @@ export class AiMinimaxingService {
       );
     }
 
-    // console.log('MINIMAX RATING MOVES FOR UNKNOWN: ', maxDepthPerIteration - 1);
+    // console.log('MINIMAX RATING MOVES FOR HYBRID: ', maxDepthPerIteration - 1);
 
     return nodes.map((node, index) => {
       return {
@@ -215,33 +215,9 @@ export class AiMinimaxingService {
         rating: iterativeDeepening.completed[index]
       }
     });
-
-    // const moves: Move[] = AiService.shuffle(AiService.getPossiblesMoves(matrix, isPlaying));
-    // const evaluatedMoves: number[] = moves.map(
-    //   move => this.minimax2(matrix, AiUnknownService.MINIMAX_SEARCH_DEPTH - 1, move, isPlaying, isPlaying, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY)
-    // );
-    //
-    // return moves.map((move, index) => {
-    //   return {
-    //     move: move,
-    //     rating: evaluatedMoves[index]
-    //   }
-    // });
   }
 
-  getTrainingRatedMovesForUnknown(matrix: number[][], isPlaying: GodType, maxTimeDuration: number): { move: Move, rating: number }[] {
-    // const moves: Move[] = AiService.shuffle(AiService.getPossiblesMoves(matrix, isPlaying));
-    // const evaluatedMoves: number[] = moves.map(
-    //   move => this.minimax2(matrix, AiUnknownService.MINIMAX_SEARCH_DEPTH - 1, move, isPlaying, isPlaying, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY)
-    // );
-    //
-    // return moves.map((move, index) => {
-    //   return {
-    //     move: move,
-    //     rating: evaluatedMoves[index]
-    //   }
-    // });
-
+  getTrainingRatedMovesForHybrid(matrix: number[][], isPlaying: GodType, maxTimeDuration: number): { move: Move, rating: number }[] {
     let startTime = Date.now();
     let maxDepthPerIteration = 0;
 
@@ -260,7 +236,7 @@ export class AiMinimaxingService {
       );
     }
 
-    // console.log('MINIMAX 5 RATING MOVES FOR UNKNOWN: ', maxDepthPerIteration - 1);
+    // console.log('MINIMAX 5 RATING MOVES FOR HYBRID: ', maxDepthPerIteration - 1);
 
     return nodes.map((node, index) => {
       return {

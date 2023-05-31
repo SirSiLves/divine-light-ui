@@ -13,6 +13,7 @@ COPY nginx.conf /etc/nginx/nginx.conf
 COPY --from=build /usr/src/app/dist/divine-light-ui /usr/share/nginx/html
 
 
+# increase version
 # docker build -t divine-light-docker:latest .
 # docker save divine-light-docker:latest -o "divine-light-docker.tar" divine-light-docker
 # on error: sudo vi ~/.npmrc -> exclude artifactory path

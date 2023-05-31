@@ -21,7 +21,7 @@ import { AiDqn2Service } from './dqn/dqn-2/ai-dqn-2.service';
 import { AiDqn3Service } from './dqn/dqn-3/ai-dqn-3.service';
 import { AiDqn4Service } from './dqn/dqn-4/ai-dqn-4.service';
 import { AiDqn5Service } from './dqn/dqn-5/ai-dqn-5.service';
-import { AiUnknownService } from './unknown/ai-unknown.service';
+import { AiHybridService } from './hybrid/ai-hybrid.service';
 
 
 @Injectable({
@@ -43,7 +43,7 @@ export class AiService {
     private aiDqn3Service: AiDqn3Service,
     private aiDqn4Service: AiDqn4Service,
     private aiDqn5Service: AiDqn5Service,
-    private aiUnknownService: AiUnknownService
+    private aiHybridService: AiHybridService
   ) {
   }
 
@@ -60,9 +60,9 @@ export class AiService {
         return this.aiMinimaxingService.getMove(matrix, player.godType);
       case 'dqn':
         return this.aiDqnService.getMove(matrix, player.godType);
-      case 'unknown':
+      case 'hybrid':
         const bestDQNMove = this.aiDqn5Service.getMove(matrix, player.godType);
-        return this.aiUnknownService.getMove(matrix, player.godType, bestDQNMove);
+        return this.aiHybridService.getMove(matrix, player.godType, bestDQNMove);
       default:
         return this.aiRandomService.getMove(matrix, player.godType);
     }
@@ -79,9 +79,9 @@ export class AiService {
         return this.aiMinimaxingService.getMove(matrix, godType);
       case BotTypes.DQN:
         return this.aiDqnService.getMove(matrix, godType);
-      case BotTypes.UNKNOWN:
+      case BotTypes.HYBRID:
         const bestDQNMove = this.aiDqn5Service.getMove(matrix, godType);
-        return this.aiUnknownService.getMove(matrix, godType, bestDQNMove);
+        return this.aiHybridService.getMove(matrix, godType, bestDQNMove);
       default:
         return this.aiRandomService.getMove(matrix, godType);
     }

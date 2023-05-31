@@ -39,7 +39,7 @@ export class AiDqnService {
     NUM_BOARD_WIDTH: MatrixStore.WIDTH_NUMBER,
     NUM_BOARD_HEIGHT: MatrixStore.HEIGHT_NUMBER,
     NUM_MOVES: MatrixStore.TOTAL_POSSIBLE_ACTIONS,
-    opponent: 'minimax', // 'random' | 'minimax' | 'unknown'
+    opponent: 'minimax', // 'random' | 'minimax' | 'hybrid'
   };
 
   constructor(

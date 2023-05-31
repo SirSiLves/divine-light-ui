@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { AiUnknownService } from './ai-unknown.service';
+import { AiHybridService } from './ai-hybrid.service';
 
-describe('UnknownService', () => {
-  let service: AiUnknownService;
+describe('HybridService', () => {
+  let service: AiHybridService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(AiUnknownService);
+    service = TestBed.inject(AiHybridService);
   });
 
   it('should be created', () => {

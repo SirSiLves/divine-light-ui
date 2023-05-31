@@ -12,8 +12,8 @@ import { Rewards } from '../../rewards';
 import { AiDqnService } from '../ai-dqn.service';
 import { AISarsd } from './ai-dqn-train.model';
 import { environment } from '../../../../../../../environments/environment';
-import { AiUnknownService } from '../../unknown/ai-unknown.service';
 import { NotificationService } from '../../../../../../core/notification/notification.service';
+import { AiHybridService } from '../../hybrid/ai-hybrid.service';
 
 
 @Injectable({providedIn: 'root'})
@@ -28,7 +28,7 @@ export class AiDqnTrainService {
     private aiRandomService: AiRandomService,
     private aiTensorflowService: AiTensorflowService,
     private drawValidatorService: DrawValidatorService,
-    private aiUnknownService: AiUnknownService,
+    private aiHybridService: AiHybridService,
     private notificationService: NotificationService
   ) {
   }
@@ -60,7 +60,7 @@ export class AiDqnTrainService {
   }
 
   getOpponentMove(
-    state: number[][], isPlaying: GodType, botType: 'random' | 'minimax' | 'unknown', isTraining: GodType, model: any
+    state: number[][], isPlaying: GodType, botType: 'random' | 'minimax' | 'hybrid', isTraining: GodType, model: any
   ): Move {
     switch (botType) {
       case 'random': {
@@ -95,9 +95,9 @@ export class AiDqnTrainService {
       case 'minimax': {
         return this.aiMinimaxingService.getMove2(state, isPlaying);
       }
-      case 'unknown': {
+      case 'hybrid': {
         const bestDQNMove = this.getBestAction(model, state, isPlaying).move;
-        return this.aiUnknownService.getTrainingMove(state, isPlaying, bestDQNMove);
+        return this.aiHybridService.getTrainingMove(state, isPlaying, bestDQNMove);
       }
     }
   }
@@ -177,7 +177,7 @@ export class AiDqnTrainService {
   }
 
   executeActionWithReward(
-    state: number[][], isTraining: GodType, move: Move, rounds: number, model: any, opponent: 'random' | 'minimax' | 'unknown'
+    state: number[][], isTraining: GodType, move: Move, rounds: number, model: any, opponent: 'random' | 'minimax' | 'hybrid'
   ): {
     reward: number, nextState: number[][], winner: GodType | undefined, draw: boolean
   } {

@@ -60,10 +60,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
   matrixFromPGN: number[][] | undefined;
 
   botTypeP1 = this.playerQuery.getPlayer1().botType;
-  unsavedGBotTypeP1: 'random' | 'minimax' | 'dqn' | 'unknown' | undefined = this.botTypeP1;
+  unsavedGBotTypeP1: 'random' | 'minimax' | 'dqn' | 'hybrid' | undefined = this.botTypeP1;
 
   botTypeP2 = this.playerQuery.getPlayer2().botType;
-  unsavedGBotTypeP2: 'random' | 'minimax' | 'dqn' | 'unknown' | undefined = this.botTypeP2;
+  unsavedGBotTypeP2: 'random' | 'minimax' | 'dqn' | 'hybrid' | undefined = this.botTypeP2;
 
   minimaxExtension = AiMinimaxingService.EXTENSION_SETTING;
   unsavedMinimaxExtension = this.minimaxExtension;
@@ -77,8 +77,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
     mode: 'p1vp2' | 'p1vb' | 'bvb',
     camaxtli: 'p1' | 'p2',
     nanahuatzin: 'p1' | 'p2',
-    botTypeP1: 'random' | 'minimax' | 'dqn' | 'unknown' | undefined,
-    botTypeP2: 'random' | 'minimax' | 'dqn' | 'unknown' | undefined,
+    botTypeP1: 'random' | 'minimax' | 'dqn' | 'hybrid' | undefined,
+    botTypeP2: 'random' | 'minimax' | 'dqn' | 'hybrid' | undefined,
     rematch: 'auto' | 'manual',
     autoSwitch: boolean,
   } = {
