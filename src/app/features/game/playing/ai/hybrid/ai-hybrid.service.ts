@@ -12,7 +12,7 @@ import { AiRandomService } from '../random/ai-random.service';
 export class AiHybridService {
 
   public static readonly MINIMAX_MAX_TIME_DURATION = 2000; // in ms
-  public static readonly MINIMAX_MAX_TRAINING_TIME_DURATION = 50; // in ms
+  public static readonly MINIMAX_MAX_TRAINING_TIME_DURATION = 1000; // in ms
   public static readonly MINIMAX_SEARCH_DEPTH = 2;
 
   constructor(
