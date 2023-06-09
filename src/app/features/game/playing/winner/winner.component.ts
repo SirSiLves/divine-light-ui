@@ -5,6 +5,7 @@ import { GodType, Player } from '../../state/player/player.model';
 import { PlayerQuery } from '../../state/player/player.query';
 import { GameManagerService } from '../../../../core/state/game-manager/game-manager.service';
 import { GameManagerQuery } from '../../../../core/state/game-manager/game-manager.query';
+import { PollComponent } from '../../poll/poll.component';
 
 @Component({
   selector: 'app-winner',
@@ -23,7 +24,6 @@ export class WinnerComponent implements OnInit, OnDestroy {
   displayModal: boolean = false;
 
   poll$ = this.gameManagerQuery.polling$;
-
 
   constructor(
     private playerQuery: PlayerQuery,

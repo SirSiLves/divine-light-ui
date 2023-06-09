@@ -2,8 +2,13 @@
   <ng-container *ngIf="player1$ | async as player1">
     <div class="player">
       <h4 class="m-0" [ngStyle]="{color: colorMapping?.p1?.color}">
-        {{player1.name}}
-        <ng-container *ngIf="player1.bot">(Computer)</ng-container>
+        {{player1.name}} -
+        <ng-container *ngIf="(player1.nick === 'DQN' || player1.nick === 'MINIMAX') && (poll$ | async); else nick">
+          <ng-container *ngIf="player1.nick === 'DQN'">{{'features.poll.dqn.name' | translate}}</ng-container>
+          <ng-container *ngIf="player1.nick === 'MINIMAX'">{{'features.poll.minimax.name' | translate}}</ng-container>
+        </ng-container>
+        <ng-template #nick>{{player1.nick}}</ng-template>
+        <ng-container *ngIf="player1.bot"> (Computer)</ng-container>
       </h4>
       <h3 class="m-0">{{player1.wins}}</h3>
     </div>
@@ -14,8 +19,13 @@
   <ng-container *ngIf="player2$ | async as player2">
     <div class="player">
       <h4 class="m-0" [ngStyle]="{color: colorMapping?.p2?.color}">
-        {{player2.name}}
-        <ng-container *ngIf="player2.bot">(Computer)</ng-container>
+        {{player2.name}} -
+        <ng-container *ngIf="(player2.nick === 'DQN' || player2.nick === 'MINIMAX') && (poll$ | async); else nick">
+          <ng-container *ngIf="player2.nick === 'DQN'">{{'features.poll.dqn.name' | translate}}</ng-container>
+          <ng-container *ngIf="player2.nick === 'MINIMAX'">{{'features.poll.minimax.name' | translate}}</ng-container>
+        </ng-container>
+        <ng-template #nick>{{player2.nick}}</ng-template>
+        <ng-container *ngIf="player2.bot"> (Computer)</ng-container>
       </h4>
       <h3 class="m-0">{{player2.wins}}</h3>
     </div>

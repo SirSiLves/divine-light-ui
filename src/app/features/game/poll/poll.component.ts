@@ -7,6 +7,7 @@ import { PlayerQuery } from '../state/player/player.query';
 import { GameManagerService } from '../../../core/state/game-manager/game-manager.service';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { MenuItem } from 'primeng/api';
 
 
 @Component({
@@ -72,6 +73,7 @@ export class PollComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const item = localStorage.getItem(PollComponent.LOCAL_STORAGE_KEY);
     if (item) this.step = item as any;
+    if (item !== 'end') this.gameManagerQuery.polling$.next(true);
 
     this.gameManagerQuery.polling$.pipe(takeUntil(this.onDestroy$)).subscribe({
       next: state => {
@@ -188,6 +190,7 @@ export class PollComponent implements OnInit, OnDestroy {
   get question05(): FormControl {
     return this.formGroup.controls.question05 as FormControl;
   }
+
   get question06(): FormControl {
     return this.formGroup.controls.question06 as FormControl;
   }

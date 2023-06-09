@@ -3,6 +3,8 @@ import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ColorMapping, Player } from '../../state/player/player.model';
 import { PlayerQuery } from '../../state/player/player.query';
+import { PollComponent } from '../../poll/poll.component';
+import { GameManagerQuery } from '../../../../core/state/game-manager/game-manager.query';
 
 @Component({
   selector: 'app-result',
@@ -18,8 +20,11 @@ export class ResultComponent implements OnInit, OnDestroy {
 
   colorMapping?: ColorMapping;
 
+  poll$ = this.gameManagerQuery.polling$;
+
   constructor(
-    private playerQuery: PlayerQuery
+    private playerQuery: PlayerQuery,
+    private gameManagerQuery: GameManagerQuery
   ) {
   }
 

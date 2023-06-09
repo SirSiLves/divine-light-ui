@@ -8,23 +8,38 @@
     <ng-container [ngSwitch]="step">
       <h3>
         <ng-container *ngSwitchCase="'start'">
-          {{'features.poll.start.title' | translate}}
+          <div class="step">
+            {{'features.poll.start.title' | translate}}
+            <div class="page">1 | 5</div>
+          </div>
         </ng-container>
 
         <ng-container *ngSwitchCase="'minimax'">
-          {{'features.poll.minimax.title' | translate}}
+          <div class="step">
+            {{'features.poll.minimax.title' | translate}}
+            <div class="page">2 | 5</div>
+          </div>
         </ng-container>
 
         <ng-container *ngSwitchCase="'dqn'">
-          {{'features.poll.dqn.title' | translate}}
+          <div class="step">
+            {{'features.poll.dqn.title' | translate}}
+            <div class="page">3 | 5</div>
+          </div>
         </ng-container>
 
         <ng-container *ngSwitchCase="'questions'">
-          {{'features.poll.questions.title' | translate}}
+          <div class="step">
+            {{'features.poll.questions.title' | translate}}
+            <div class="page">4 | 5</div>
+          </div>
         </ng-container>
 
         <ng-container *ngSwitchCase="'end'">
-          {{'features.poll.end.title' | translate}}
+          <div class="step">
+            {{'features.poll.end.title' | translate}}
+            <div class="page">5 | 5</div>
+          </div>
         </ng-container>
 
         <ng-container *ngSwitchDefault>
@@ -309,7 +324,6 @@
   </ng-container>
 
   <ng-template pTemplate="footer">
-
     <div class="footer">
       <ng-container [ngSwitch]="step">
         <ng-container *ngSwitchCase="'start'">

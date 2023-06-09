@@ -1,3 +1,17 @@
+h3 {
+  width: 100%;
+
+  .step {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .page {
+      font-size: 1rem;
+    }
+  }
+}
+
 .question {
   font-style: italic;
 }

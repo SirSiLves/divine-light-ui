@@ -15,12 +15,24 @@
     <h2 class="m-0">
       <ng-container *ngIf="winner.godType === PlayerType.CAMAXTLI; else nanahuatzin">
         <span class="player camaxtli">{{winner.name}}</span>
-        <ng-container *ngIf="winner.bot"> (Computer)</ng-container>
+
+        <ng-container *ngIf="(winner.nick === 'DQN' || winner.nick === 'MINIMAX') && (poll$ | async); else nick">
+          <ng-container *ngIf="winner.nick === 'DQN'"> ({{'features.poll.dqn.name' | translate}})</ng-container>
+          <ng-container *ngIf="winner.nick === 'MINIMAX'"> ({{'features.poll.minimax.name' | translate}})</ng-container>
+        </ng-container>
+        <ng-template #nick> ({{winner.nick}})</ng-template>
+
         {{'features.game.winner.won' | translate}}
       </ng-container>
       <ng-template #nanahuatzin>
         <span class="player nanahuatzin">{{winner.name}}</span>
-        <ng-container *ngIf="winner.bot"> (Computer)</ng-container>
+
+        <ng-container *ngIf="(winner.nick === 'DQN' || winner.nick === 'MINIMAX') && (poll$ | async); else nick">
+          <ng-container *ngIf="winner.nick === 'DQN'"> ({{'features.poll.dqn.name' | translate}})</ng-container>
+          <ng-container *ngIf="winner.nick === 'MINIMAX'"> ({{'features.poll.minimax.name' | translate}})</ng-container>
+        </ng-container>
+        <ng-template #nick> ({{winner.nick}})</ng-template>
+
         {{'features.game.winner.won' | translate}}
       </ng-template>
     </h2>

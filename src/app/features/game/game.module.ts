@@ -41,6 +41,7 @@ import { DqnComponent } from './settings/dqn/dqn.component';
 import { MinimaxComponent } from './settings/minimax/minimax.component';
 import { SliderModule } from 'primeng/slider';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { StepsModule } from 'primeng/steps';
 
 
 @NgModule({
@@ -93,7 +94,8 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
         InputTextModule,
         RadioButtonModule,
         SliderModule,
-        InputTextareaModule
+        InputTextareaModule,
+        StepsModule
     ]
 })
 export class GameModule {
