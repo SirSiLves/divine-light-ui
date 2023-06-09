@@ -54,6 +54,7 @@ export class PollComponent implements OnInit, OnDestroy {
     question06: [null, Validators.required],
     question07: [null, Validators.required],
     question08: [null, Validators.required],
+    question09: [null],
   });
 
   isSaving = false;
@@ -197,6 +198,10 @@ export class PollComponent implements OnInit, OnDestroy {
 
   get question08(): FormControl {
     return this.formGroup.controls.question08 as FormControl;
+  }
+
+  get question09(): FormControl {
+    return this.formGroup.controls.question09 as FormControl;
   }
 
 }

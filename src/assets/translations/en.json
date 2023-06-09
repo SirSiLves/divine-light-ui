@@ -146,6 +146,7 @@
 	"features.poll.questions.08.dqn": "Opponent 2",
 	"features.poll.questions.08.minimax": "Opponent 1",
 	"features.poll.questions.08.question": "Which opponent did you feel was the better?",
+	"features.poll.questions.09.question": "If you want to tell me something",
 	"features.poll.questions.description": "Answer the 8 short questions according to your personal feelings.",
 	"features.poll.questions.title": "Survey",
 	"features.poll.send": "Submit",

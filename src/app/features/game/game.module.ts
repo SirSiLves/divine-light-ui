@@ -40,6 +40,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { DqnComponent } from './settings/dqn/dqn.component';
 import { MinimaxComponent } from './settings/minimax/minimax.component';
 import { SliderModule } from 'primeng/slider';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 
 @NgModule({
@@ -91,7 +92,8 @@ import { SliderModule } from 'primeng/slider';
         RippleModule,
         InputTextModule,
         RadioButtonModule,
-        SliderModule
+        SliderModule,
+        InputTextareaModule
     ]
 })
 export class GameModule {

@@ -146,6 +146,7 @@
 	"features.poll.questions.08.dqn": "Gegner 2",
 	"features.poll.questions.08.minimax": "Gegner 1",
 	"features.poll.questions.08.question": "Welcher Gegner empfandest du als der Bessere?",
+	"features.poll.questions.09.question": "Falls du mir etwas was mitteilen möchtest",
 	"features.poll.questions.description": "Beantworte die 8 kurzen Fragen nach deinem persönlichen Empfinden.",
 	"features.poll.questions.title": "Umfrage",
 	"features.poll.send": "Absenden",

@@ -223,7 +223,8 @@
             <div class="grid">
               <div class="col-6">
                 <div class="p-field-radiobutton">
-                  <p-radioButton [value]="'MINIMAX'" [formControlName]="'question06'" inputId="minimax06"></p-radioButton>
+                  <p-radioButton [value]="'MINIMAX'" [formControlName]="'question06'"
+                                 inputId="minimax06"></p-radioButton>
                   <label for="minimax06" class="ml-2">{{'features.poll.questions.06.minimax' | translate}}</label>
                 </div>
               </div>
@@ -243,7 +244,8 @@
             <div class="grid">
               <div class="col-6">
                 <div class="p-field-radiobutton">
-                  <p-radioButton [value]="'MINIMAX'" [formControlName]="'question07'" inputId="minimax07"></p-radioButton>
+                  <p-radioButton [value]="'MINIMAX'" [formControlName]="'question07'"
+                                 inputId="minimax07"></p-radioButton>
                   <label for="minimax07" class="ml-2">{{'features.poll.questions.07.minimax' | translate}}</label>
                 </div>
               </div>
@@ -263,7 +265,8 @@
             <div class="grid">
               <div class="col-6">
                 <div class="p-field-radiobutton">
-                  <p-radioButton [value]="'MINIMAX'" [formControlName]="'question08'" inputId="minimax08"></p-radioButton>
+                  <p-radioButton [value]="'MINIMAX'" [formControlName]="'question08'"
+                                 inputId="minimax08"></p-radioButton>
                   <label for="minimax08" class="ml-2">{{'features.poll.questions.08.minimax' | translate}}</label>
                 </div>
               </div>
@@ -275,6 +278,23 @@
               </div>
             </div>
           </div>
+
+          <div class="col-12 mt-2 question">
+            {{'features.poll.questions.09.question' | translate}}
+          </div>
+          <div class="col-12">
+            <div class="grid">
+              <div class="col-12">
+                <div>
+                  <textarea [ngStyle]="{'width':'100%', 'min-height':'5rem'}"
+                            pInputTextarea [autoResize]="true"
+                            [maxLength]="1000"
+                            [formControlName]="'question09'"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </form>
     </ng-container>
