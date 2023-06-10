@@ -83,7 +83,7 @@ export class PollComponent implements OnInit, OnDestroy {
 
     this.wins$.pipe(takeUntil(this.onDestroy$)).subscribe({
       next: wins => {
-        if (wins >= 3) {
+        if (wins >= 3 && !this.displayModal) {
           if (this.step !== 'questions') this.next();
           this.displayModal = true;
         }
@@ -125,7 +125,7 @@ export class PollComponent implements OnInit, OnDestroy {
   play(algorithm: string): void {
     switch (algorithm) {
       case 'minimax': {
-        if (this.playerQuery.getPlayer2().botType !== 'minimax') this.gameManagerService.newGame();
+        this.gameManagerService.newGame();
         this.router.navigate([], {
           queryParams: {
             mode: 'p1vb',
@@ -139,7 +139,7 @@ export class PollComponent implements OnInit, OnDestroy {
         break;
       }
       case 'dqn': {
-        if (this.playerQuery.getPlayer2().botType !== 'dqn') this.gameManagerService.newGame();
+        this.gameManagerService.newGame();
         this.router.navigate([], {
           queryParams: {
             mode: 'p1vb',
