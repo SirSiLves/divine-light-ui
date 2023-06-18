@@ -64,33 +64,7 @@ export class AiDqnTrainService {
   ): Move {
     switch (botType) {
       case 'random': {
-        const moves: Move[] = AiService.getPossiblesMoves(state, isPlaying);
-
-        // RANDOM is never killing himself improves learning to kill opponent
-        const filteredMoves: Move[] = moves.filter(m => {
-          const execution = AiService.executeMoveWithReward(state, m, isPlaying);
-
-          if (execution.winner !== undefined && execution.winner !== isPlaying) {
-            return false;
-          }
-
-          // check if trainer can win without doing something, if its so filter this move
-          AiService.executeLight(execution.nextState, isTraining);
-          const winner: GodType | undefined = WinnerValidatorService.checkWinnerWithGod(execution.nextState);
-
-          if (winner !== undefined && winner === isPlaying) {
-            return false;
-          }
-
-          return true;
-        });
-
-        if (filteredMoves.length > 0) {
-          return filteredMoves[this.aiRandomService.generateRandomNumber(0, filteredMoves.length - 1)];
-        }
-
-        return moves[this.aiRandomService.generateRandomNumber(0, moves.length - 1)];
-
+        return this.aiRandomService.getFilteredMove(state, isPlaying);
       }
       case 'minimax': {
         return this.aiMinimaxingService.getMove2(state, isPlaying);

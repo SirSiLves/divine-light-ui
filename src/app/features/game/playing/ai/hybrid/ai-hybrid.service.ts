@@ -54,9 +54,14 @@ export class AiHybridService {
   }
 
   getTrainingMove(matrix: number[][], isPlaying: GodType, bestDQNMove: Move): Move {
-    const minimaxMoveRating: { move: Move, rating: number }[] = this.aiMinimaxingService.getTrainingRatedMovesForHybrid(
-      matrix, isPlaying, AiHybridService.MINIMAX_MAX_TRAINING_TIME_DURATION
+    // check if a winning move exist, if yes execute it
+    const minimalMinimaxMoveRating: { move: Move, rating: number }[] = this.aiMinimaxingService.getTrainingRatedMovesForHybrid(
+      matrix, isPlaying, 10
     );
+    for (let i = 0; i < minimalMinimaxMoveRating.length; i++) {
+      const moveRating = minimalMinimaxMoveRating[i];
+      if (moveRating.rating === Rewards.WIN) return moveRating.move;
+    }
 
     // alternate between RANDOM, MINIMAX & DQN
     const alternate = AiRandomService.generateRandomNumber(0, 100);
@@ -65,9 +70,15 @@ export class AiHybridService {
     if (alternate < 1) {
       return this.aiRandomService.getMove(matrix, isPlaying);
     }
-    // execute minimax move
-    else if (alternate >= 1 && alternate < 50) {
 
+    // get minimax rated moves
+    const minimaxRandomThinkingTIme = AiRandomService.generateRandomNumber(50, 3000);
+    const minimaxMoveRating: { move: Move, rating: number }[] = this.aiMinimaxingService.getTrainingRatedMovesForHybrid(
+      matrix, isPlaying, minimaxRandomThinkingTIme
+    );
+
+    // execute minimax move
+    if (alternate >= 1 && alternate < 80) {
       const moves = minimaxMoveRating.map(entry => entry.move);
       const ratings = minimaxMoveRating.map(entry => entry.rating);
       const index = this.aiMinimaxingService.getBestIndexFromEvaluation(
@@ -76,11 +87,11 @@ export class AiHybridService {
 
       return moves[index];
     }
+
     // check dqn move and execute dqn if it's a good move
     else {
       for (let i = 0; i < minimaxMoveRating.length; i++) {
         const moveRating = minimaxMoveRating[i];
-        if (moveRating.rating === Rewards.WIN) return moveRating.move;
 
         if (moveRating.rating === Rewards.LOSE || moveRating.rating === Rewards.DRAW) {
           const minimaxPGN = PgnLoaderComponent.getMoveToPGN(moveRating.move, isPlaying);

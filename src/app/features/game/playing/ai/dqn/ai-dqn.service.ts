@@ -27,7 +27,7 @@ export class AiDqnService {
     gamma: 0.9, // y-discount factor between 0 and 1 - gammas should correspond to the size of observation space: you should use larger gammas (ie closer to 1) for big state spaces, and smaller gammas for smaller spaces.
     episodes: 10000,
     epsilon: 1,
-    epsilonDecay: 0.0001, // go slightly for more exploitation instead of exploration
+    epsilonDecay: 0.000175, // go slightly for more exploitation instead of exploration
     epochs: 1, // the validation loss going to increase that means overfitting than reduce epochs
     batchSize: 32, // sample size
     replayStartSize: 1000, // minimum replay memory size
